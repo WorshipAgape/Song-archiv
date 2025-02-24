@@ -312,7 +312,7 @@ body.dark-theme .chord {
 /* Стиль для разделения текста на две колонки */
 #song-content.split-columns pre {
     column-count: 2;
-    column-gap: 14px;
+    column-gap: 10px;
 }
 
 /* Общие стили для кнопок */
