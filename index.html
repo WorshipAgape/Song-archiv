@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agape Worship</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+<header>
+    <h1>Agape Worship</h1>
+    <!-- Кнопка "Группа" вынесена в заголовок -->
+    <button id="toggle-favorites" class="toggle-favorites">Группа</button>
+</header>
+<main class="container">
+    <!-- Панель управления -->
+    <section class="controls">
+        <div class="control-group">
+            <label for="sheet-select">Выберите лист:</label>
+            <select id="sheet-select">
+                <option value="">-- Выберите лист --</option>
+                <option value="Быстрые (вертикаль)">Быстрые (вертикаль)</option>
+                <option value="Быстрые (горизонталь)">Быстрые (горизонталь)</option>
+                <option value="Поклонение (вертикаль)">Поклонение (вертикаль)</option>
+                <option value="Поклонение (горизонталь)">Поклонение (горизонталь)</option>
+            </select>
+        </div>
+        <div class="control-group">
+            <label for="search-input">Поиск песни:</label>
+            <input type="text" id="search-input" placeholder="Введите название песни...">
+            <div id="search-results"></div>
+        </div>
+        <div class="control-group">
+            <label for="song-select">Выберите песню:</label>
+            <select id="song-select" disabled>
+                <option value="">-- Сначала выберите лист --</option>
+            </select>
+        </div>
+        <div class="control-group">
+            <label for="key-select">Тональность:</label>
+            <select id="key-select">
+                <option value="C">C</option>
+                <option value="C#">C#</option>
+                <option value="D">D</option>
+                <option value="D#">D#</option>
+                <option value="E">E</option>
+                <option value="F">F</option>
+                <option value="F#">F#</option>
+                <option value="G">G</option>
+                <option value="G#">G#</option>
+                <option value="A">A</option>
+                <option value="A#">A#</option>
+                <option value="H">H</option>
+            </select>
+        </div>
+        <div class="font-size-controls">
+            <button id="zoom-in">+</button>
+            <button id="zoom-out">-</button>
+        </div>
+    </section>
+    <!-- Текст песни -->
+    <section id="song-content">
+        <h2 id="song-title">Название песни — Тональность</h2>
+    </section>
+    <!-- Дополнительные кнопки -->
+    <div class="control-buttons">
+        <button id="favorite-button" aria-label="Добавить в избранное">❤️ Избранное</button>
+        <button id="add-to-list-button" aria-label="Добавить в список">📝 Добавить в список</button>
+        <button id="split-text-button" aria-label="Разделить текст">Разделить текст</button>
+    </div>
+    <!-- Информация о BPM -->
+    <footer>
+        <p>BPM: <span id="bpm-display">-</span></p>
+        <a id="holychords-button" href="#" target="_blank">Holychords</a>
+    </footer>
+</main>
+<!-- Панель "Группа" -->
+<div id="favorites-panel" class="favorites-panel">
+    <div id="my-list" class="list-section">
+        <h3>Мой список</h3>
+        <div id="favorites-list" class="favorites-list"></div>
+    </div>
+    <div id="shared-list" class="list-section">
+        <h3>Общий список</h3>
+        <div id="shared-songs-list" class="shared-songs-list"></div>
+    </div>
+</div>
+<!-- Индикатор загрузки -->
+<div id="loading-indicator">Загрузка...</div>
+<script type="module" src="script.js"></script>
+</body>
+</html>
