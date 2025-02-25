@@ -64,11 +64,11 @@ h1, h2 {
 }
 
 #key-select {
-    padding: 10px 2px; /* Увеличиваем отступы */
+    padding: 8px 2px; /* Увеличиваем отступы */
     border: 1px solid var(--border-color);
     border-radius: var(--radius);
     font-size: 12px; /* Увеличиваем размер шрифта */
-    width: 5%; /* Делаем кнопки шире */
+    width: 10%; /* Делаем кнопки шире */
     box-sizing: border-box; /* Включаем отступы и границы в ширину */
 }
 
