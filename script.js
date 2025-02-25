@@ -543,7 +543,6 @@ favoriteButton.addEventListener('click', () => {
         storedFavorites.push(song);
         localStorage.setItem('favorites', JSON.stringify(storedFavorites));
         favorites = storedFavorites; // Обновляем массив favorites в памяти
-        alert('Песня добавлена в избранное!');
         loadFavorites(); // Перезагружаем список избранного
     } else {
         alert('Песня уже в избранном!');
