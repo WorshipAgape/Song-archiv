@@ -496,13 +496,12 @@ function loadFavorites(container = document.getElementById('favorites-list')) {
         favoriteItem.textContent = `${fav.name} — ${fav.key}`; // Добавляем тональность
         favoriteItem.className = 'favorite-item';
 
-        // Кнопка удаления 
+        // Кнопка удаления
         const removeBtn = document.createElement('button');
         removeBtn.textContent = '❌';
         removeBtn.className = 'remove-button';
         removeBtn.addEventListener('click', () => {
             removeFromFavorites(fav);
-            loadGroupPanel(); // Перезагружаем панель "Группа"
         });
 
         favoriteItem.appendChild(removeBtn);
@@ -552,7 +551,7 @@ favoriteButton.addEventListener('click', () => {
 
 // Функция для удаления песни из избранного
 function removeFromFavorites(fav) {
-    const index = favorites.findIndex(item => item.name === fav.name && item.sheet === fav.sheet);
+    const index = favorites.findIndex(item => item.name === fav.name && item.sheet === fav.sheet && item.index === fav.index);
     if (index !== -1) {
         favorites.splice(index, 1);
         localStorage.setItem('favorites', JSON.stringify(favorites));
@@ -674,12 +673,16 @@ function loadGroupPanel() {
         console.error("Контейнеры для списков не найдены.");
         return;
     }
-  
-    myFavoritesContainer.innerHTML = ''; // Очищаем предыдущие результаты
-    sharedSongsContainer.innerHTML = ''; // Очищаем предыдущие результаты
 
-    loadFavorites(myFavoritesContainer); // Загружаем "Мой список"
-    loadSharedList(sharedSongsContainer); // Загружаем "Общий список"
+    // Очищаем предыдущие результаты
+    myFavoritesContainer.innerHTML = '';
+    sharedSongsContainer.innerHTML = '';
+
+    // Загружаем "Мой список"
+    loadFavorites(myFavoritesContainer);
+
+    // Загружаем "Общий список"
+    loadSharedList(sharedSongsContainer);
 }
 
 // Функция для удаления песни из общего списка
@@ -732,4 +735,13 @@ document.getElementById('toggle-favorites').addEventListener('click', () => {
     } else {
         console.log("Панель закрыта.");
     }
+});
+
+document.getElementById('toggle-controls').addEventListener('click', () => {
+    const controls = document.querySelector('.controls');
+    if (!controls) return;
+
+    controls.classList.toggle('hidden');
+    const buttonText = controls.classList.contains('hidden') ? 'Показать управление' : 'Скрыть управление';
+    document.getElementById('toggle-controls').textContent = buttonText;
 });
