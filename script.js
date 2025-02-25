@@ -525,8 +525,6 @@ function loadFavorites(container = document.getElementById('favorites-list')) {
 }
 
 // Функция для добавления песни в избранное
-// Функция для добавления песни в избранное
-// Функция для добавления песни в избранное
 favoriteButton.addEventListener('click', () => {
     const sheetName = SHEETS[sheetSelect.value];
     const songIndex = songSelect.value;
