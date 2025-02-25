@@ -344,14 +344,16 @@ async function loadSheetSongs() {
     if (!sheetName) return;
 
     const rows = await fetchSheetData(sheetName);
-    songSelect.innerHTML = '<option value="">-- Выберите песню --</option>';
+    songSelect.innerHTML = ''; // Очищаем предыдущие опции
+
     rows.forEach((row, index) => {
         const option = document.createElement('option');
         option.value = index;
-        option.textContent = row[0];
+        option.textContent = row[0]; // Название песни
         songSelect.appendChild(option);
     });
-    songSelect.disabled = false;
+
+    songSelect.disabled = rows.length === 0;
 }
 
 
@@ -380,7 +382,7 @@ function displaySongDetails(songData, index, key) {
 
     // Обновляем содержимое страницы
     songContent.innerHTML = `
-         ${songData[0]} — ${originalKey}
+        ${songData[0]} — ${originalKey}
 ${highlightedLyrics}
     `;
 
@@ -638,13 +640,30 @@ function loadSharedList(container = document.getElementById('shared-songs-list')
             const songNameElement = document.createElement('span');
             songNameElement.textContent = `${song.name} — ${song.key}`; // Добавляем тональность
             songNameElement.className = 'song-name';
-            songNameElement.addEventListener('click', () => {
-                sheetSelect.value = song.sheet;
-                songSelect.value = song.index;
-                keySelect.value = song.key; // Устанавливаем сохраненную тональность
-                displaySongDetails(cachedData[song.sheet][song.index], song.index, song.key); // Передаем сохраненную тональность
-                updateTransposedLyrics(); // Вызываем функцию для транспонирования аккордов
-            });
+            songNameElement.addEventListener('click', async () => {
+    const sheetName = song.sheet;
+    const songIndex = song.index;
+
+    // Устанавливаем выбранный лист
+    sheetSelect.value = Object.keys(SHEETS).find(key => SHEETS[key] === sheetName);
+
+    // Загружаем данные листа, если они ещё не загружены
+    if (!cachedData[sheetName]) {
+        await fetchSheetData(sheetName);
+    }
+
+    // Обновляем выпадающий список песен
+    await loadSheetSongs();
+
+    // Устанавливаем выбранную песню
+    songSelect.value = songIndex;
+
+    // Отображаем детали песни
+    displaySongDetails(cachedData[sheetName][songIndex], songIndex, song.key);
+
+    // Обновляем транспонирование аккордов
+    updateTransposedLyrics();
+});
 
             // Кнопка удаления
             const deleteButton = document.createElement('button');
