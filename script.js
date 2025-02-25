@@ -356,10 +356,10 @@ async function loadSheetSongs() {
 
 
 // Функция для отображения текста песни
-function displaySongDetails(songData, index) {
-    if (!songData) return; 
+function displaySongDetails(songData, index, key) {
+    if (!songData) return;
 
-    const originalKey = songData[2];
+    const originalKey = key || songData[2]; // Используем сохраненную тональность, если она передана
     const bpm = songData[4] || 'N/A';
     const lyrics = songData[1] || '';
     const sourceUrl = songData[3] || '#';
@@ -370,7 +370,7 @@ function displaySongDetails(songData, index) {
     if (sourceUrl && sourceUrl.trim() !== '') {
         holychordsButton.href = sourceUrl; // Устанавливаем ссылку
         holychordsButton.style.display = 'inline-block'; // Показываем кнопку
-    }  else {
+    } else {
         holychordsButton.href = '#'; // Если ссылки нет, делаем её неактивной
         holychordsButton.style.display = 'none'; // Скрываем кнопку
     }
@@ -387,7 +387,6 @@ function displaySongDetails(songData, index) {
     keySelect.value = originalKey;
     keySelect.dataset.index = index;
 }
-
 
 // Обработчик кнопки Holychords
 holychordsButton.addEventListener('click', (event) => {
@@ -639,7 +638,7 @@ function loadSharedList(container = document.getElementById('shared-songs-list')
                 sheetSelect.value = song.sheet;
                 songSelect.value = song.index;
                 keySelect.value = song.key; // Устанавливаем сохраненную тональность
-                displaySongDetails(cachedData[song.sheet][song.index], song.index);
+                displaySongDetails(cachedData[song.sheet][song.index], song.index, song.key); // Передаем сохраненную тональность
             });
 
             // Кнопка удаления
