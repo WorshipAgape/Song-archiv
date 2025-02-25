@@ -687,7 +687,6 @@ function loadGroupPanel() {
 async function deleteFromSharedList(docId) {
     try {
         await deleteDoc(doc(db, "sharedList", docId));
-        alert("Песня успешно удалена из общего списка!");
     } catch (error) {
         console.error("Ошибка при удалении песни:", error);
         alert("Не удалось удалить песню. Попробуйте еще раз.");
