@@ -42,11 +42,17 @@ h1, h2 {
     margin-bottom: 15px;
 }
 
+.control-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
 .font-size-controls {
     display: flex;
-    justify-content: center;
     gap: 8px;
-    margin-top: 10px;
+    margin-top: 0; /* Убираем отступ сверху */
 }
 
 .font-size-controls button {
@@ -56,6 +62,8 @@ h1, h2 {
     border-radius: var(--radius);
     cursor: pointer;
 }
+
+
 
 #sheet-select, #search-input, #key-select {
     padding: 8px;
