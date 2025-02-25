@@ -525,6 +525,7 @@ function loadFavorites(container = document.getElementById('favorites-list')) {
 }
 
 // Функция для добавления песни в избранное
+// Функция для добавления песни в избранное
 favoriteButton.addEventListener('click', () => {
     const sheetName = SHEETS[sheetSelect.value];
     const songIndex = songSelect.value;
@@ -545,12 +546,10 @@ favoriteButton.addEventListener('click', () => {
     if (!storedFavorites.some(fav => fav.name === song.name && fav.sheet === song.sheet)) {
         storedFavorites.push(song);
         localStorage.setItem('favorites', JSON.stringify(storedFavorites));
-        alert('Песня добавлена в избранное!');
+        loadFavorites(); // Динамическое обновление списка избранных песен
     } else {
-        alert('Песня уже в избранном!');
+        console.log('Песня уже в избранном!'); // Логируем вместо alert
     }
-
-    loadFavorites(); // Обновляем список избранного
 });
 
 // Функция для удаления песни из избранного
