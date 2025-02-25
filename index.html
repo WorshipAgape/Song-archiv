@@ -16,27 +16,27 @@
 <main class="container">
     <!-- Панель управления -->
     <section class="controls">
-        <div class="control-group">
-            <label for="sheet-select">Выберите лист:</label>
-            <select id="sheet-select">
-                <option value="">-- Выберите лист --</option>
-                <option value="Быстрые (вертикаль)">Быстрые (вертикаль)</option>
-                <option value="Быстрые (горизонталь)">Быстрые (горизонталь)</option>
-                <option value="Поклонение (вертикаль)">Поклонение (вертикаль)</option>
-                <option value="Поклонение (горизонталь)">Поклонение (горизонталь)</option>
-            </select>
-        </div>
-        <div class="control-group">
-            <label for="search-input">Поиск песни:</label>
-            <input type="text" id="search-input" placeholder="Введите название песни...">
-            <div id="search-results"></div>
-        </div>
-        <div class="control-group">
-            <label for="song-select">Выберите песню:</label>
-            <select id="song-select" disabled>
-                <option value="">-- Сначала выберите лист --</option>
-            </select>
-        </div>
+    <div class="control-group">
+        <label for="search-input">Поиск песни:</label>
+        <input type="text" id="search-input" placeholder="Введите название песни...">
+        <div id="search-results"></div>
+    </div>
+    <div class="control-group">
+        <label for="sheet-select">Выберите лист:</label>
+        <select id="sheet-select">
+            <option value="">-- Выберите лист --</option>
+            <option value="Быстрые (вертикаль)">Быстрые (вертикаль)</option>
+            <option value="Быстрые (горизонталь)">Быстрые (горизонталь)</option>
+            <option value="Поклонение (вертикаль)">Поклонение (вертикаль)</option>
+            <option value="Поклонение (горизонталь)">Поклонение (горизонталь)</option>
+        </select>
+    </div>
+    <div class="control-group">
+        <label for="song-select">Выберите песню:</label>
+        <select id="song-select" disabled>
+            <option value="">-- Сначала выберите лист --</option>
+        </select>
+    </div>
         <div class="control-group">
             <label for="key-select">Тональность:</label>
             <select id="key-select">
@@ -90,4 +90,3 @@
 <script type="module" src="script.js"></script>
 </body>
 </html>
-
