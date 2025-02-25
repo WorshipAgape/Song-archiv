@@ -63,13 +63,22 @@ h1, h2 {
     cursor: pointer;
 }
 
-
-
-#sheet-select, #search-input, #key-select {
-    padding: 8px;
+#key-select {
+    padding: 10px 15px; /* Увеличиваем отступы */
     border: 1px solid var(--border-color);
     border-radius: var(--radius);
-    font-size: 14px;
+    font-size: 12px; /* Увеличиваем размер шрифта */
+    width: 7%; /* Делаем кнопки шире */
+    box-sizing: border-box; /* Включаем отступы и границы в ширину */
+}
+
+#sheet-select, #song-select, #search-input {
+    padding: 10px 15px; /* Увеличиваем отступы */
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    font-size: 16px; /* Увеличиваем размер шрифта */
+    width: 100%; /* Делаем кнопки шире */
+    box-sizing: border-box; /* Включаем отступы и границы в ширину */
 }
 
 /* Кнопки управления */
