@@ -358,6 +358,9 @@ body.dark-theme .chord {
 #song-content.split-columns pre {
     column-count: 2;
     column-gap: 13px;
+    line-height: 1.2; /* Уменьшаем высоту строки */
+    margin: 0;
+    padding: 0;
 }
 
 /* Общие стили для кнопок */
