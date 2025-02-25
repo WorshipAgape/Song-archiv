@@ -496,13 +496,13 @@ function loadFavorites(container = document.getElementById('favorites-list')) {
         favoriteItem.textContent = fav.name;
         favoriteItem.className = 'favorite-item';
 
-        // Кнопка удаления
+        // Кнопка удаления 
         const removeBtn = document.createElement('button');
         removeBtn.textContent = '❌';
         removeBtn.className = 'remove-button';
         removeBtn.addEventListener('click', () => {
             removeFromFavorites(fav);
-            loadFavorites(container); // Перезагружаем список после удаления
+            loadGroupPanel(); // Перезагружаем панель "Группа"
         });
 
         favoriteItem.appendChild(removeBtn);
@@ -540,13 +540,14 @@ favoriteButton.addEventListener('click', () => {
     if (!storedFavorites.some(fav => fav.name === song.name && fav.sheet === song.sheet)) {
         storedFavorites.push(song);
         localStorage.setItem('favorites', JSON.stringify(storedFavorites));
+        favorites = storedFavorites; // Обновляем массив favorites в памяти
         alert('Песня добавлена в избранное!');
+        loadFavorites(); // Перезагружаем список избранного
     } else {
         alert('Песня уже в избранном!');
     }
-
-    loadFavorites(); // Обновляем список избранного
 });
+
 
 // Функция для удаления песни из избранного
 function removeFromFavorites(fav) {
@@ -588,7 +589,7 @@ function addToSharedList(songData) {
     };
 
     addDoc(sharedListCollection, song)
-        .then(() => alert("Песня добавлена в общий список!"))
+        
         .catch((error) => console.error("Ошибка при добавлении песни:", error));
 }
 
@@ -672,7 +673,7 @@ function loadGroupPanel() {
         console.error("Контейнеры для списков не найдены.");
         return;
     }
-
+  
     myFavoritesContainer.innerHTML = ''; // Очищаем предыдущие результаты
     sharedSongsContainer.innerHTML = ''; // Очищаем предыдущие результаты
 
