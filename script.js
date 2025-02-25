@@ -543,7 +543,7 @@ favoriteButton.addEventListener('click', () => {
 
     let storedFavorites = JSON.parse(localStorage.getItem('favorites')) || [];
 
-    if (!storedFavorites.some(fav => fav.name === song.name && fav.sheet === song.sheet)) {
+    if (!storedFavorites.some(fav => fav.name === song.name && fav.sheet === fav.sheet)) {
         storedFavorites.push(song);
         localStorage.setItem('favorites', JSON.stringify(storedFavorites));
         loadFavorites(); // Динамическое обновление списка избранных песен
