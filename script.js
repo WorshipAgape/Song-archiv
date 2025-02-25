@@ -386,6 +386,9 @@ function displaySongDetails(songData, index, key) {
 
     keySelect.value = originalKey;
     keySelect.dataset.index = index;
+
+    // Вызываем функцию для транспонирования аккордов
+    updateTransposedLyrics();
 }
 
 // Обработчик кнопки Holychords
@@ -639,6 +642,7 @@ function loadSharedList(container = document.getElementById('shared-songs-list')
                 songSelect.value = song.index;
                 keySelect.value = song.key; // Устанавливаем сохраненную тональность
                 displaySongDetails(cachedData[song.sheet][song.index], song.index, song.key); // Передаем сохраненную тональность
+                updateTransposedLyrics(); // Вызываем функцию для транспонирования аккордов
             });
 
             // Кнопка удаления
