@@ -380,8 +380,8 @@ function displaySongDetails(songData, index, key) {
 
     // Обновляем содержимое страницы
     songContent.innerHTML = `
-        <h2>${songData[0]} — ${originalKey}</h2>
-        <pre>${highlightedLyrics}</pre>
+         ${songData[0]} — ${originalKey}
+${highlightedLyrics}
     `;
 
     keySelect.value = originalKey;
@@ -493,7 +493,7 @@ function loadFavorites(container = document.getElementById('favorites-list')) {
 
     favorites.forEach(fav => {
         const favoriteItem = document.createElement('div');
-        favoriteItem.textContent = fav.name;
+        favoriteItem.textContent = `${fav.name} — ${fav.key}`; // Добавляем тональность
         favoriteItem.className = 'favorite-item';
 
         // Кнопка удаления 
@@ -512,7 +512,8 @@ function loadFavorites(container = document.getElementById('favorites-list')) {
             if (e.target.tagName === 'BUTTON') return; // Игнорируем клик на кнопке
             sheetSelect.value = fav.sheet;
             songSelect.value = fav.index;
-            displaySongDetails(cachedData[fav.sheet][fav.index], fav.index);
+            keySelect.value = fav.key; // Устанавливаем сохраненную тональность
+            displaySongDetails(cachedData[fav.sheet][fav.index], fav.index, fav.key); // Передаем сохраненную тональность
         });
 
         container.appendChild(favoriteItem);
@@ -532,12 +533,13 @@ favoriteButton.addEventListener('click', () => {
     const song = {
         name: songData[0],
         sheet: sheetName,
-        index: songIndex
+        index: songIndex,
+        key: keySelect.value // Сохраняем текущую тональность
     };
 
     let storedFavorites = JSON.parse(localStorage.getItem('favorites')) || [];
 
-    if (!storedFavorites.some(fav => fav.name === song.name && fav.sheet === song.sheet)) {
+    if (!storedFavorites.some(fav => fav.name === song.name && fav.sheet === song.sheet && fav.index === song.index)) {
         storedFavorites.push(song);
         localStorage.setItem('favorites', JSON.stringify(storedFavorites));
         favorites = storedFavorites; // Обновляем массив favorites в памяти
