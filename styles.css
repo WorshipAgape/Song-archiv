@@ -208,6 +208,31 @@ body.dark-theme .chord {
     }
 }
 
+#song-content.split-columns pre {
+    column-count: 2;
+    column-gap: 13px;
+    line-height: 1.6; /* Убедимся, что высота строки достаточна */
+    position: relative; /* Добавляем относительное позиционирование */
+}
+
+#song-content.split-columns pre::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+#song-content.split-columns pre::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 1px;
+    background-color: #ccc;
+    z-index: 1;
+}
+
+
 /* Стили для выдвижной панели "Группа" */
 #favorites-panel {
     position: fixed;
