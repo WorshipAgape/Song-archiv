@@ -68,8 +68,8 @@ h1, h2 {
     border: 3px solid var(--border-color);
     border-radius: var(--radius);
     font-size: 12px; /* Увеличиваем размер шрифта */
-    width: 10%; /* Делаем кнопки шире */
-    box-sizing: border-box; /* Включаем отступы и границы в ширину */
+    width: 15%; /* Делаем кнопки шире */
+    text-align: center; /* Центрируем текст */
 }
 
 #sheet-select, #song-select, #search-input {
@@ -176,12 +176,10 @@ body.dark-theme .chord {
 
 /* Адаптивность */
 @media (max-width: 768px) {
-    #song-content pre {
-        font-size: 12px;
-        line-height: 1.4;
-    }
-    .control-buttons {
-        flex-direction: column;
+    #key-select {
+        width: 30%; /* Увеличиваем ширину на планшетах */
+        font-size: 14px; /* Увеличиваем размер шрифта */
+        margin-right: 10px; /* Добавляем отступ справа для кнопок масштабирования */
     }
 }
 
@@ -196,6 +194,11 @@ body.dark-theme .chord {
         font-size: 16px;
         padding: 12px;
     }
+     #key-select {
+        width: 40%; /* Увеличиваем ширину на смартфонах */
+        font-size: 16px; /* Увеличиваем размер шрифта */
+        margin-right: 10px; /* Добавляем отступ справа для кнопок масштабирования */}
+  
     #song-content {
         padding: 15px;
     }
