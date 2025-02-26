@@ -801,10 +801,6 @@ document.getElementById('toggle-favorites').addEventListener('click', () => {
 });
 
 
-// Функция для создания звука
-// Переменные для метронома
-let metronomeInterval = null;
-let isMetronomeActive = false;
 
 // Функция для создания звука
 function playClick() {
