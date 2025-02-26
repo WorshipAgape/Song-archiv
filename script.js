@@ -56,6 +56,8 @@ const sharedSongsList = document.getElementById('shared-songs-list');
 let metronomeInterval = null;
 let isMetronomeActive = false;
 let metronomeSound = null; // Глобальная переменная для аудиофайла
+const timeSignatureSelect = document.getElementById('time-signature');
+let currentBeat = 0; // Текущий удар в такте
 
 // Функция для загрузки данных из Google Sheets
 async function fetchSheetData(sheetName) {
@@ -828,9 +830,14 @@ async function loadMetronomeSound() {
 
 
 // Функция для создания звука
-function playClick() {
+function playClick(isAccent) {
     if (metronomeSound) {
         metronomeSound.currentTime = 0; // Возвращаем аудиофайл к началу
+        if (isAccent) {
+            metronomeSound.volume = 1.0; // Громкий звук для акцента
+        } else {
+            metronomeSound.volume = 0.5; // Тише для остальных ударов
+        }
         metronomeSound.play().catch(error => {
             console.error('Ошибка воспроизведения звука:', error);
         });
@@ -838,6 +845,8 @@ function playClick() {
         console.error("Аудиофайл метронома не загружен.");
     }
 }
+
+
 
 // Функция для запуска/остановки метронома
 function toggleMetronome(bpm) {
@@ -849,8 +858,17 @@ function toggleMetronome(bpm) {
         document.getElementById('metronome-button').textContent = '▶️ Включить метроном';
     } else {
         // Запускаем метроном
+        const beatsPerMeasure = parseInt(timeSignatureSelect.value, 10); // Количество ударов в такте
         const interval = (60000 / bpm); // Вычисляем интервал в миллисекундах
-        metronomeInterval = setInterval(playClick, interval);
+
+        currentBeat = 0; // Сбрасываем текущий удар
+        metronomeInterval = setInterval(() => {
+            const isAccent = currentBeat === 0; // Акцент на первый удар
+            playClick(isAccent);
+
+            currentBeat = (currentBeat + 1) % beatsPerMeasure; // Переходим к следующему удару
+        }, interval);
+
         isMetronomeActive = true;
         document.getElementById('metronome-button').textContent = '⏹️ Выключить метроном';
     }
