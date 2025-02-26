@@ -802,24 +802,42 @@ document.getElementById('toggle-favorites').addEventListener('click', () => {
 
 
 // Функция для создания звука
-function playClick(isFirstBeat) {
-    if (!audioContext) {
-        audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    }
+// Переменные для метронома
+let metronomeInterval = null;
+let isMetronomeActive = false;
 
-    const oscillator = audioContext.createOscillator();
+// Функция для создания звука
+function playClick() {
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+    // Создаем два осциллятора для более богатого звука
+    const oscillator1 = audioContext.createOscillator();
+    const oscillator2 = audioContext.createOscillator();
     const gainNode = audioContext.createGain();
 
-    oscillator.connect(gainNode);
+    // Настройка осцилляторов
+    oscillator1.type = 'square'; // Квадратная волна для основного тона
+    oscillator1.frequency.setValueAtTime(1000, audioContext.currentTime); // Частота 1000 Гц
+
+    oscillator2.type = 'sine'; // Синусоидальная волна для мягкости
+    oscillator2.frequency.setValueAtTime(1500, audioContext.currentTime); // Частота 1500 Гц
+
+    // Подключаем осцилляторы к узлу усиления
+    oscillator1.connect(gainNode);
+    oscillator2.connect(gainNode);
     gainNode.connect(audioContext.destination);
 
-    // Настройка звука (частота и длительность)
-    oscillator.frequency.setValueAtTime(isFirstBeat ? 800 : 400, audioContext.currentTime); // Разные частоты для долей
-    gainNode.gain.setValueAtTime(1, audioContext.currentTime);
+    // Настройка затухания звука
+    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime); // Уменьшаем громкость
     gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.1); // Затухание за 0.1 секунды
 
-    oscillator.start();
-    oscillator.stop(audioContext.currentTime + 0.1);
+    // Запускаем осцилляторы
+    oscillator1.start();
+    oscillator2.start();
+
+    // Останавливаем осцилляторы после короткого времени
+    oscillator1.stop(audioContext.currentTime + 0.1);
+    oscillator2.stop(audioContext.currentTime + 0.1);
 }
 
 // Функция для запуска/остановки метронома
@@ -833,14 +851,7 @@ function toggleMetronome(bpm) {
     } else {
         // Запускаем метроном
         const interval = (60000 / bpm); // Вычисляем интервал в миллисекундах
-        let beatCount = 0; // Счетчик долей
-
-        metronomeInterval = setInterval(() => {
-            const isFirstBeat = beatCount % 4 === 0; // Первая доля такта
-            playClick(isFirstBeat);
-            beatCount++;
-        }, interval);
-
+        metronomeInterval = setInterval(playClick, interval);
         isMetronomeActive = true;
         document.getElementById('metronome-button').textContent = '⏹️ Выключить метроном';
     }
