@@ -56,8 +56,6 @@ const sharedSongsList = document.getElementById('shared-songs-list');
 let metronomeInterval = null;
 let isMetronomeActive = false;
 let metronomeSound = null; // Глобальная переменная для аудиофайла
-const timeSignatureSelect = document.getElementById('time-signature');
-let currentBeat = 0; // Текущий удар в такте
 
 // Функция для загрузки данных из Google Sheets
 async function fetchSheetData(sheetName) {
@@ -815,7 +813,7 @@ document.getElementById('toggle-favorites').addEventListener('click', () => {
 
 async function loadMetronomeSound() {
     const storage = getStorage(app);
-    const soundRef = ref(storage, 'https://firebasestorage.googleapis.com/v0/b/song-archive-389a6.firebasestorage.app/o/metronome-85688%20(mp3cut.net).mp3?alt=media&token=97b66349-7568-43eb-80c3-c2278ff38c10'); // Путь к файлу в Firebase Storage
+    const soundRef = ref(storage, 'https://firebasestorage.googleapis.com/v0/b/song-archive-389a6.firebasestorage.app/o/metronome-85688.mp3?alt=media&token=ea147cdf-8ae5-42f8-a174-783d91055950'); // Путь к файлу в Firebase Storage
 
     try {
         const downloadURL = await getDownloadURL(soundRef); // Получаем публичную ссылку
@@ -830,14 +828,9 @@ async function loadMetronomeSound() {
 
 
 // Функция для создания звука
-function playClick(isAccent) {
+function playClick() {
     if (metronomeSound) {
         metronomeSound.currentTime = 0; // Возвращаем аудиофайл к началу
-        if (isAccent) {
-            metronomeSound.volume = 1.0; // Громкий звук для акцента
-        } else {
-            metronomeSound.volume = 0.5; // Тише для остальных ударов
-        }
         metronomeSound.play().catch(error => {
             console.error('Ошибка воспроизведения звука:', error);
         });
@@ -845,8 +838,6 @@ function playClick(isAccent) {
         console.error("Аудиофайл метронома не загружен.");
     }
 }
-
-
 
 // Функция для запуска/остановки метронома
 function toggleMetronome(bpm) {
@@ -858,17 +849,8 @@ function toggleMetronome(bpm) {
         document.getElementById('metronome-button').textContent = '▶️ Включить метроном';
     } else {
         // Запускаем метроном
-        const beatsPerMeasure = parseInt(timeSignatureSelect.value, 10); // Количество ударов в такте
         const interval = (60000 / bpm); // Вычисляем интервал в миллисекундах
-
-        currentBeat = 0; // Сбрасываем текущий удар
-        metronomeInterval = setInterval(() => {
-            const isAccent = currentBeat === 0; // Акцент на первый удар
-            playClick(isAccent);
-
-            currentBeat = (currentBeat + 1) % beatsPerMeasure; // Переходим к следующему удару
-        }, interval);
-
+        metronomeInterval = setInterval(playClick, interval);
         isMetronomeActive = true;
         document.getElementById('metronome-button').textContent = '⏹️ Выключить метроном';
     }
@@ -886,9 +868,18 @@ document.getElementById('metronome-button').addEventListener('click', () => {
     }
 });
 
-// Обновление BPM при выборе песни
+bpmDisplay.addEventListener('blur', () => {
+    const newBPM = parseInt(bpmDisplay.textContent, 10);
+    if (!isNaN(newBPM) && newBPM > 0) {
+        updateBPM(newBPM); // Обновляем BPM
+    } else {
+        alert('Введите корректное значение BPM.');
+        bpmDisplay.textContent = '-'; // Сбрасываем значение
+    }
+});
+
+// Функция обновления BPM
 function updateBPM(newBPM) {
-    const bpmDisplay = document.getElementById('bpm-display');
     bpmDisplay.textContent = newBPM || '-';
     if (isMetronomeActive) {
         toggleMetronome(newBPM); // Перезапускаем метроном с новым BPM
