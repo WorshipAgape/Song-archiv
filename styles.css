@@ -512,3 +512,9 @@ button:hover {
     font-size: 14px;
     padding: 10px;
 }
+
+#time-signature {
+    padding: 8px;
+    width: 20%;
+  
+}
