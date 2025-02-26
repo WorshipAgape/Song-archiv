@@ -84,6 +84,8 @@ select, input, button {
     display: flex;
     gap: 8px;
     margin-top: 0; /* Убираем отступ сверху */
+
+
 }
 
 .font-size-controls button {
@@ -93,6 +95,8 @@ select, input, button {
     border-radius: var(--radius);
     cursor: pointer;
 }
+
+
 
 #key-select {
     padding: 8px 5px; /* Увеличиваем отступы */
@@ -198,14 +202,34 @@ button:active {
     transition: all 0.3s ease;
 }
 
+/* Стиль для кнопки размера (time-signature) */
 #time-signature {
-    padding: 8px;
-    width: 20%;
-    font-size: 15px;
-    border: 1px solid var(--border-color);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 14px; /* Увеличенные отступы для лучшей видимости */
+    font-size: 1rem; /* Размер шрифта адаптирован под мобильные устройства */
+    border: 2px solid var(--border-color); /* Утолщенные границы для акцента */
     border-radius: var(--radius);
-    margin-right: 20px;
+    background: #fff;
+    color: var(--text-color);
+    box-shadow: var(--shadow); /* Добавляем тень для объемного эффекта */
+    transition: all 0.3s ease; /* Плавные переходы */
+    min-width: 60px; /* Минимальная ширина для удобства нажатия */
     text-align: center;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+#time-signature:hover {
+    transform: translateY(-2px); /* Легкий подъем при наведении */
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15); /* Усиленная тень */
+    background-color: var(--hover-color); /* Изменение фона */
+}
+
+#time-signature:active {
+    transform: translateY(0); /* Возвращаем на место при нажатии */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Уменьшаем тень */
 }
 
 /* Стиль для ссылки Holychords */
@@ -514,7 +538,8 @@ button:hover {
 }
 
 #time-signature {
-    padding: 8px;
-    width: 20%;
-  
+        font-size: 16px;
+        padding: 12px;
+        min-width: 70px;
+    }
 }
