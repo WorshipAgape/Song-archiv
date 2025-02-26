@@ -50,6 +50,10 @@ const favoritesList = document.getElementById('favorites-list');
 const sharedSongsList = document.getElementById('shared-songs-list');
 
 
+// Переменные для метронома
+let metronomeInterval = null;
+let isMetronomeActive = false;
+
 // Функция для загрузки данных из Google Sheets
 async function fetchSheetData(sheetName) {
     if (cachedData[sheetName]) return cachedData[sheetName];
@@ -365,6 +369,9 @@ function displaySongDetails(songData, index, key) {
     const bpm = songData[4] || 'N/A';
     const lyrics = songData[1] || '';
     const sourceUrl = songData[3] || '#';
+
+// Обновляем BPM
+    updateBPM(bpm);
 
     bpmDisplay.textContent = bpm;
 
@@ -753,6 +760,23 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+document.addEventListener('DOMContentLoaded', () => {
+    // Инициализация метронома
+    const metronomeButton = document.getElementById('metronome-button');
+    if (metronomeButton) {
+        metronomeButton.addEventListener('click', () => {
+            const bpmDisplay = document.getElementById('bpm-display');
+            const bpm = parseInt(bpmDisplay.textContent, 10);
+
+            if (!isNaN(bpm) && bpm > 0) {
+                toggleMetronome(bpm);
+            } else {
+                alert('BPM не указан или некорректен.');
+            }
+        });
+    }
+});
+
     loadAllSheetsData(); // Загружаем данные при старте
     loadFavorites(); // Загружаем избранные песни
     loadSharedList(); // Загружаем общий список песен
@@ -785,9 +809,7 @@ document.getElementById('toggle-controls').addEventListener('click', () => {
 });
 
 
-// Переменные для метронома
-let metronomeInterval = null;
-let isMetronomeActive = false;
+
 
 // Функция для создания звука
 function playClick() {
@@ -840,7 +862,9 @@ document.getElementById('metronome-button').addEventListener('click', () => {
 function updateBPM(newBPM) {
     const bpmDisplay = document.getElementById('bpm-display');
     bpmDisplay.textContent = newBPM || '-';
+
     if (isMetronomeActive) {
-        toggleMetronome(newBPM); // Перезапускаем метроном с новым BPM
+        // Если метроном активен, перезапускаем его с новым BPM
+        toggleMetronome(newBPM);
     }
 }
