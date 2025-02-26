@@ -53,6 +53,7 @@ const sharedSongsList = document.getElementById('shared-songs-list');
 // Переменные для метронома
 let metronomeInterval = null;
 let isMetronomeActive = false;
+let audioContext = null; // Общий AudioContext для метронома
 
 // Функция для загрузки данных из Google Sheets
 async function fetchSheetData(sheetName) {
@@ -802,17 +803,20 @@ document.getElementById('toggle-favorites').addEventListener('click', () => {
 
 // Функция для создания звука
 function playClick(isFirstBeat) {
-    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    if (!audioContext) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    }
+
     const oscillator = audioContext.createOscillator();
     const gainNode = audioContext.createGain();
 
     oscillator.connect(gainNode);
     gainNode.connect(audioContext.destination);
 
-    // Настройка звука
-    oscillator.frequency.setValueAtTime(isFirstBeat ? 800 : 400, audioContext.currentTime); // Частота для первой и остальных долей
+    // Настройка звука (частота и длительность)
+    oscillator.frequency.setValueAtTime(isFirstBeat ? 800 : 400, audioContext.currentTime); // Разные частоты для долей
     gainNode.gain.setValueAtTime(1, audioContext.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.1); // Короткий щелчок
+    gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.1); // Затухание за 0.1 секунды
 
     oscillator.start();
     oscillator.stop(audioContext.currentTime + 0.1);
@@ -828,7 +832,7 @@ function toggleMetronome(bpm) {
         document.getElementById('metronome-button').textContent = '▶️ Включить метроном';
     } else {
         // Запускаем метроном
-        const interval = (60000 / bpm); // Интервал между ударами
+        const interval = (60000 / bpm); // Вычисляем интервал в миллисекундах
         let beatCount = 0; // Счетчик долей
 
         metronomeInterval = setInterval(() => {
