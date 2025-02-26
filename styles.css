@@ -200,11 +200,11 @@ button:active {
 
 #time-signature {
     padding: 8px;
-    width: 14%;
+    width: 20%;
     font-size: 15px;
     border: 1px solid var(--border-color);
     border-radius: var(--radius);
-    margin-right: 10px;
+    margin-right: 20px;
     text-align: center;
 }
 
