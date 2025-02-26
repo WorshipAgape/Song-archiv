@@ -362,7 +362,7 @@ function displaySongDetails(songData, index, key) {
     if (!songData) return;
 
     const originalKey = key || songData[2]; // Используем сохраненную тональность, если она передана
-    cconst bpm = songData[4] || 'N/A'; // BPM из данных песни
+    const bpm = songData[4] || 'N/A'; // BPM из данных песни
     updateBPM(bpm);
     const lyrics = songData[1] || '';
     const sourceUrl = songData[3] || '#';
