@@ -129,6 +129,14 @@ h1, h2 {
     transition: all 0.3s ease;
 }
 
+#time-signature {
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    margin-right: 10px;
+}
+
 /* Стиль для ссылки Holychords */
 #holychords-button {
     display: inline-block;
