@@ -799,17 +799,6 @@ document.getElementById('toggle-favorites').addEventListener('click', () => {
     }
 });
 
-document.getElementById('toggle-controls').addEventListener('click', () => {
-    const controls = document.querySelector('.controls');
-    if (!controls) return;
-
-    controls.classList.toggle('hidden');
-    const buttonText = controls.classList.contains('hidden') ? 'Показать управление' : 'Скрыть управление';
-    document.getElementById('toggle-controls').textContent = buttonText;
-});
-
-
-
 
 // Функция для создания звука
 function playClick() {
