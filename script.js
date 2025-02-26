@@ -813,7 +813,7 @@ document.getElementById('toggle-favorites').addEventListener('click', () => {
 
 async function loadMetronomeSound() {
     const storage = getStorage(app);
-    const soundRef = ref(storage, 'metronome-85688.mp3'); // Путь к файлу в Firebase Storage
+    const soundRef = ref(storage, 'https://firebasestorage.googleapis.com/v0/b/song-archive-389a6.firebasestorage.app/o/metronome-85688.mp3?alt=media&token=ea147cdf-8ae5-42f8-a174-783d91055950'); // Путь к файлу в Firebase Storage
 
     try {
         const downloadURL = await getDownloadURL(soundRef); // Получаем публичную ссылку
