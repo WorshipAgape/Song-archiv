@@ -50,14 +50,14 @@ h1, h2 {
     text-align: center;
     color: var(--primary-color);
     margin-bottom: 15px;
-    font-size: 1.5rem;
+    font-size: 1.8rem;
 }
 
 /* Панель управления */
 .controls {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 10px;
     margin-bottom: 15px;
 }
 
@@ -99,7 +99,7 @@ select, input, button {
 
 #key-select {
     padding: 8px 5px; /* Увеличиваем отступы */
-    border: 2px solid var(--border-color);
+    border: 3px solid var(--border-color);
     border-radius: var(--radius);
     font-size: 12px; /* Увеличиваем размер шрифта */
     width: 15%; /* Делаем кнопки шире */
@@ -108,9 +108,9 @@ select, input, button {
 
 #sheet-select, #song-select, #search-input {
     padding: 5px 15px; /* Увеличиваем отступы */
-    border: 2px solid var(--border-color);
+    border: 3px solid var(--border-color);
     border-radius: var(--radius);
-    font-size: 15px; /* Увеличиваем размер шрифта */
+    font-size: 17px; /* Увеличиваем размер шрифта */
     width: 100%; /* Делаем кнопки шире */
     box-sizing: border-box; /* Включаем отступы и границы в ширину */
 }
@@ -280,7 +280,7 @@ button:active {
     word-wrap: break-word;
     overflow-wrap: anywhere;
     line-height: 1.6;
-    font-size: clamp(10px, 2vw, 16px);
+    font-size: clamp(14px, 2vw, 20px);
     color: var(--text-color);
     margin: 0;
     max-width: 100%;
