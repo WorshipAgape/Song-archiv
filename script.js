@@ -801,7 +801,7 @@ document.getElementById('toggle-favorites').addEventListener('click', () => {
 
 
 // Функция для создания звука
-function playClick() {
+function playClick(isFirstBeat) {
     const audioContext = new (window.AudioContext || window.webkitAudioContext)();
     const oscillator = audioContext.createOscillator();
     const gainNode = audioContext.createGain();
@@ -809,10 +809,10 @@ function playClick() {
     oscillator.connect(gainNode);
     gainNode.connect(audioContext.destination);
 
-    // Настройка звука (частота и длительность)
-    oscillator.frequency.setValueAtTime(800, audioContext.currentTime); // Частота щелчка
+    // Настройка звука
+    oscillator.frequency.setValueAtTime(isFirstBeat ? 800 : 400, audioContext.currentTime); // Частота для первой и остальных долей
     gainNode.gain.setValueAtTime(1, audioContext.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.1); // Затухание
+    gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.1); // Короткий щелчок
 
     oscillator.start();
     oscillator.stop(audioContext.currentTime + 0.1);
@@ -828,8 +828,15 @@ function toggleMetronome(bpm) {
         document.getElementById('metronome-button').textContent = '▶️ Включить метроном';
     } else {
         // Запускаем метроном
-        const interval = (60000 / bpm); // Вычисляем интервал в миллисекундах
-        metronomeInterval = setInterval(playClick, interval);
+        const interval = (60000 / bpm); // Интервал между ударами
+        let beatCount = 0; // Счетчик долей
+
+        metronomeInterval = setInterval(() => {
+            const isFirstBeat = beatCount % 4 === 0; // Первая доля такта
+            playClick(isFirstBeat);
+            beatCount++;
+        }, interval);
+
         isMetronomeActive = true;
         document.getElementById('metronome-button').textContent = '⏹️ Выключить метроном';
     }
@@ -851,9 +858,7 @@ document.getElementById('metronome-button').addEventListener('click', () => {
 function updateBPM(newBPM) {
     const bpmDisplay = document.getElementById('bpm-display');
     bpmDisplay.textContent = newBPM || '-';
-
     if (isMetronomeActive) {
-        // Если метроном активен, перезапускаем его с новым BPM
-        toggleMetronome(newBPM);
+        toggleMetronome(newBPM); // Перезапускаем метроном с новым BPM
     }
 }
