@@ -12,9 +12,12 @@ const firebaseConfig = {
 // Initialize Firebase
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import { getFirestore, collection, addDoc, query, onSnapshot, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+import { getStorage, ref, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js";
+
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const storage = getStorage(app);
 
 // Reference to the shared list collection
 const sharedListCollection = collection(db, "sharedList");
@@ -50,10 +53,9 @@ const favoritesList = document.getElementById('favorites-list');
 const sharedSongsList = document.getElementById('shared-songs-list');
 
 
-// Переменные для метронома
 let metronomeInterval = null;
 let isMetronomeActive = false;
-let audioContext = null; // Общий AudioContext для метронома
+let metronomeSound = null; // Глобальная переменная для аудиофайла
 
 // Функция для загрузки данных из Google Sheets
 async function fetchSheetData(sheetName) {
@@ -743,6 +745,11 @@ async function deleteFromSharedList(docId) {
     loadGroupPanel(); // Перезагружаем панель "Группа"
 }
 
+// Загрузка аудиофайла при старте
+document.addEventListener('DOMContentLoaded', () => {
+    loadMetronomeSound(); // Загружаем аудиофайл метронома
+});
+
 // Загрузка списка при старте
 document.addEventListener('DOMContentLoaded', () => {
     const toggleFavoritesButton = document.getElementById('toggle-favorites');
@@ -802,38 +809,34 @@ document.getElementById('toggle-favorites').addEventListener('click', () => {
 
 
 
+
+
+async function loadMetronomeSound() {
+    const storage = getStorage(app);
+    const soundRef = ref(storage, 'metronome-85688.mp3'); // Путь к файлу в Firebase Storage
+
+    try {
+        const downloadURL = await getDownloadURL(soundRef); // Получаем публичную ссылку
+        metronomeSound = new Audio(downloadURL); // Создаем объект Audio
+        console.log("Аудиофайл метронома успешно загружен.");
+    } catch (error) {
+        console.error("Ошибка загрузки аудиофайла:", error);
+    }
+}
+
+
+
+
 // Функция для создания звука
 function playClick() {
-    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-
-    // Создаем два осциллятора для более богатого звука
-    const oscillator1 = audioContext.createOscillator();
-    const oscillator2 = audioContext.createOscillator();
-    const gainNode = audioContext.createGain();
-
-    // Настройка осцилляторов
-    oscillator1.type = 'square'; // Квадратная волна для основного тона
-    oscillator1.frequency.setValueAtTime(1000, audioContext.currentTime); // Частота 1000 Гц
-
-    oscillator2.type = 'sine'; // Синусоидальная волна для мягкости
-    oscillator2.frequency.setValueAtTime(1500, audioContext.currentTime); // Частота 1500 Гц
-
-    // Подключаем осцилляторы к узлу усиления
-    oscillator1.connect(gainNode);
-    oscillator2.connect(gainNode);
-    gainNode.connect(audioContext.destination);
-
-    // Настройка затухания звука
-    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime); // Уменьшаем громкость
-    gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.1); // Затухание за 0.1 секунды
-
-    // Запускаем осцилляторы
-    oscillator1.start();
-    oscillator2.start();
-
-    // Останавливаем осцилляторы после короткого времени
-    oscillator1.stop(audioContext.currentTime + 0.1);
-    oscillator2.stop(audioContext.currentTime + 0.1);
+    if (metronomeSound) {
+        metronomeSound.currentTime = 0; // Возвращаем аудиофайл к началу
+        metronomeSound.play().catch(error => {
+            console.error('Ошибка воспроизведения звука:', error);
+        });
+    } else {
+        console.error("Аудиофайл метронома не загружен.");
+    }
 }
 
 // Функция для запуска/остановки метронома
