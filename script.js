@@ -362,7 +362,8 @@ function displaySongDetails(songData, index, key) {
     if (!songData) return;
 
     const originalKey = key || songData[2]; // Используем сохраненную тональность, если она передана
-    const bpm = songData[4] || 'N/A';
+    cconst bpm = songData[4] || 'N/A'; // BPM из данных песни
+    updateBPM(bpm);
     const lyrics = songData[1] || '';
     const sourceUrl = songData[3] || '#';
 
@@ -783,3 +784,64 @@ document.getElementById('toggle-controls').addEventListener('click', () => {
     const buttonText = controls.classList.contains('hidden') ? 'Показать управление' : 'Скрыть управление';
     document.getElementById('toggle-controls').textContent = buttonText;
 });
+
+
+// Переменные для метронома
+let metronomeInterval = null;
+let isMetronomeActive = false;
+
+// Функция для создания звука
+function playClick() {
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+
+    // Настройка звука (частота и длительность)
+    oscillator.frequency.setValueAtTime(800, audioContext.currentTime); // Частота щелчка
+    gainNode.gain.setValueAtTime(1, audioContext.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.1); // Затухание
+
+    oscillator.start();
+    oscillator.stop(audioContext.currentTime + 0.1);
+}
+
+// Функция для запуска/остановки метронома
+function toggleMetronome(bpm) {
+    if (isMetronomeActive) {
+        // Останавливаем метроном
+        clearInterval(metronomeInterval);
+        metronomeInterval = null;
+        isMetronomeActive = false;
+        document.getElementById('metronome-button').textContent = '▶️ Включить метроном';
+    } else {
+        // Запускаем метроном
+        const interval = (60000 / bpm); // Вычисляем интервал в миллисекундах
+        metronomeInterval = setInterval(playClick, interval);
+        isMetronomeActive = true;
+        document.getElementById('metronome-button').textContent = '⏹️ Выключить метроном';
+    }
+}
+
+// Обработчик кнопки метронома
+document.getElementById('metronome-button').addEventListener('click', () => {
+    const bpmDisplay = document.getElementById('bpm-display');
+    const bpm = parseInt(bpmDisplay.textContent, 10);
+
+    if (!isNaN(bpm) && bpm > 0) {
+        toggleMetronome(bpm);
+    } else {
+        alert('BPM не указан или некорректен.');
+    }
+});
+
+// Обновление BPM при выборе песни
+function updateBPM(newBPM) {
+    const bpmDisplay = document.getElementById('bpm-display');
+    bpmDisplay.textContent = newBPM || '-';
+    if (isMetronomeActive) {
+        toggleMetronome(newBPM); // Перезапускаем метроном с новым BPM
+    }
+}
