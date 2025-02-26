@@ -294,17 +294,22 @@ body.dark-theme .chord {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 5px 0;
-    border-bottom: 1px solid #eee;
+    padding: 10px;
+    border-bottom: 1px solid #eaeaea; /* Граница между элементами */
+    border-radius: 4px; /* Скругленные углы */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Легкая тень */
+    margin-bottom: 8px; /* Отступ между элементами */
+    transition: background-color 0.2s ease; /* Плавный переход при наведении */
 }
 
 .favorite-item:last-child, .shared-item:last-child {
-    border-bottom: none;
+    border-bottom: none; /* Убираем границу для последнего элемента */
 }
 
-.favorites-list div:hover, .shared-item:hover {
-    background-color: #f0f8ff;
+.favorite-item:hover, .shared-item:hover {
+    background-color: #f0f8ff; /* Светло-голубой фон при наведении */
 }
+
 
 .song-name {
     flex-grow: 1;
@@ -379,4 +384,3 @@ button:hover {
     font-size: 14px;
     padding: 10px;
 }
-
