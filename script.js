@@ -509,12 +509,31 @@ function loadFavorites(container = document.getElementById('favorites-list')) {
         favoriteItem.appendChild(removeBtn);
 
         // Обработчик клика по песне
-        favoriteItem.addEventListener('click', (e) => {
+        favoriteItem.addEventListener('click', async (e) => {
             if (e.target.tagName === 'BUTTON') return; // Игнорируем клик на кнопке
-            sheetSelect.value = fav.sheet;
-            songSelect.value = fav.index;
-            keySelect.value = fav.key; // Устанавливаем сохраненную тональность
-            displaySongDetails(cachedData[fav.sheet][fav.index], fav.index, fav.key); // Передаем сохраненную тональность
+
+            const sheetName = fav.sheet;
+            const songIndex = fav.index;
+
+            // Устанавливаем выбранный лист
+            sheetSelect.value = Object.keys(SHEETS).find(key => SHEETS[key] === sheetName);
+
+            // Загружаем данные листа, если они ещё не загружены
+            if (!cachedData[sheetName]) {
+                await fetchSheetData(sheetName);
+            }
+
+            // Обновляем выпадающий список песен
+            await loadSheetSongs();
+
+            // Устанавливаем выбранную песню
+            songSelect.value = songIndex;
+
+            // Отображаем детали песни
+            displaySongDetails(cachedData[sheetName][songIndex], songIndex, fav.key);
+
+            // Обновляем транспонирование аккордов
+            updateTransposedLyrics();
         });
 
         container.appendChild(favoriteItem);
