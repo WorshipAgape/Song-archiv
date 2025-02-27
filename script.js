@@ -820,19 +820,13 @@ function setupAudioContext() {
 
 
 async function loadAudioFile() {
-    const proxyUrl = 'https://your-proxy-server.com/?url=';
     const fileUrl = 'https://firebasestorage.googleapis.com/v0/b/song-archive-389a6.firebasestorage.app/o/metronome-85688.mp3?alt=media&token=ea147cdf-8ae5-42f8-a174-783d91055950';
 
     try {
-        const response = await fetch(proxyUrl + encodeURIComponent(fileUrl));
-        const arrayBuffer = await response.arrayBuffer();
-
-        if (!audioContext) {
-            audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        }
-
-        audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-        console.log("Аудиофайл успешно загружен и декодирован.");
+        const response = await fetch(fileUrl, { mode: 'no-cors' });
+        const blob = await response.blob();
+        metronomeSound = new Audio(URL.createObjectURL(blob));
+        console.log("Аудиофайл успешно загружен.");
     } catch (error) {
         console.error('Ошибка загрузки аудиофайла:', error);
     }
