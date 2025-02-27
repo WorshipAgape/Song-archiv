@@ -63,6 +63,24 @@ document.addEventListener('DOMContentLoaded', () => {
     loadAudioFile(); // Загружаем аудиофайл при старте
 });
 
+function setupAudioContext() {
+    if (!audioContext) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    }
+}
+
+
+// Функция для возобновления AudioContext при пользовательском действии
+function resumeAudioContext() {
+    if (audioContext && audioContext.state === 'suspended') {
+        audioContext.resume().then(() => {
+            console.log('AudioContext успешно возобновлен.');
+        }).catch((error) => {
+            console.error('Ошибка возобновления AudioContext:', error);
+        });
+    }
+}
+
 // Функция для загрузки данных из Google Sheets
 async function fetchSheetData(sheetName) {
     if (cachedData[sheetName]) return cachedData[sheetName];
@@ -811,22 +829,8 @@ document.getElementById('toggle-favorites').addEventListener('click', () => {
 
 
 
-function setupAudioContext() {
-    if (!audioContext) {
-        audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    }
-}
 
-// Функция для возобновления AudioContext при пользовательском действии
-function resumeAudioContext() {
-    if (audioContext && audioContext.state === 'suspended') {
-        audioContext.resume().then(() => {
-            console.log('AudioContext успешно возобновлен.');
-        }).catch((error) => {
-            console.error('Ошибка возобновления AudioContext:', error);
-        });
-    }
-}
+
 
 
 async function loadAudioFile() {
