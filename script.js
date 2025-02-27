@@ -59,27 +59,10 @@ let audioContext;
 let audioBuffer;
 let currentBeat = 0;
 
+// Загрузка аудиофайла при старте
 document.addEventListener('DOMContentLoaded', () => {
     loadAudioFile(); // Загружаем аудиофайл при старте
 });
-
-function setupAudioContext() {
-    if (!audioContext) {
-        audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    }
-}
-
-
-// Функция для возобновления AudioContext при пользовательском действии
-function resumeAudioContext() {
-    if (audioContext && audioContext.state === 'suspended') {
-        audioContext.resume().then(() => {
-            console.log('AudioContext успешно возобновлен.');
-        }).catch((error) => {
-            console.error('Ошибка возобновления AudioContext:', error);
-        });
-    }
-}
 
 // Функция для загрузки данных из Google Sheets
 async function fetchSheetData(sheetName) {
@@ -833,12 +816,29 @@ document.getElementById('toggle-favorites').addEventListener('click', () => {
 
 
 
+// Настройка AudioContext
+function setupAudioContext() {
+    if (!audioContext) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    }
+}
+
+// Возобновление AudioContext при пользовательском действии
+function resumeAudioContext() {
+    if (audioContext && audioContext.state === 'suspended') {
+        audioContext.resume().then(() => {
+            console.log('AudioContext успешно возобновлен.');
+        }).catch((error) => {
+            console.error('Ошибка возобновления AudioContext:', error);
+        });
+    }
+}
+
+// Загрузка аудиофайла
 async function loadAudioFile() {
     const fileUrl = 'https://firebasestorage.googleapis.com/v0/b/song-archive-389a6.firebasestorage.app/o/metronome-85688%20(mp3cut.net).mp3?alt=media&token=97b66349-7568-43eb-80c3-c2278ff38c10';
     try {
-        if (!audioContext) {
-            audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        }
+        setupAudioContext(); // Инициализируем AudioContext
         const response = await fetch(fileUrl);
         const arrayBuffer = await response.arrayBuffer();
         audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
@@ -848,24 +848,15 @@ async function loadAudioFile() {
     }
 }
 
-async function loadMetronomeSound() {
-    const storage = getStorage(app);
-    const soundRef = ref(storage, 'metronome-85688.mp3');
-
-    try {
-        const downloadURL = await getDownloadURL(soundRef);
-        metronomeSound = new Audio(downloadURL);
-        console.log("Аудиофайл метронома успешно загружен.");
-    } catch (error) {
-        console.error("Ошибка загрузки аудиофайла:", error);
-    }
-}
-
+// Воспроизведение щелчка метронома
 function playClick() {
     if (!audioContext || !audioBuffer) {
         console.error("Аудиофайл не загружен.");
         return;
     }
+
+    // Возобновляем AudioContext, если он приостановлен
+    resumeAudioContext();
 
     const timeSignature = document.getElementById('time-signature').value;
     const beatsPerMeasure = parseInt(timeSignature.split('/')[0], 10);
@@ -873,16 +864,18 @@ function playClick() {
     const source = audioContext.createBufferSource();
     source.buffer = audioBuffer;
 
+    // Настройка громкости: акцент на первый удар
     const gainNode = audioContext.createGain();
-    gainNode.gain.value = currentBeat % beatsPerMeasure === 0 ? 1 : 0.5; // Акцент на первый удар
+    gainNode.gain.value = currentBeat % beatsPerMeasure === 0 ? 1 : 0.5;
+
     source.connect(gainNode);
     gainNode.connect(audioContext.destination);
 
     source.start();
-
     currentBeat = (currentBeat + 1) % beatsPerMeasure;
 }
 
+// Переключение метронома
 function toggleMetronome(bpm) {
     if (isMetronomeActive) {
         clearInterval(metronomeInterval);
@@ -900,8 +893,10 @@ function toggleMetronome(bpm) {
     }
 }
 
+// Обработчик кнопки метронома
 document.getElementById('metronome-button').addEventListener('click', () => {
     resumeAudioContext(); // Возобновляем AudioContext при нажатии на кнопку
+
     const bpmDisplay = document.getElementById('bpm-display');
     const bpm = parseInt(bpmDisplay.textContent, 10);
 
@@ -912,8 +907,10 @@ document.getElementById('metronome-button').addEventListener('click', () => {
     }
 });
 
+// Обновление BPM
 document.getElementById('bpm-display').addEventListener('blur', () => {
     const newBPM = parseInt(document.getElementById('bpm-display').textContent, 10);
+
     if (!isNaN(newBPM) && newBPM > 0) {
         updateBPM(newBPM);
     } else {
@@ -924,6 +921,7 @@ document.getElementById('bpm-display').addEventListener('blur', () => {
 
 function updateBPM(newBPM) {
     document.getElementById('bpm-display').textContent = newBPM || '-';
+
     if (isMetronomeActive) {
         toggleMetronome(newBPM);
     }
