@@ -55,10 +55,9 @@ const sharedSongsList = document.getElementById('shared-songs-list');
 
 let metronomeInterval = null;
 let isMetronomeActive = false;
-
-// Инициализация AudioContext
 let audioContext;
-let oscillator;
+let audioBuffer;
+let currentBeat = 0;
 
 document.addEventListener('DOMContentLoaded', () => {
     loadAudioFile(); // Загружаем аудиофайл при старте
@@ -818,19 +817,15 @@ function setupAudioContext() {
     }
 }
 
-
 async function loadAudioFile() {
-    const fileUrl = 'https://firebasestorage.googleapis.com/v0/b/song-archive-389a6.firebasestorage.app/o/metronome-85688.mp3?alt=media&token=ea147cdf-8ae5-42f8-a174-783d91055950';
-
+    const fileUrl = 'https://firebasestorage.googleapis.com/v0/b/song-archive-389a6.firebasestorage.app/o/metronome-85688%20(mp3cut.net).mp3?alt=media&token=97b66349-7568-43eb-80c3-c2278ff38c10';
     try {
         if (!audioContext) {
             audioContext = new (window.AudioContext || window.webkitAudioContext)();
         }
-
         const response = await fetch(fileUrl);
         const arrayBuffer = await response.arrayBuffer();
         audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-
         console.log("Аудиофайл успешно загружен.");
     } catch (error) {
         console.error('Ошибка загрузки аудиофайла:', error);
@@ -843,49 +838,45 @@ function playClick() {
         return;
     }
 
+    const timeSignature = document.getElementById('time-signature').value;
+    const beatsPerMeasure = parseInt(timeSignature.split('/')[0], 10);
+
     const source = audioContext.createBufferSource();
     source.buffer = audioBuffer;
-    source.connect(audioContext.destination);
+
+    const gainNode = audioContext.createGain();
+    gainNode.gain.value = currentBeat % beatsPerMeasure === 0 ? 1 : 0.5; // Акцент на первый удар
+    source.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+
     source.start();
+
+    currentBeat = (currentBeat + 1) % beatsPerMeasure;
 }
 
-
-
-// Функция для создания звука
-function playClick() {
-    if (!audioContext || !audioBuffer) {
-        console.error("Аудиофайл не загружен.");
-        return;
-    }
-
-    playAudioBuffer();
-}
-
-// Функция для запуска/остановки метронома
 function toggleMetronome(bpm) {
     if (isMetronomeActive) {
-        // Останавливаем метроном
         clearInterval(metronomeInterval);
         metronomeInterval = null;
         isMetronomeActive = false;
         document.getElementById('metronome-button').textContent = '▶️ Включить метроном';
     } else {
-        // Запускаем метроном
-        const interval = (60000 / bpm); // Вычисляем интервал в миллисекундах
+        const timeSignature = document.getElementById('time-signature').value;
+        const beatsPerMeasure = parseInt(timeSignature.split('/')[0], 10);
+        const interval = (60000 / bpm) * (4 / beatsPerMeasure);
+
         metronomeInterval = setInterval(playClick, interval);
         isMetronomeActive = true;
         document.getElementById('metronome-button').textContent = '⏹️ Выключить метроном';
     }
 }
 
-// Обработчик кнопки метронома
 document.getElementById('metronome-button').addEventListener('click', () => {
     const bpmDisplay = document.getElementById('bpm-display');
     const bpm = parseInt(bpmDisplay.textContent, 10);
-
     if (!isNaN(bpm) && bpm > 0) {
         if (!audioContext) {
-            setupAudioContext(); // Инициализируем AudioContext при первом клике
+            setupAudioContext();
         }
         toggleMetronome(bpm);
     } else {
@@ -893,20 +884,19 @@ document.getElementById('metronome-button').addEventListener('click', () => {
     }
 });
 
-// Обновление BPM
-bpmDisplay.addEventListener('blur', () => {
-    const newBPM = parseInt(bpmDisplay.textContent, 10);
+document.getElementById('bpm-display').addEventListener('blur', () => {
+    const newBPM = parseInt(document.getElementById('bpm-display').textContent, 10);
     if (!isNaN(newBPM) && newBPM > 0) {
         updateBPM(newBPM);
     } else {
         alert('Введите корректное значение BPM.');
-        bpmDisplay.textContent = '-'; // Сбрасываем значение
+        document.getElementById('bpm-display').textContent = '-';
     }
 });
 
 function updateBPM(newBPM) {
-    bpmDisplay.textContent = newBPM || '-';
+    document.getElementById('bpm-display').textContent = newBPM || '-';
     if (isMetronomeActive) {
-        toggleMetronome(newBPM); // Перезапускаем метроном с новым BPM
+        toggleMetronome(newBPM);
     }
 }
