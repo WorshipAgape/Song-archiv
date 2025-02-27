@@ -68,6 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function setupAudioContext() {
     if (!audioContext) {
         audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        console.log("AudioContext успешно создан.");
     }
 }
 
@@ -838,11 +839,6 @@ function resumeAudioContext() {
 async function loadAudioFile() {
     const fileUrl = 'https://firebasestorage.googleapis.com/v0/b/song-archive-389a6.firebasestorage.app/o/metronome-85688%20(mp3cut.net).mp3?alt=media&token=97b66349-7568-43eb-80c3-c2278ff38c10';
     try {
-        // Инициализируем AudioContext только при первом взаимодействии
-        if (!audioContext) {
-            setupAudioContext();
-        }
-
         const response = await fetch(fileUrl);
         const arrayBuffer = await response.arrayBuffer();
         audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
@@ -859,8 +855,7 @@ function playClick() {
         return;
     }
 
-    // Возобновляем AudioContext, если он приостановлен
-    resumeAudioContext();
+    resumeAudioContext(); // Возобновляем AudioContext, если он приостановлен
 
     const timeSignature = document.getElementById('time-signature').value;
     const beatsPerMeasure = parseInt(timeSignature.split('/')[0], 10);
@@ -899,7 +894,12 @@ function toggleMetronome(bpm) {
 
 // Обработчик кнопки метронома
 document.getElementById('metronome-button').addEventListener('click', () => {
-    resumeAudioContext(); // Возобновляем AudioContext при нажатии на кнопку
+    // Инициализируем AudioContext при первом клике
+    if (!audioContext) {
+        setupAudioContext();
+    }
+
+    resumeAudioContext(); // Возобновляем AudioContext
 
     const bpmDisplay = document.getElementById('bpm-display');
     const bpm = parseInt(bpmDisplay.textContent, 10);
