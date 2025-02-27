@@ -55,14 +55,21 @@ const sharedSongsList = document.getElementById('shared-songs-list');
 
 let metronomeInterval = null;
 let isMetronomeActive = false;
-let audioContext;
-let audioBuffer;
+let audioContext; // Переменная для хранения AudioContext
+let audioBuffer; // Переменная для хранения аудиобуфера
 let currentBeat = 0;
 
 // Загрузка аудиофайла при старте
 document.addEventListener('DOMContentLoaded', () => {
     loadAudioFile(); // Загружаем аудиофайл при старте
 });
+
+// Настройка AudioContext
+function setupAudioContext() {
+    if (!audioContext) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    }
+}
 
 // Функция для загрузки данных из Google Sheets
 async function fetchSheetData(sheetName) {
@@ -816,13 +823,6 @@ document.getElementById('toggle-favorites').addEventListener('click', () => {
 
 
 
-// Настройка AudioContext
-function setupAudioContext() {
-    if (!audioContext) {
-        audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    }
-}
-
 // Возобновление AudioContext при пользовательском действии
 function resumeAudioContext() {
     if (audioContext && audioContext.state === 'suspended') {
@@ -838,7 +838,11 @@ function resumeAudioContext() {
 async function loadAudioFile() {
     const fileUrl = 'https://firebasestorage.googleapis.com/v0/b/song-archive-389a6.firebasestorage.app/o/metronome-85688%20(mp3cut.net).mp3?alt=media&token=97b66349-7568-43eb-80c3-c2278ff38c10';
     try {
-        setupAudioContext(); // Инициализируем AudioContext
+        // Инициализируем AudioContext только при первом взаимодействии
+        if (!audioContext) {
+            setupAudioContext();
+        }
+
         const response = await fetch(fileUrl);
         const arrayBuffer = await response.arrayBuffer();
         audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
