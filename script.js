@@ -893,10 +893,15 @@ function toggleMetronome(bpm) {
 }
 
 // Обработчик кнопки метронома
-document.getElementById('metronome-button').addEventListener('click', () => {
+document.getElementById('metronome-button').addEventListener('click', async () => {
     // Инициализируем AudioContext при первом клике
     if (!audioContext) {
         setupAudioContext();
+    }
+
+    // Загружаем аудиофайл, если он еще не загружен
+    if (!audioBuffer) {
+        await loadAudioFile();
     }
 
     resumeAudioContext(); // Возобновляем AudioContext
@@ -910,6 +915,7 @@ document.getElementById('metronome-button').addEventListener('click', () => {
         alert('BPM не указан или некорректен.');
     }
 });
+
 
 // Обновление BPM
 document.getElementById('bpm-display').addEventListener('blur', () => {
