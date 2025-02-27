@@ -55,7 +55,10 @@ const sharedSongsList = document.getElementById('shared-songs-list');
 
 let metronomeInterval = null;
 let isMetronomeActive = false;
-let metronomeSound = null; // Глобальная переменная для аудиофайла
+
+// Инициализация AudioContext
+let audioContext;
+let oscillator;
 
 // Функция для загрузки данных из Google Sheets
 async function fetchSheetData(sheetName) {
@@ -827,16 +830,27 @@ async function loadMetronomeSound() {
 
 
 
+function setupAudioContext() {
+    if (!audioContext) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    }
+}
+
 // Функция для создания звука
 function playClick() {
-    if (metronomeSound) {
-        metronomeSound.currentTime = 0; // Возвращаем аудиофайл к началу
-        metronomeSound.play().catch(error => {
-            console.error('Ошибка воспроизведения звука:', error);
-        });
-    } else {
-        console.error("Аудиофайл метронома не загружен.");
-    }
+    if (!audioContext) return;
+
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+
+    oscillator.frequency.value = 800; // Частота звука
+    gainNode.gain.value = 0.1; // Громкость
+
+    oscillator.start();
+    setTimeout(() => oscillator.stop(), 50); // Длительность звука
 }
 
 // Функция для запуска/остановки метронома
@@ -862,23 +876,27 @@ document.getElementById('metronome-button').addEventListener('click', () => {
     const bpm = parseInt(bpmDisplay.textContent, 10);
 
     if (!isNaN(bpm) && bpm > 0) {
+        if (!audioContext) {
+            setupAudioContext(); // Инициализируем AudioContext при первом клике
+        }
         toggleMetronome(bpm);
     } else {
         alert('BPM не указан или некорректен.');
     }
 });
 
+// Обновление BPM
+const bpmDisplay = document.getElementById('bpm-display');
 bpmDisplay.addEventListener('blur', () => {
     const newBPM = parseInt(bpmDisplay.textContent, 10);
     if (!isNaN(newBPM) && newBPM > 0) {
-        updateBPM(newBPM); // Обновляем BPM
+        updateBPM(newBPM);
     } else {
         alert('Введите корректное значение BPM.');
         bpmDisplay.textContent = '-'; // Сбрасываем значение
     }
 });
 
-// Функция обновления BPM
 function updateBPM(newBPM) {
     bpmDisplay.textContent = newBPM || '-';
     if (isMetronomeActive) {
