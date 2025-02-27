@@ -60,6 +60,10 @@ let isMetronomeActive = false;
 let audioContext;
 let oscillator;
 
+document.addEventListener('DOMContentLoaded', () => {
+    loadAudioFile(); // Загружаем аудиофайл при старте
+});
+
 // Функция для загрузки данных из Google Sheets
 async function fetchSheetData(sheetName) {
     if (cachedData[sheetName]) return cachedData[sheetName];
@@ -748,10 +752,6 @@ async function deleteFromSharedList(docId) {
     loadGroupPanel(); // Перезагружаем панель "Группа"
 }
 
-// Загрузка аудиофайла при старте
-document.addEventListener('DOMContentLoaded', () => {
-    loadMetronomeSound(); // Загружаем аудиофайл метронома
-});
 
 // Загрузка списка при старте
 document.addEventListener('DOMContentLoaded', () => {
@@ -812,45 +812,51 @@ document.getElementById('toggle-favorites').addEventListener('click', () => {
 
 
 
-
-
-async function loadMetronomeSound() {
-    const storage = getStorage(app);
-    const soundRef = ref(storage, 'https://firebasestorage.googleapis.com/v0/b/song-archive-389a6.firebasestorage.app/o/metronome-85688.mp3?alt=media&token=ea147cdf-8ae5-42f8-a174-783d91055950'); // Путь к файлу в Firebase Storage
-
-    try {
-        const downloadURL = await getDownloadURL(soundRef); // Получаем публичную ссылку
-        metronomeSound = new Audio(downloadURL); // Создаем объект Audio
-        console.log("Аудиофайл метронома успешно загружен.");
-    } catch (error) {
-        console.error("Ошибка загрузки аудиофайла:", error);
-    }
-}
-
-
-
-
 function setupAudioContext() {
     if (!audioContext) {
         audioContext = new (window.AudioContext || window.webkitAudioContext)();
     }
 }
 
+
+async function loadAudioFile() {
+    const storage = getStorage(app);
+    const soundRef = ref(storage, 'https://firebasestorage.googleapis.com/v0/b/song-archive-389a6.firebasestorage.app/o/metronome-85688.mp3?alt=media&token=ea147cdf-8ae5-42f8-a174-783d91055950');
+
+    try {
+        const downloadURL = await getDownloadURL(soundRef);
+        const response = await fetch(downloadURL);
+        const arrayBuffer = await response.arrayBuffer();
+
+        if (!audioContext) {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        }
+
+        audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+        console.log("Аудиофайл успешно загружен и декодирован.");
+    } catch (error) {
+        console.error("Ошибка загрузки аудиофайла:", error);
+    }
+}
+
+function playAudioBuffer() {
+    if (!audioContext || !audioBuffer) return;
+
+    const source = audioContext.createBufferSource();
+    source.buffer = audioBuffer;
+    source.connect(audioContext.destination);
+    source.start();
+}
+
+
 // Функция для создания звука
 function playClick() {
-    if (!audioContext) return;
+    if (!audioContext || !audioBuffer) {
+        console.error("Аудиофайл не загружен.");
+        return;
+    }
 
-    const oscillator = audioContext.createOscillator();
-    const gainNode = audioContext.createGain();
-
-    oscillator.connect(gainNode);
-    gainNode.connect(audioContext.destination);
-
-    oscillator.frequency.value = 800; // Частота звука
-    gainNode.gain.value = 0.1; // Громкость
-
-    oscillator.start();
-    setTimeout(() => oscillator.stop(), 50); // Длительность звука
+    playAudioBuffer();
 }
 
 // Функция для запуска/остановки метронома
