@@ -817,6 +817,18 @@ function setupAudioContext() {
     }
 }
 
+// Функция для возобновления AudioContext при пользовательском действии
+function resumeAudioContext() {
+    if (audioContext && audioContext.state === 'suspended') {
+        audioContext.resume().then(() => {
+            console.log('AudioContext успешно возобновлен.');
+        }).catch((error) => {
+            console.error('Ошибка возобновления AudioContext:', error);
+        });
+    }
+}
+
+
 async function loadAudioFile() {
     const fileUrl = 'https://firebasestorage.googleapis.com/v0/b/song-archive-389a6.firebasestorage.app/o/metronome-85688%20(mp3cut.net).mp3?alt=media&token=97b66349-7568-43eb-80c3-c2278ff38c10';
     try {
@@ -829,6 +841,19 @@ async function loadAudioFile() {
         console.log("Аудиофайл успешно загружен.");
     } catch (error) {
         console.error('Ошибка загрузки аудиофайла:', error);
+    }
+}
+
+async function loadMetronomeSound() {
+    const storage = getStorage(app);
+    const soundRef = ref(storage, 'metronome-85688.mp3');
+
+    try {
+        const downloadURL = await getDownloadURL(soundRef);
+        metronomeSound = new Audio(downloadURL);
+        console.log("Аудиофайл метронома успешно загружен.");
+    } catch (error) {
+        console.error("Ошибка загрузки аудиофайла:", error);
     }
 }
 
@@ -872,12 +897,11 @@ function toggleMetronome(bpm) {
 }
 
 document.getElementById('metronome-button').addEventListener('click', () => {
+    resumeAudioContext(); // Возобновляем AudioContext при нажатии на кнопку
     const bpmDisplay = document.getElementById('bpm-display');
     const bpm = parseInt(bpmDisplay.textContent, 10);
+
     if (!isNaN(bpm) && bpm > 0) {
-        if (!audioContext) {
-            setupAudioContext();
-        }
         toggleMetronome(bpm);
     } else {
         alert('BPM не указан или некорректен.');
