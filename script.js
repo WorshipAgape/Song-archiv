@@ -820,12 +820,11 @@ function setupAudioContext() {
 
 
 async function loadAudioFile() {
-    const storage = getStorage(app);
-    const soundRef = ref(storage, 'https://firebasestorage.googleapis.com/v0/b/song-archive-389a6.firebasestorage.app/o/metronome-85688.mp3?alt=media&token=ea147cdf-8ae5-42f8-a174-783d91055950');
+    const proxyUrl = 'https://your-proxy-server.com/?url=';
+    const fileUrl = 'https://firebasestorage.googleapis.com/v0/b/song-archive-389a6.firebasestorage.app/o/metronome-85688.mp3?alt=media&token=ea147cdf-8ae5-42f8-a174-783d91055950';
 
     try {
-        const downloadURL = await getDownloadURL(soundRef);
-        const response = await fetch(downloadURL);
+        const response = await fetch(proxyUrl + encodeURIComponent(fileUrl));
         const arrayBuffer = await response.arrayBuffer();
 
         if (!audioContext) {
@@ -835,7 +834,7 @@ async function loadAudioFile() {
         audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
         console.log("Аудиофайл успешно загружен и декодирован.");
     } catch (error) {
-        console.error("Ошибка загрузки аудиофайла:", error);
+        console.error('Ошибка загрузки аудиофайла:', error);
     }
 }
 
