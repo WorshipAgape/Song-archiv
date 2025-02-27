@@ -886,7 +886,6 @@ document.getElementById('metronome-button').addEventListener('click', () => {
 });
 
 // Обновление BPM
-const bpmDisplay = document.getElementById('bpm-display');
 bpmDisplay.addEventListener('blur', () => {
     const newBPM = parseInt(bpmDisplay.textContent, 10);
     if (!isNaN(newBPM) && newBPM > 0) {
