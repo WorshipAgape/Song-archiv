@@ -823,23 +823,32 @@ async function loadAudioFile() {
     const fileUrl = 'https://firebasestorage.googleapis.com/v0/b/song-archive-389a6.firebasestorage.app/o/metronome-85688.mp3?alt=media&token=ea147cdf-8ae5-42f8-a174-783d91055950';
 
     try {
-        const response = await fetch(fileUrl, { mode: 'no-cors' });
-        const blob = await response.blob();
-        metronomeSound = new Audio(URL.createObjectURL(blob));
+        if (!audioContext) {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        }
+
+        const response = await fetch(fileUrl);
+        const arrayBuffer = await response.arrayBuffer();
+        audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+
         console.log("Аудиофайл успешно загружен.");
     } catch (error) {
         console.error('Ошибка загрузки аудиофайла:', error);
     }
 }
 
-function playAudioBuffer() {
-    if (!audioContext || !audioBuffer) return;
+function playClick() {
+    if (!audioContext || !audioBuffer) {
+        console.error("Аудиофайл не загружен.");
+        return;
+    }
 
     const source = audioContext.createBufferSource();
     source.buffer = audioBuffer;
     source.connect(audioContext.destination);
     source.start();
 }
+
 
 
 // Функция для создания звука
