@@ -54,17 +54,13 @@ const favoritesList = document.getElementById('favorites-list');
 const sharedSongsList = document.getElementById('shared-songs-list');
 
 
-let metronomeInterval = null;
-let isMetronomeActive = false;
+// Переменные для работы с аудио
 let audioContext; // Переменная для хранения AudioContext
 let audioBuffer; // Переменная для хранения аудиобуфера
+let metronomeInterval = null;
+let isMetronomeActive = false;
 let currentBeat = 0;
 
-// Инициализация при загрузке страницы
-document.addEventListener('DOMContentLoaded', () => {
-    setupAudioContext(); // Создаем AudioContext
-    loadAudioFile(); // Загружаем аудиофайл
-});
 
 // Настройка AudioContext
 function setupAudioContext() {
@@ -839,7 +835,6 @@ function resumeAudioContext() {
 
 // Загрузка аудиофайла
 async function loadAudioFile() {
-    // Инициализируем AudioContext, если он еще не создан
     if (!audioContext) {
         setupAudioContext();
     }
@@ -899,6 +894,7 @@ function toggleMetronome(bpm) {
     }
 }
 
+
 // Обработчик кнопки метронома
 document.getElementById('metronome-button').addEventListener('click', async () => {
     // Инициализируем AudioContext при первом клике
@@ -922,7 +918,6 @@ document.getElementById('metronome-button').addEventListener('click', async () =
         alert('BPM не указан или некорректен.');
     }
 });
-
 
 // Обновление BPM
 document.getElementById('bpm-display').addEventListener('blur', () => {
