@@ -837,6 +837,7 @@ function resumeAudioContext() {
     }
 }
 
+// Загрузка аудиофайла
 async function loadAudioFile() {
     // Инициализируем AudioContext, если он еще не создан
     if (!audioContext) {
