@@ -60,9 +60,10 @@ let audioContext; // Переменная для хранения AudioContext
 let audioBuffer; // Переменная для хранения аудиобуфера
 let currentBeat = 0;
 
-// Загрузка аудиофайла при старте
+// Инициализация при загрузке страницы
 document.addEventListener('DOMContentLoaded', () => {
-    loadAudioFile(); // Загружаем аудиофайл при старте
+    setupAudioContext(); // Создаем AudioContext
+    loadAudioFile(); // Загружаем аудиофайл
 });
 
 // Настройка AudioContext
@@ -836,8 +837,12 @@ function resumeAudioContext() {
     }
 }
 
-// Загрузка аудиофайла
 async function loadAudioFile() {
+    // Инициализируем AudioContext, если он еще не создан
+    if (!audioContext) {
+        setupAudioContext();
+    }
+
     const fileUrl = 'https://firebasestorage.googleapis.com/v0/b/song-archive-389a6.firebasestorage.app/o/metronome-85688%20(mp3cut.net).mp3?alt=media&token=97b66349-7568-43eb-80c3-c2278ff38c10';
     try {
         const response = await fetch(fileUrl);
