@@ -1,5 +1,5 @@
 :root {
-    --primary-color: #4a90e2;
+    --primary-color: #ff5722;
     --secondary-color: #357abd;
     --background-color: #151515; /* Черный фон */
     --container-background-color: #1c1c1c; /* Темно-серый матовый контейнер */
@@ -105,6 +105,7 @@ select, input, button {
 button {
     background: linear-gradient(145deg, var(--primary-color), var(--secondary-color));
     color: #fff;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
     font-weight: 500;
     cursor: pointer;
     border: none;
@@ -230,12 +231,14 @@ button:active {
     white-space: pre-wrap;
     word-wrap: break-word;
     overflow-wrap: anywhere;
-    line-height: 1.6;
-    font-size: clamp(10px, 2vw, 20px);
+    line-height: 1.2;
+    font-size: clamp(8px, 2vw, 20px);
     color: var(--text-color);
     margin: 0;
     max-width: 100%;
 }
+
+
 
 /* Базовый стиль для аккордов */
 .chord {
