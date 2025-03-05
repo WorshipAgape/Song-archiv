@@ -477,17 +477,9 @@ async function loadAllSheetsData() {
     }
 }
 
-let currentFontSize = getInitialFontSize(); // Получаем начальный размер шрифта
+let currentFontSize = 10; // Начальный размер шрифта (фиксированное значение)
 
-// Функция для получения начального размера шрифта из стилей элемента
-function getInitialFontSize() {
-    const lyricsElement = document.querySelector('#song-content pre');
-    if (lyricsElement) {
-        const computedStyle = window.getComputedStyle(lyricsElement);
-        return parseInt(computedStyle.fontSize); // Возвращаем значение без единиц измерения
-    }
-    return 16; // Значение по умолчанию, если элемент не найден
-}
+// Убираем функцию getInitialFontSize
 
 document.getElementById('zoom-in').addEventListener('click', () => {
     currentFontSize += 2;
@@ -506,6 +498,12 @@ function updateFontSize() {
     if (lyricsElement) {
         lyricsElement.style.fontSize = `${currentFontSize}px`;
     }
+}
+
+// Дополнительная функция для сброса размера шрифта к начальному значению
+function resetFontSize() {
+    currentFontSize = 10; // Возвращаемся к начальному размеру
+    updateFontSize();
 }
 
 
