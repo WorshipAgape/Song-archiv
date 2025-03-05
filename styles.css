@@ -443,7 +443,7 @@ button:active {
 #song-content.split-columns pre {
     column-count: 2;
     column-gap: 13px;
-    line-height: 1.2;
+    line-height: 1.0;
     position: relative;
 }
 
