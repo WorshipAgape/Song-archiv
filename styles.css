@@ -62,10 +62,10 @@ h2 {
     text-align: center;
     color: #fff; /* Белый цвет */
     margin-bottom: 15px;
-    font-size: 1.8rem;
+    font-size: 1.4rem;
     font-weight: bold; /* Полужирный шрифт */
     letter-spacing: 1px; /* Небольшое пространство между буквами */
-    text-shadow: 0 2px 4px rgba(255, 255, 255, 0.3); /* Легкая тень для объема */
+    
 }
 
 
@@ -173,7 +173,7 @@ button:active {
     flex-direction: column;
     align-items: center; /* Центрируем по горизонтали */
     gap: 15px; /* Отступ между элементами */
-    margin-top: 20px; /* Отступ сверху */
+    margin-top: 10px; /* Отступ сверху */
     padding: 10px;
     text-align: center; /* Текст внутри элементов также центрируется */
 }
