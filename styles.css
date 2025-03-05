@@ -35,13 +35,39 @@ body {
     position: relative;
 }
 
-/* Заголовки */
-h1, h2 {
+/* Главный заголовок */
+h1 {
     text-align: center;
-    color: var(--primary-color);
+    color: #fff; /* Розовый цвет для акцента */
+    margin-bottom: 15px;
+    font-size: 2.4rem;
+    
+    
+    text-transform: uppercase; /* Все буквы в верхнем регистре */
+    letter-spacing: 2px; /* Пространство между буквами */
+    animation: glow 3s infinite alternate; /* Мягкое сияние */
+}
+
+@keyframes glow {
+    from {
+        text-shadow: 0 0 10px #ff69b4;
+    }
+    to {
+        text-shadow: 0 0 20px #ff69b4;
+    }
+}
+
+/* Подзаголовок */
+h2 {
+    text-align: center;
+    color: #fff; /* Белый цвет */
     margin-bottom: 15px;
     font-size: 1.8rem;
+    font-weight: bold; /* Полужирный шрифт */
+    letter-spacing: 1px; /* Небольшое пространство между буквами */
+    text-shadow: 0 2px 4px rgba(255, 255, 255, 0.3); /* Легкая тень для объема */
 }
+
 
 /* Панель управления */
 .controls {
