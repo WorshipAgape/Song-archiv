@@ -150,6 +150,31 @@ button:active {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
+/* Стиль для кнопок масштабирования */
+#zoom-in, #zoom-out {
+    background: linear-gradient(145deg, var(--primary-color), var(--secondary-color)); /* Используем те же цвета */
+    color: #fff;
+    font-weight: 500;
+    border: none;
+    border-radius: var(--radius);
+    padding: 8px 12px; /* Отступы внутри кнопки */
+    font-size: 14px; /* Размер шрифта */
+    cursor: pointer;
+    transition: none; /* Убираем все переходные эффекты */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Добавляем тень для объемного эффекта */
+}
+
+/* Убираем эффект наведения */
+#zoom-in:hover, #zoom-out:hover {
+    transform: none; /* Нет подъема */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Тень остается неизменной */
+}
+
+#zoom-in:active, #zoom-out:active {
+    transform: none; /* Нет эффекта нажатия */
+    box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.2); /* Внутренняя тень при нажатии */
+}
+
 /* Кнопки управления */
 .control-buttons {
     display: flex;
