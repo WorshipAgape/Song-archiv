@@ -421,23 +421,6 @@ button:active {
     color: #fff;
 }
 
-/* Стиль для индикатора загрузки */
-#loading-indicator {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: rgba(255, 255, 255, 0.9);
-    padding: 15px;
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    z-index: 1001;
-    display: none;
-}
-
-#loading-indicator.show {
-    display: block;
-}
 
 /* Стиль для разделения текста на две колонки */
 #song-content.split-columns pre {
