@@ -96,6 +96,12 @@ const zoomOutButton = document.getElementById('zoom-out');
 // YouTube Player
 const playerContainer = document.getElementById('youtube-player-container');
 const playerSection = document.getElementById('youtube-player-section');
+// Новые элементы для панели репертуара
+const toggleRepertoireButton = document.getElementById('toggle-repertoire');
+const repertoirePanel = document.getElementById('repertoire-panel');
+const repertoirePanelTitle = document.getElementById('repertoire-panel-title'); // Не используется пока, но можно
+const repertoirePanelVocalistName = document.getElementById('repertoire-panel-vocalist-name');
+const repertoirePanelList = document.getElementById('repertoire-panel-list');
 
 
 // --- API FUNCTIONS (Sheets, Firestore) ---
@@ -296,109 +302,155 @@ async function deleteFromSharedList(docId) {
     }
 }
 
-// --- Функция для загрузки и отображения репертуара вокалиста (Исправлена ошибка с listContainer) ---
+// --- Функция загрузки и ДВОЙНОЙ ГРУППИРОВКИ репертуара вокалиста ---
 function loadRepertoire(vocalistId) {
-    // Получаем ссылки на секцию и заголовок (они нужны сразу)
-    const sectionContainer = document.getElementById('repertoire-section');
-    const nameSpan = document.getElementById('repertoire-vocalist-name');
+    // Используем новые ID элементов панели репертуара
+    const listContainer = repertoirePanelList;
+    const sectionContainer = repertoirePanel; // Сама панель
+    const nameSpan = repertoirePanelVocalistName;
 
-    // Проверки на наличие этих элементов
-    if (!sectionContainer || !nameSpan) {
-         console.error("Не найдены UI элементы секции или заголовка репертуара.");
+    if (!listContainer || !sectionContainer || !nameSpan) {
+         console.error("Не найдены UI элементы для панели репертуара.");
          return;
     }
-    // Получаем контейнер списка для первоначальной очистки/сообщения
-    const initialListContainer = document.getElementById('repertoire-list');
-     if (!initialListContainer) {
-          console.error("Элемент <div id='repertoire-list'> не найден.");
-          sectionContainer.style.display = 'none'; // Прячем секцию, если нет контейнера списка
-          return;
-     }
 
-    // Очищаем предыдущий список и скрываем секцию
-    initialListContainer.innerHTML = '';
-    sectionContainer.style.display = 'none';
+    listContainer.innerHTML = ''; // Очищаем
 
-    // Если вокалист не выбран
     if (!vocalistId) {
-        nameSpan.textContent = '';
-        console.log("loadRepertoire: Вокалист не выбран.");
+        nameSpan.textContent = '-- Выберите вокалиста --';
+        listContainer.innerHTML = '<div class="empty-message">Выберите вокалиста для просмотра репертуара.</div>';
         return;
     }
 
-    // Если вокалист выбран: показываем секцию, имя и сообщение о загрузке
-    nameSpan.textContent = currentVocalistName || vocalistId;
-    sectionContainer.style.display = 'block';
-    initialListContainer.innerHTML = '<div>Загрузка репертуара...</div>';
+    nameSpan.textContent = currentVocalistName || vocalistId; // Обновляем имя в заголовке панели
+    listContainer.innerHTML = '<div>Загрузка репертуара...</div>';
 
-    // --- Настраиваем слушатель Firestore ---
     const repertoireColRef = collection(db, "vocalists", vocalistId, "repertoire");
-    const q = query(repertoireColRef, orderBy("name", "asc"));
-    console.log(`loadRepertoire: Установка слушателя для вокалиста ${vocalistId}`);
+    const q = query(repertoireColRef); // Запрос без сортировки здесь
 
-    // Устанавливаем слушатель onSnapshot
     const unsubscribe = onSnapshot(q, (snapshot) => {
-        // *** ИСПРАВЛЕНИЕ: Получаем listContainer ЗДЕСЬ, внутри callback ***
-        const listContainer = document.getElementById('repertoire-list');
-        if (!listContainer) {
-             console.error("loadRepertoire (onSnapshot callback): Контейнер #repertoire-list не найден!");
-             return; // Не можем обновить UI
-        }
-        // *** КОНЕЦ ИСПРАВЛЕНИЯ ***
-
-        console.log(`loadRepertoire: Получены данные для ${vocalistId}, количество: ${snapshot.size}`);
-        listContainer.innerHTML = ''; // Очищаем контейнер
+        listContainer.innerHTML = ''; // Очищаем перед отрисовкой
 
         if (snapshot.empty) {
-            listContainer.innerHTML = '<div class="empty-message">В репертуаре этого вокалиста пока нет песен.</div>';
+            listContainer.innerHTML = '<div class="empty-message">Репертуар пуст.</div>';
             return;
         }
 
-        // Отображаем песни
+        // --- ДВОЙНАЯ ГРУППИРОВКА ---
+        const groupedByKeys = {};
+
         snapshot.docs.forEach((doc) => {
             const song = doc.data();
-            const repertoireDocId = doc.id;
-            const listItem = document.createElement('div');
-            listItem.className = 'favorite-item repertoire-item';
-
-            // Имя и тональность
-            const songInfo = document.createElement('span');
-            songInfo.className = 'song-name';
-            songInfo.textContent = `${song.name} — ${song.preferredKey}`;
-            listItem.appendChild(songInfo);
-
-            // Кнопка удаления
-            const removeBtn = document.createElement('button');
-            removeBtn.textContent = '❌';
-            removeBtn.className = 'remove-button';
-            removeBtn.title = 'Удалить из репертуара';
-            removeBtn.addEventListener('click', (e) => {
-                 e.stopPropagation();
-                 removeFromRepertoire(vocalistId, repertoireDocId);
-            });
-            listItem.appendChild(removeBtn);
-
-            // Клик по элементу
-            listItem.addEventListener('click', async () => {
-                // ... (остальная логика клика без изменений) ...
-                 if (!cachedData[song.sheet] || !cachedData[song.sheet][song.index]) {
-                     console.warn(`Данные песни ${song.name} не найдены в кэше...`);
-                     await fetchSheetData(song.sheet);
-                     if (!cachedData[song.sheet] || !cachedData[song.sheet][song.index]){
-                         alert('Не удалось найти исходные данные песни.'); return;
-                     }
-                 }
-                 const originalSongData = cachedData[song.sheet][song.index];
-                 const sheetNameValue = Object.keys(SHEETS).find(key => SHEETS[key] === song.sheet);
-                 if(sheetNameValue) sheetSelect.value = sheetNameValue;
-                 await loadSheetSongs();
-                 songSelect.value = song.index;
-                 displaySongDetails(originalSongData, song.index, song.preferredKey);
-                 if (favoritesPanel) favoritesPanel.classList.remove('open');
-            });
-
-            listContainer.appendChild(listItem); // Используем listContainer, определенный ВНУТРИ callback
+            const key = song.preferredKey || "N/A";
+            const sheet = song.sheet || "Unknown Sheet";
+            if (!groupedByKeys[key]) {
+                groupedByKeys[key] = {}; // Внутри ключа будет объект с листами
+            }
+            if (!groupedByKeys[key][sheet]) {
+                groupedByKeys[key][sheet] = []; // Массив песен для ключа->листа
+            }
+            groupedByKeys[key][sheet].push({ ...song, repertoireDocId: doc.id });
         });
+        // --- КОНЕЦ ГРУППИРОВКИ ---
+
+
+        // --- СОРТИРОВКА И ВЫВОД ---
+        // 1. Сортируем тональности (ключи)
+        const sortedKeys = Object.keys(groupedByKeys).sort((a, b) => {
+            const indexA = chords.indexOf(a);
+            const indexB = chords.indexOf(b);
+            if (indexA === -1) return 1;
+            if (indexB === -1) return -1;
+            return indexA - indexB;
+        });
+
+        // 2. Выводим по тональностям
+        sortedKeys.forEach(key => {
+            // Выводим заголовок тональности
+            const keyHeading = document.createElement('div');
+            keyHeading.className = 'repertoire-key-heading';
+            keyHeading.textContent = `Тональность: ${key}`;
+            listContainer.appendChild(keyHeading);
+
+            // Получаем листы для этой тональности
+            const sheetsInKey = groupedByKeys[key];
+            // Сортируем листы по названию
+            const sortedSheets = Object.keys(sheetsInKey).sort((a, b) => a.localeCompare(b));
+
+            // 3. Выводим по листам внутри тональности
+            sortedSheets.forEach(sheet => {
+                // Выводим подзаголовок листа (если нужно)
+                const sheetHeading = document.createElement('div');
+                sheetHeading.className = 'repertoire-sheet-heading';
+                // Извлекаем короткое имя листа для отображения, если оно есть в SHEETS
+                const shortSheetName = Object.keys(SHEETS).find(sKey => SHEETS[sKey] === sheet) || sheet;
+                sheetHeading.textContent = shortSheetName;
+                listContainer.appendChild(sheetHeading);
+
+                // Получаем песни для этой тональности->листа
+                const songsInSheet = sheetsInKey[sheet];
+                // Сортируем песни по названию
+                songsInSheet.sort((a, b) => a.name.localeCompare(b.name));
+
+                // 4. Выводим сами песни
+                songsInSheet.forEach(songWithId => {
+                    const song = songWithId;
+                    const repertoireDocId = song.repertoireDocId;
+                    const listItem = document.createElement('div');
+                    listItem.className = 'repertoire-item';
+
+                    const songInfo = document.createElement('span');
+                    songInfo.className = 'song-name';
+                    // Показываем только имя, так как ключ и лист уже есть в заголовках
+                    songInfo.textContent = song.name;
+                    listItem.appendChild(songInfo);
+
+                    const removeBtn = document.createElement('button');
+                    removeBtn.textContent = '❌';
+                    removeBtn.className = 'remove-button'; // Даем класс для стилей
+                    removeBtn.title = 'Удалить из репертуара';
+                    removeBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        removeFromRepertoire(vocalistId, repertoireDocId);
+                    });
+                    listItem.appendChild(removeBtn);
+
+                    listItem.addEventListener('click', async () => {
+                         // Логика клика остается прежней:
+                         // Найти песню в кэше, обновить селекты,
+                         // вызвать displaySongDetails с ПРЕДПОЧТИТЕЛЬНОЙ тональностью,
+                         // ЗАКРЫТЬ ПАНЕЛЬ РЕПЕРТУАРА
+                         if (!cachedData[song.sheet] || !cachedData[song.sheet][song.index]) {
+                             await fetchSheetData(song.sheet);
+                             if (!cachedData[song.sheet]?.[song.index]) {
+                                 alert('Не удалось найти исходные данные песни.'); return;
+                             }
+                         }
+                         const originalSongData = cachedData[song.sheet][song.index];
+                         const sheetNameValue = Object.keys(SHEETS).find(sKey => SHEETS[sKey] === song.sheet);
+                         if(sheetNameValue) sheetSelect.value = sheetNameValue;
+                         await loadSheetSongs();
+                         songSelect.value = song.index;
+                         displaySongDetails(originalSongData, song.index, song.preferredKey);
+
+                         // Закрываем НОВУЮ панель репертуара
+                         if (repertoirePanel) repertoirePanel.classList.remove('open');
+
+                    });
+                    listContainer.appendChild(listItem);
+                }); // Конец перебора песен
+            }); // Конец перебора листов
+        }); // Конец перебора тональностей
+
+    }, (error) => {
+        const listContainer = repertoirePanelList; // Используем новый ID
+        if (listContainer) {
+             listContainer.innerHTML = '<div class="empty-message">Ошибка загрузки репертуара.</div>';
+        }
+        console.error(`Ошибка при прослушивании репертуара для ${vocalistId}:`, error);
+    });
+    // Тут можно сохранить unsubscribe, если потребуется
+}
 
     }, (error) => { // Обработчик ошибок слушателя
         // *** ИСПРАВЛЕНИЕ: Получаем listContainer ЗДЕСЬ тоже, внутри callback ошибки ***
@@ -874,12 +926,13 @@ function removeFromFavorites(fav) {
     }
 }
 
-/** Загрузка содержимого панели "Группа" (Избранное + Общий список + Репертуар) */
+/ --- Обновляем функцию загрузки ПАНЕЛИ СПИСКОВ (БЕЗ РЕПЕРТУАРА) ---
 function loadGroupPanel() {
-    console.log("Загрузка панели 'Группа'");
-    if (!favoritesPanel.classList.contains('open')) {
-         console.log("Панель закрыта, загрузка не требуется.");
-         return; // Нет смысла грузить, если панель закрыта
+    console.log("Загрузка панели 'Списки'");
+    // Проверяем, открыта ли панель СПИСКОВ
+    if (!favoritesPanel || !favoritesPanel.classList.contains('open')) {
+        // console.log("Панель 'Списки' закрыта, загрузка не требуется.");
+        return;
     }
 
     // Загружаем "Мой список" (Избранное)
@@ -888,9 +941,59 @@ function loadGroupPanel() {
     // Загружаем "Общий список" (Firestore)
     if(sharedSongsList) loadSharedList(sharedSongsList);
 
-    // Загружаем "Репертуар" (если вокалист выбран)
-    if(repertoireList) loadRepertoire(currentVocalistId);
+    // Репертуар больше здесь НЕ загружаем
+    // if(repertoireList) loadRepertoire(currentVocalistId);
 }
+
+
+// --- Настройка слушателей событий (дополнения) ---
+
+// Модифицируем слушатель для кнопки "Списки" (#toggle-favorites)
+if (toggleFavoritesButton && favoritesPanel) {
+     toggleFavoritesButton.addEventListener('click', () => {
+         const isOpen = favoritesPanel.classList.toggle('open'); // Переключаем и запоминаем состояние
+         if (isOpen) {
+             console.log("Панель 'Списки' открыта");
+             // Закрываем панель репертуара, если она открыта
+             if (repertoirePanel && repertoirePanel.classList.contains('open')) {
+                 repertoirePanel.classList.remove('open');
+             }
+             loadGroupPanel(); // Загружаем списки
+         } else {
+             console.log("Панель 'Списки' закрыта.");
+         }
+     });
+}
+
+// ДОБАВЛЯЕМ слушатель для НОВОЙ кнопки "Репертуар" (#toggle-repertoire)
+ if (toggleRepertoireButton && repertoirePanel) {
+     toggleRepertoireButton.addEventListener('click', () => {
+         const isOpen = repertoirePanel.classList.toggle('open'); // Переключаем панель репертуара
+         if (isOpen) {
+              console.log("Панель 'Репертуар' открыта");
+              // Закрываем панель списков, если она открыта
+              if (favoritesPanel && favoritesPanel.classList.contains('open')) {
+                  favoritesPanel.classList.remove('open');
+              }
+              // Загружаем репертуар (он сам проверит, выбран ли вокалист)
+              loadRepertoire(currentVocalistId);
+         } else {
+              console.log("Панель 'Репертуар' закрыта.");
+         }
+     });
+ }
+
+ // В слушателе для vocalistSelect ничего менять не нужно,
+ // он по-прежнему должен вызывать loadRepertoire(currentVocalistId),
+ // чтобы данные в панели репертуара были актуальными, даже если она закрыта.
+
+ // ВАЖНО: Убедитесь, что слушатели на toggleFavoritesButton и toggleRepertoireButton
+ // добавляются только ОДИН РАЗ (например, внутри setupEventListeners или DOMContentLoaded).
+
+ // --- Обновляем слушатель клика по песне в РЕПЕРТУАРЕ ---
+ // Эта логика теперь находится внутри обновленной функции loadRepertoire.
+ // Главное, чтобы там было закрытие ПРАВИЛЬНОЙ панели:
+ // if (repertoirePanel) repertoirePanel.classList.remove('open'); // <-- Проверьте это в loadRepertoire
 
 /** Обновление отображения BPM */
 function updateBPM(newBPM) {
