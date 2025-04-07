@@ -1206,17 +1206,6 @@ function loadRepertoire(vocalistId) {
     // Пример: vocalistSelect.dataset.listener = unsubscribe;
 }
 
-// --- Заглушка для функции удаления (реализуем на след. шаге) ---
-async function removeFromRepertoire(vocalistId, repertoireDocId) {
-     console.log(`ЗАГЛУШКА: Удалить песню ${repertoireDocId} для вокалиста ${vocalistId}`);
-     if (!vocalistId || !repertoireDocId) {
-         console.error("Не переданы ID для удаления из репертуара.");
-         return;
-     }
-     // TODO: Добавить вызов deleteDoc из Firestore
-     alert(`Здесь будет удаление песни с ID: ${repertoireDocId}`); // Временное сообщение
-}
-
 
 // --- Добавляем слушатель на кнопку "В мой репертуар" ---
 const addToRepertoireButton = document.getElementById('add-to-repertoire-button');
