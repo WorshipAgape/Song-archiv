@@ -541,13 +541,12 @@ function transposeLyrics(lyrics, transposition) {
  }
 
 /** Обработка строк текста для уменьшения пробелов */
+// Функция для обработки строк с аккордами и уменьшения пробелов (ВОССТАНОВЛЕНА)
 function processLyrics(lyrics) {
     if (!lyrics) return '';
-    // Заменяем два и более пробелов на один (или чуть больше для выравнивания)
-    // Это может быть спорным моментом, зависит от форматирования в таблице
     return lyrics.split('\n').map(line => {
-        // return line.replace(/ {2,}/g, match => ' '.repeat(Math.ceil(match.length / 2)));
-        return line.replace(/ {2,}/g, ' '); // Просто заменяем на один пробел - возможно, лучше?
+        // Заменяем 2+ пробела на округленную половину их количества
+        return line.replace(/ {2,}/g, match => ' '.repeat(Math.ceil(match.length / 2)));
     }).join('\n');
 }
 
@@ -677,12 +676,13 @@ function displaySongDetails(songData, index, key) {
         holychordsButton.style.display = 'none';
     }
 
-    // Обрабатываем и подсвечиваем ОРИГИНАЛЬНЫЙ текст
-    const highlightedOriginalLyrics = highlightChords(lyrics);
+// --- Обрабатываем и подсвечиваем текст ---
+   const processedOriginalLyrics = processLyrics(lyrics); // <--- ВОССТАНОВИЛИ ВЫЗОВ
+const highlightedOriginalLyrics = highlightChords(processedOriginalLyrics); // Используем обработанный текст
 
-    // Обновляем основной контент (Название + ОРИГИНАЛЬНЫЙ текст)
-    songContent.innerHTML = `
-        <h2>${songTitle} — ${currentKey}</h2>
+   // --- Обновляем ОСНОВНОЕ содержимое (Название + Текст) ---
+songContent.innerHTML = `
+    <h2>${songTitle} — <span class="math-inline">\{currentKey\}</h2\>
         <pre>${highlightedOriginalLyrics}</pre>
     `;
 
@@ -744,7 +744,9 @@ function updateTransposedLyrics() {
     // Транспонируем оригинальный текст
     const transposedLyrics = transposeLyrics(lyrics, transposition);
     // Обрабатываем пробелы и подсвечиваем аккорды в транспонированном тексте
-   const highlightedTransposedLyrics = highlightChords(transposedLyrics);
+  const processedTransposedLyrics = processLyrics(transposedLyrics); // <--- ВОССТАНОВИЛИ ВЫЗОВ
+    const highlightedTransposedLyrics = highlightChords(processedTransposedLyrics); // Используем обработанный текст
+
 
     // Обновляем текст в <pre>
     preElement.innerHTML = highlightedTransposedLyrics;
