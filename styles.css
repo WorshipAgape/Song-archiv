@@ -1,394 +1,518 @@
-/* ======================================== */
-/* Styles for Agape Worship (v5)        */
-/* TARGETING ORIGINAL HTML STRUCTURE      */
-/* With Consistent Button Styling       */
-/* ======================================== */
-
-/* --- Theme Variables --- */
 :root {
-    --primary-color: #ff1493;
-    --secondary-color: #c71585;
-    --background-color: #151515;
-    --container-background-color: #1c1c1c;
-    --text-color: #fff;
-    --label-color: #ccc;
-    --border-color: #333;
-    --input-bg-color: #252525;
-    --hover-color: #2f2f2f;
-    --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    --radius: 8px;
-    --accent-color: #ff69b4;
-    --button-text-color: #fff;
-    --danger-color: #ff4d4d;
-    --link-color: var(--accent-color);
+    --primary-color: #ff1493; /* Темно-розовый */
+    --secondary-color: #c71585; /* Более темный розовый */
+    --background-color: #151515; /* Черный фон */
+    --container-background-color: #1c1c1c; /* Темно-серый матовый контейнер */
+    --text-color: #fff; /* Белый текст */
+    --border-color: #333; /* Темная граница */
+    --hover-color: #262626; /* Цвет при наведении */
+    --shadow: 0 8px 20px rgba(0, 0, 0, 0.3); /* Тень */
+    --radius: 14px; /* Скругление углов */
+    --accent-color: #ff69b4; /* Светло-розовый для аккордов */
 }
 
-/* --- Base & Body --- */
-*, *::before, *::after {
-    box-sizing: border-box;
-}
-
+/* Базовые стили */
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-family: 'Tahoma', sans-serif;
     margin: 0;
-    padding: 10px;
+    padding: 0;
     background: var(--background-color);
     color: var(--text-color);
     line-height: 1.6;
     min-height: 100vh;
-    font-size: 16px;
+    display: flex;
+    flex-direction: column;
 }
 
-/* --- Layout & Header --- */
 .container {
-    max-width: 700px;
-    margin: 15px auto;
-    padding: 20px;
+    max-width: 600px;
+    margin: auto;
+    padding: 10px;
+    box-shadow: var(--shadow);
     border-radius: var(--radius);
     background: var(--container-background-color);
-    box-shadow: var(--shadow);
-}
-
-header {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    margin-top: 20px;
     position: relative;
-    padding: 5px 55px;
-    margin-bottom: 25px;
 }
 
+/* Главный заголовок */
 h1 {
     text-align: center;
-    color: var(--primary-color);
-    margin: 0;
-    font-size: 1.8rem; /* Adjusted */
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    animation: glow 2.5s infinite alternate;
+    color: #fff; /* Розовый цвет для акцента */
+    margin-bottom: 15px;
+    font-size: 2.4rem;
+    
+    
+    text-transform: uppercase; /* Все буквы в верхнем регистре */
+    letter-spacing: 2px; /* Пространство между буквами */
+    animation: glow 3s infinite alternate; /* Мягкое сияние */
 }
 
 @keyframes glow {
-    from { text-shadow: 0 0 8px var(--primary-color), 0 0 12px var(--primary-color); }
-    to { text-shadow: 0 0 15px var(--accent-color), 0 0 25px var(--accent-color); }
+    from {
+        text-shadow: 0 0 10px #ff69b4;
+    }
+    to {
+        text-shadow: 0 0 20px #ff69b4;
+    }
 }
 
-/* --- Base Button Style --- */
-/* Applies to <button> and links styled as buttons */
-button,
-a.button-styled /* Add this class to links you want styled as buttons */
-{
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 9px 15px;
-    font-size: 0.9rem;
-    font-weight: 500;
-    line-height: 1.4;
-    color: var(--button-text-color) !important; /* !important to override link color if needed */
-    background: linear-gradient(145deg, var(--primary-color), var(--secondary-color));
-    border: none;
-    border-radius: var(--radius);
-    cursor: pointer;
+/* Подзаголовок */
+h2 {
     text-align: center;
-    text-decoration: none;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
-    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
-    outline: none;
-    vertical-align: middle;
+    color: #fff; /* Белый цвет */
+    margin-bottom: 15px;
+    font-size: 1.4rem;
+    font-weight: bold; /* Полужирный шрифт */
+    letter-spacing: 1px; /* Небольшое пространство между буквами */
+    
 }
 
-button:hover,
-a.button-styled:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
-}
 
-button:active,
-a.button-styled:active {
-    transform: translateY(0);
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
-}
-
-button:disabled {
-    opacity: 0.5; cursor: not-allowed; box-shadow: none; transform: none;
-}
-
-/* --- Top Controls Section (`.controls`) --- */
+/* Панель управления */
 .controls {
     display: flex;
     flex-direction: column;
-    gap: 15px; /* Space between control groups */
-    margin-bottom: 25px;
+    gap: 10px;
+    margin-bottom: 15px;
 }
 
 .control-group {
     display: flex;
-    flex-wrap: wrap; /* Allow wrapping */
-    align-items: flex-end; /* Align items (label+input) along their bottom edge */
-    gap: 10px; /* Space between items in a group if wrapped */
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
-.control-group label {
-    flex-basis: 100%; /* Label takes full width initially */
-    margin-bottom: 4px;
-    font-size: 0.8rem;
-    color: var(--label-color);
-}
-
-/* Input fields and Selects */
-select, input[type="text"] {
-    display: block;
-    width: 100%; /* Take full width of their container */
-    padding: 10px 12px;
-    font-size: 0.95rem;
-    font-family: inherit;
-    color: var(--text-color);
-    background-color: var(--input-bg-color);
+select, input, button {
+    padding: 14px;
+    font-size: 1rem;
     border: 1px solid var(--border-color);
     border-radius: var(--radius);
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    transition: all 0.3s ease;
     outline: none;
+    appearance: none;
+    background: #222;
+    color: #fff;
 }
 
-select {
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23cccccc'%3E%3Cpath fill-rule='evenodd' d='M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z' clip-rule='evenodd' /%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 10px center;
-    background-size: 16px;
-    padding-right: 35px;
+.font-size-controls {
+    display: flex;
+    gap: 8px;
+    margin-top: 0;
+}
+
+.font-size-controls button {
+    padding: 5px 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: var(--radius);
     cursor: pointer;
 }
-select:disabled { opacity: 0.5; cursor: not-allowed; }
-input[type="text"]:focus, select:focus { border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(255, 20, 147, 0.25); }
 
-/* Specific styling for Key Select and Zoom in the top controls */
-.control-group:has(#key-select) { /* Target the group containing key select */
-    align-items: flex-end; /* Align label, select, buttons nicely */
-    gap: 15px;
-}
-.control-group:has(#key-select) label[for="key-select"] {
-    flex-basis: auto; /* Label doesn't take full width */
-    margin-bottom: 0; /* Align with bottom of select */
-}
-.control-group #key-select {
-    width: auto; /* Auto width based on content */
-    min-width: 65px;
-    padding: 8px 10px;
-    font-size: 0.9rem;
+#key-select {
+    padding: 8px 5px;
+    border: 3px solid var(--border-color);
+    border-radius: var(--radius);
+    font-size: 12px;
+    width: 15%;
     text-align: center;
-    flex-grow: 0; /* Don't grow */
-}
-.control-group .font-size-controls {
-    display: flex;
-    gap: 5px;
-    margin-left: auto; /* Push zoom buttons to the right */
-}
-.control-group .font-size-controls button { /* Zoom buttons */
-    min-width: 38px; height: 38px;
-    padding: 5px;
-    font-size: 1.1rem;
-    line-height: 1;
-    /* Base button style is already applied */
 }
 
-/* Search results */
-#search-results { /* Position relative to the search input group */
-     width: 100%;
-     margin-top: 2px;
-     border-radius: 0 0 var(--radius) var(--radius);
-     overflow: hidden;
-     z-index: 10;
+#sheet-select, #song-select, #search-input {
+    padding: 5px 15px;
+    border: 3px solid var(--border-color);
+    border-radius: var(--radius);
+    font-size: 17px;
+    width: 100%;
+    box-sizing: border-box;
 }
-.search-result {
-    padding: 10px 15px;
-    background-color: var(--input-bg-color);
-    border: 1px solid var(--border-color);
-    border-top: none;
-    cursor: pointer; font-size: 0.95rem;
-    transition: background-color 0.2s ease, color 0.2s ease;
-}
-.search-result:hover { background-color: var(--primary-color); color: var(--button-text-color); }
-.search-result:last-child { border-bottom-left-radius: var(--radius); border-bottom-right-radius: var(--radius); }
 
+button {
+    background: linear-gradient(145deg, var(--primary-color), var(--secondary-color));
+    color: #fff;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    border-radius: var(--radius);
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+    padding: 12px;
+}
 
-/* --- Song Content --- */
-#song-content {
-    background: var(--container-background-color); padding: 20px; border-radius: var(--radius);
-    margin-top: 20px; border: 1px solid var(--border-color); position: relative; overflow: hidden;
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 }
-#song-content h2 { font-size: 1.4rem; margin-bottom: 15px; }
-#song-content pre {
-    font-family: 'Courier New', Courier, monospace; white-space: pre-wrap; word-wrap: break-word;
-    line-height: 1.7; font-size: var(--lyrics-font-size, 1rem); color: var(--text-color);
-    margin: 0; overflow-x: auto;
-}
-.chord {
-    font-weight: 600; color: var(--accent-color); background-color: rgba(255, 105, 180, 0.08);
-    padding: 1px 3px; border-radius: 3px; margin: 0 1px; vertical-align: baseline; /* Changed alignment */
-}
-#song-content.split-columns pre { column-count: 2; column-gap: 25px; }
 
-/* --- Control Buttons (Below Song Content) --- */
+button:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Стиль для кнопок масштабирования */
+#zoom-in, #zoom-out {
+    background: linear-gradient(145deg, var(--primary-color), var(--secondary-color)); /* Используем те же цвета */
+    color: #fff;
+    font-weight: 500;
+    border: none;
+    border-radius: var(--radius);
+    padding: 8px 12px; /* Отступы внутри кнопки */
+    font-size: 14px; /* Размер шрифта */
+    cursor: pointer;
+    transition: none; /* Убираем все переходные эффекты */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Добавляем тень для объемного эффекта */
+}
+
+/* Убираем эффект наведения */
+#zoom-in:hover, #zoom-out:hover {
+    transform: none; /* Нет подъема */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Тень остается неизменной */
+}
+
+#zoom-in:active, #zoom-out:active {
+    transform: none; /* Нет эффекта нажатия */
+    box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.2); /* Внутренняя тень при нажатии */
+}
+
+/* Кнопки управления */
 .control-buttons {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center; /* Center buttons */
-    gap: 12px; /* Space between buttons */
-    margin-top: 20px;
-    margin-bottom: 20px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid var(--border-color); /* Separator */
+    justify-content: space-around;
+    gap: 10px;
+    margin-top: 15px;
 }
-.control-buttons button {
-    padding: 9px 12px;
-    font-size: 0.9rem;
-    flex: 0 1 auto; /* Don't grow too much */
-}
-.control-buttons #favorite-button { font-size: 1.1rem; } /* Make heart bigger */
 
-/* --- Controls Footer (BPM, Metronome, Links) --- */
+.control-buttons button {
+    padding: 8px 12px;
+    font-size: 14px;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex: 1;
+}
+
 .controls-footer {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center; /* Центрируем по горизонтали */
+    gap: 15px; /* Отступ между элементами */
+    margin-top: 10px; /* Отступ сверху */
+    padding: 10px;
+    text-align: center; /* Текст внутри элементов также центрируется */
+}
+
+.bpm-controls {
+    display: flex;
     align-items: center;
-    gap: 15px; /* Space between items */
-    margin-top: 0; /* Removed top margin */
-    padding-top: 0; /* Removed top padding */
-}
-.bpm-controls { display: flex; align-items: center; gap: 10px; }
-.bpm-controls span:not(#bpm-display) { font-size: 0.85rem; color: var(--label-color); }
-.bpm-controls #time-signature { padding: 8px 10px; font-size: 0.9rem; min-width: 65px; }
-.bpm-controls #bpm-display {
-    padding: 8px 10px; min-width: 55px; font-size: 0.95rem; cursor: text;
-    border: 1px solid var(--border-color); background-color: var(--input-bg-color);
-    border-radius: var(--radius); text-align: center; color: var(--text-color);
-}
-.bpm-controls #metronome-button {
-    min-width: 40px; height: 40px; padding: 5px; font-size: 1.1rem;
-}
-/* Repertoire button & Holychords link in footer */
-.controls-footer #add-to-repertoire-button,
-.controls-footer #holychords-button {
-    padding: 9px 15px; /* Use base button padding */
-    font-size: 0.9rem;
-    /* Base button style is already applied */
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
 }
 
-/* --- YouTube Player --- */
-#youtube-player-section { margin-top: 25px; }
-#youtube-player-section h3 { text-align: center; margin-bottom: 15px; font-size: 1.15rem; color: var(--text-color); border: none; padding: 0;}
-#youtube-player-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; background: #000; border-radius: var(--radius); margin-bottom: 15px; }
-#youtube-player-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+#bpm-display {
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    min-width: 50px;
+    text-align: center;
+}
 
-/* --- Side Panel --- */
+#bpm-display:focus {
+    outline: none;
+    background-color: #151515;
+}
+
+#metronome-button {
+    padding: 8px 12px;
+    font-size: 14px;
+    border: none;
+    border-radius: var(--radius);
+    background: linear-gradient(145deg, var(--primary-color), var(--secondary-color));
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#time-signature {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 14px; /* Увеличенные отступы для лучшей видимости */
+    font-size: 1rem; /* Размер шрифта адаптирован под мобильные устройства */
+    border: 2px solid var(--border-color); /* Утолщенные границы для акцента */
+    border-radius: var(--radius);
+    
+    color: var(--text-color);
+    box-shadow: var(--shadow); /* Добавляем тень для объемного эффекта */
+    transition: all 0.3s ease; /* Плавные переходы */
+    min-width: 60px; /* Минимальная ширина для удобства нажатия */
+    text-align: center;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+#time-signature:hover {
+    transform: translateY(-2px); /* Легкий подъем при наведении */
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15); /* Усиленная тень */
+    background-color: var(--hover-color); /* Изменение фона */
+}
+
+#time-signature:active {
+    transform: translateY(0); /* Возвращаем на место при нажатии */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Уменьшаем тень */
+}
+
+
+
+/* Текст песни */
+#song-content {
+    background: var(--container-background-color);
+    padding: 20px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-top: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+#song-content pre {
+    font-family: 'Tahoma', monospace;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+    line-height: 1.2;
+    font-size: clamp(10px, 2vw, 20px);
+    color: var(--text-color);
+    margin: 0;
+    max-width: 100%;
+}
+
+
+
+/* Базовый стиль для аккордов */
+.chord {
+    font-weight: bold;
+    color: var(--accent-color); /* Светло-розовый */
+    margin-right: 4px;
+}
+
+
+
+/* Секция с плеером */
+#youtube-player-section h3 {
+  text-align: center;
+  margin-bottom: 10px;
+  font-size: 1.2rem; /* Или другой размер */
+}
+
+/* Контейнер для адаптивного iframe */
+#youtube-player-container {
+  position: relative;
+  padding-bottom: 56.25%; /* Соотношение сторон 16:9 (height / width * 100) */
+  height: 0;
+  overflow: hidden;
+  max-width: 100%; /* Ширина контейнера */
+  background: #000; /* Черный фон на время загрузки */
+  border-radius: var(--radius); /* Скругление как у других блоков */
+  margin-bottom: 15px; /* Отступ снизу */
+}
+
+#youtube-player-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0; /* Убираем стандартную рамку iframe */
+}
+
+
+
+
+
+
+
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    #key-select {
+        width: 30%;
+        font-size: 14px;
+        margin-right: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 5px;
+    }
+    h1, h2 {
+        font-size: 1.2rem;
+    }
+    select, input, button {
+        font-size: 16px;
+        padding: 12px;
+    }
+    #key-select {
+        width: 15%;
+        font-size: 16px;
+        margin-right: 10px;
+    }
+    #song-content {
+        padding: 15px;
+    }
+    #song-content pre {
+        font-size: 10px;
+        line-height: 1.1;
+    }
+}
+
+/* Стиль для выдвижной панели "Группа" */
 #favorites-panel {
-    position: fixed; top: 0; left: 0; width: 90%; max-width: 380px; height: 100%;
-    background-color: #202020; border-right: 1px solid var(--border-color);
-    box-shadow: 3px 0 10px rgba(0, 0, 0, 0.3); transform: translateX(-100%);
-    transition: transform 0.3s ease-in-out; z-index: 1000; padding: 20px;
-    display: flex; flex-direction: column; gap: 20px; overflow-y: auto;
+    position: fixed;
+    top: 0;
+    left: -80%;
+    width: 80%;
+    height: 100%;
+    background-color: #1c1c1c; /* Темно-серый матовый */
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+    z-index: 1000;
+    overflow-y: auto;
 }
-#favorites-panel.open { transform: translateX(0); }
 
-.toggle-favorites { /* Panel toggle button */
-    position: fixed; top: 10px; right: 10px; width: 45px; height: 45px;
-    border-radius: 50%; font-size: 0.9rem; z-index: 1001;
-    /* Base button style applied */
+#favorites-panel.open {
+    transform: translateX(100%);
 }
-.toggle-favorites:hover { transform: scale(1.1); /* Override base hover */ }
-.toggle-favorites:active { transform: scale(1); box-shadow: inset 0 1px 3px rgba(0,0,0,0.2); }
 
-.list-section { margin-bottom: 0; }
-.list-section h3 { font-size: 1.05rem; margin-top: 0; margin-bottom: 10px; color: var(--accent-color); border-bottom: 1px solid var(--border-color); padding-bottom: 5px; text-align: left; }
-.list-section h3 span { font-weight: normal; color: var(--text-color); font-size: 0.9em; }
+/* Стиль для кнопки "Группа" */
+.toggle-favorites {
+    position: fixed;
+    background: linear-gradient(145deg, #ff1493, #c71585); /* Темно-розовый градиент */
+    top: 10px; /* Небольшой отступ сверху */
+    right: 10px; /* Перемещаем кнопку в правый угол */
+    width: 50px;
+    height: 50px;
+    color: white; /* Белый текст */
+    border: none;
+    border-radius: 50%; /* Круглая форма */
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); /* Тень для объемного эффекта */
+    z-index: 1001;
+}
 
-.list-container { max-height: 220px; overflow-y: auto; }
-.list-container::-webkit-scrollbar { width: 6px; }
-.list-container::-webkit-scrollbar-track { background: var(--border-color); border-radius: 3px;}
-.list-container::-webkit-scrollbar-thumb { background: var(--primary-color); border-radius: 3px;}
-.list-container::-webkit-scrollbar-thumb:hover { background: var(--secondary-color); }
+/* Анимация при наведении */
+.toggle-favorites:hover {
+    transform: scale(1.05); /* Легкое увеличение */
+    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.3); /* Усиленная тень */
+}
 
-.favorite-item, .shared-item, .repertoire-item { display: flex; justify-content: space-between; align-items: center; padding: 9px 5px; border-bottom: 1px solid var(--border-color); cursor: pointer; transition: background-color 0.2s ease; font-size: 0.9rem; }
-.favorite-item:last-child, .shared-item:last-child, .repertoire-item:last-child { border-bottom: none; }
-.favorite-item:hover, .shared-item:hover, .repertoire-item:hover { background-color: var(--hover-color); }
-.list-container .song-name { flex-grow: 1; margin-right: 8px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-/* Remove buttons in lists - override base button style */
-.list-container .remove-button,
-.list-container .delete-button {
+/* Эффект при нажатии */
+.toggle-favorites:active {
+    transform: scale(1); /* Возвращаем к исходному размеру */
+    box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.2); /* Внутренняя тень */
+}
+
+.list-section {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 20px;
+}
+
+.list-section h3 {
+    font-size: 1rem;
+    margin-bottom: 10px;
+    color: var(--text-color);
+}
+
+.favorites-list, .shared-songs-list {
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    background: var(--hover-color);
+}
+
+.favorite-item, .shared-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    transition: background 0.3s ease;
+}
+
+.favorite-item:last-child, .shared-item:last-child {
+    border-bottom: none;
+}
+
+.favorite-item:hover, .shared-item:hover {
+    background-color: #262626; /* Темный серый при наведении */
+}
+
+.song-name {
+    flex-grow: 1;
+    margin-right: 10px;
+}
+
+.remove-button, .delete-button {
     background: none;
     border: none;
-    color: var(--danger-color);
+    color: red;
     cursor: pointer;
-    padding: 0 6px;
-    font-size: 1.1rem;
-    line-height: 1;
-    flex-shrink: 0;
-    box-shadow: none; /* Override */
-    transition: color 0.2s ease;
-}
-.list-container .remove-button:hover,
-.list-container .delete-button:hover {
-    color: #ff1a1a;
-    transform: none; /* Override */
-    box-shadow: none; /* Override */
-}
-.list-container .remove-button:active,
-.list-container .delete-button:active {
-     transform: none; /* Override */
-     box-shadow: none; /* Override */
-}
-.empty-message { padding: 15px; text-align: center; color: var(--label-color); font-style: italic; font-size: 0.9rem; }
-
-/* --- Loading Indicator --- */
-#loading-indicator { display: none; position: fixed; top: 15px; left: 50%; transform: translateX(-50%); background-color: rgba(40, 40, 40, 0.85); color: white; padding: 8px 18px; border-radius: var(--radius); z-index: 1002; font-size: 0.9rem; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-
-/* --- Responsiveness --- */
-@media (max-width: 700px) {
-    .container { padding: 15px; }
-    /* Adjust top controls group with key/zoom */
-    .control-group:has(#key-select) { justify-content: space-between; } /* Spread items */
-    .control-group:has(#key-select) label[for="key-select"] { margin-right: 0;}
-    .control-group:has(#key-select) .font-size-controls { margin-left: 0; } /* Remove margin push */
 }
 
-@media (max-width: 500px) {
-    body { font-size: 15px; padding: 5px; }
-    .container { padding: 10px; margin: 10px auto; }
-    header { padding: 5px 50px; margin-bottom: 15px; }
-    h1 { font-size: 1.6rem; letter-spacing: 1px; }
-    #song-content h2 { font-size: 1.2rem; }
-    h3 { font-size: 1.1rem; }
+.remove-btn:hover, .delete-button:hover {
+    text-decoration: underline;
+}
 
-    select, input[type="text"] { padding: 9px 10px; font-size: 0.9rem; }
-    select { padding-right: 30px; background-size: 14px; }
-    button, a#holychords-button { padding: 8px 10px; font-size: 0.85rem; } /* Smaller buttons */
+/* Стиль для кнопки Holychords */
+#holychords-button {
+    display: inline-block;
+    padding: 8px 12px;
+    font-size: 14px;
+    color: var(--accent-color);
+    text-decoration: none;
+    border: 1px solid var(--accent-color);
+    border-radius: var(--radius);
+    transition: all 0.3s ease;
+}
 
-    .controls { gap: 12px; }
-    .control-group { flex-direction: column; align-items: stretch; gap: 5px; }
-    .control-group label { margin-bottom: 3px; }
-    /* Keep key/zoom row layout */
-    .control-group:has(#key-select) { flex-direction: row; align-items: flex-end; justify-content: space-between; }
-    .control-group:has(#key-select) label { flex-basis: auto; }
-    .control-group:has(#key-select) .font-size-controls { margin-left: 0; }
+#holychords-button:hover {
+    background-color: var(--accent-color);
+    color: #fff;
+}
 
-    .control-buttons { justify-content: space-around; gap: 8px; }
-    .control-buttons button { padding: 8px 8px; }
 
-    .controls-footer { flex-direction: column; align-items: stretch; gap: 10px; }
-    .bpm-controls { justify-content: center; }
-    .controls-footer a#holychords-button,
-    .controls-footer #add-to-repertoire-button { width: 100%; text-align: center; } /* Footer buttons full width */
+/* Стиль для разделения текста на две колонки */
+#song-content.split-columns pre {
+    column-count: 2;
+    column-gap: 13px;
+    line-height: 1.2;
+    position: relative;
+}
 
-    #song-content { padding: 12px; }
-    #song-content pre { font-size: 0.85rem; line-height: 1.6; }
-    #song-content.split-columns pre { column-count: 1; } /* Disable columns */
+#song-content.split-columns pre::after {
+    content: "";
+    display: table;
+    clear: both;
+}
 
-    #favorites-panel { width: 95%; padding: 15px; }
-    .list-container { max-height: 180px; }
-    .favorite-item, .shared-item, .repertoire-item { font-size: 0.85rem; padding: 7px 5px; }
-    .list-container .remove-button, .list-container .delete-button { font-size: 1rem; }
+#song-content.split-columns pre::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 1px;
+    background-color: #ccc;
+    z-index: 1;
 }
