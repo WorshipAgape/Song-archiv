@@ -579,7 +579,5 @@ input[type="text"]:focus, select:focus {
 
     #favorites-panel { width: 90%; } /* Панель чуть шире */
 
-    #song-content.split-columns pre { column-count: 1; } /* Отключаем колонки на маленьких экранах */
-
     .toggle-favorites { width: 40px; height: 40px; font-size: 0.8rem; }
 }
