@@ -88,7 +88,7 @@ async function fetchSheetData(sheetName) {
     loadingIndicator.style.display = 'block'; // Показываем индикатор загрузки
 
     try {
-        const range = `${sheetName}!A2:E`;
+        const range = `${sheetName}!A2:F`;
         const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${range}?key=${API_KEY}`;
         const response = await fetch(url);
         const data = await response.json();
