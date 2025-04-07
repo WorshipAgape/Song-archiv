@@ -654,13 +654,36 @@ document.getElementById('add-to-list-button').addEventListener('click', () => {
 
 
 // Функция для загрузки и отображения общего списка песен
-// Функция для загрузки и отображения общего списка песен
 function loadSharedList(container = document.getElementById('shared-songs-list')) {
-    // ... (код для очистки контейнера и запроса к Firestore) ...
+    if (!container) {
+        console.error("Контейнер для общего списка песен не найден.");
+        return;
+    }
 
+    container.innerHTML = ''; // Можно очистить здесь для первоначального состояния
+
+    // >>>>> ВОТ ЭТА СТРОКА ДОЛЖНА БЫТЬ <<<<<
+    // Создаем запрос к коллекции sharedList.
+    // Если нужна сортировка, добавьте ее сюда, например:
+    // const q = query(sharedListCollection, orderBy("timestamp", "desc"));
+    const q = query(sharedListCollection);
+    // >>>>> КОНЕЦ ВАЖНОЙ СТРОКИ <<<<<
+
+    // Устанавливаем слушатель изменений в реальном времени
     onSnapshot(q, (snapshot) => {
-        // ... (код проверки на пустой список) ...
+        // Очищаем контейнер ПЕРЕД добавлением обновленных данных
+        container.innerHTML = '';
 
+        // Проверяем, пуст ли список (более современный способ)
+        if (snapshot.empty) {
+            const emptyMessage = document.createElement('div');
+            emptyMessage.textContent = 'Нет песен в общем списке';
+            emptyMessage.className = 'empty-message';
+            container.appendChild(emptyMessage);
+            return; // Выходим, если список пуст
+        }
+
+        // Перебираем документы из снимка
         snapshot.docs.forEach((doc) => {
             const song = doc.data();
             const docId = doc.id;
@@ -673,6 +696,7 @@ function loadSharedList(container = document.getElementById('shared-songs-list')
             songNameElement.textContent = `${song.name} — ${song.key}`;
             songNameElement.className = 'song-name';
 
+            // Обработчик клика по названию песни (с закрытием панели)
             songNameElement.addEventListener('click', async () => {
                 const sheetName = song.sheet;
                 const songIndex = song.index;
@@ -694,33 +718,31 @@ function loadSharedList(container = document.getElementById('shared-songs-list')
                 // Отображаем детали песни
                 displaySongDetails(cachedData[sheetName][songIndex], songIndex, song.key);
 
-                 // Обновляем транспонирование аккордов (уже вызывается в displaySongDetails, можно убрать дубль)
-                // updateTransposedLyrics();
-
-                // >>>>> ВОТ ЭТА СТРОКА: Закрываем панель <<<<<
+                // Закрываем панель
                 if (favoritesPanel) {
                      favoritesPanel.classList.remove('open');
                 }
-                // >>>>> КОНЕЦ ДОБАВЛЕННОЙ СТРОКИ <<<<<
             });
 
-            // Кнопка удаления (ваш код кнопки) ...
+            // Кнопка удаления
             const deleteButton = document.createElement('button');
             deleteButton.textContent = '❌';
             deleteButton.className = 'delete-button';
             deleteButton.addEventListener('click', () => {
                 if (confirm(`Удалить песню "${song.name}" из общего списка?`)) {
                     deleteFromSharedList(docId);
-                    // loadSharedList(container); // Перезагрузка уже происходит через onSnapshot или loadGroupPanel
+                    // Перезагрузка списка здесь не нужна, onSnapshot сам обновит интерфейс
                 }
             });
 
-
             listItem.appendChild(songNameElement);
             listItem.appendChild(deleteButton);
-
-            container.appendChild(listItem);
+            container.appendChild(listItem); // Добавляем элемент в контейнер
         });
+
+    }, (error) => { // Добавляем обработчик ошибок для самого onSnapshot
+        console.error("Ошибка при получении данных общего списка:", error);
+        container.innerHTML = '<div class="empty-message">Не удалось загрузить общий список.</div>';
     });
 }
 
