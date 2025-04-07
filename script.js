@@ -1275,7 +1275,6 @@ async function addToRepertoire() {
         index: songIndex,         // Индекс песни (строка)
         name: songName,           // Название песни
         preferredKey: preferredKey, // Выбранная тональность
-        addedAt: serverTimestamp() // Добавляем время добавления/обновления
     };
 
     console.log("Данные для сохранения:", dataToSave);
