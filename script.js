@@ -296,46 +296,77 @@ async function deleteFromSharedList(docId) {
     }
 }
 
-/** Загрузка и отображение репертуара вокалиста (Firestore) */
+// --- Функция для загрузки и отображения репертуара вокалиста (Исправлена ошибка с listContainer) ---
 function loadRepertoire(vocalistId) {
-    if (!repertoireList || !repertoireSection || !repertoireVocalistName) {
-         console.error("Не найдены UI элементы для отображения репертуара.");
+    // Получаем ссылки на секцию и заголовок (они нужны сразу)
+    const sectionContainer = document.getElementById('repertoire-section');
+    const nameSpan = document.getElementById('repertoire-vocalist-name');
+
+    // Проверки на наличие этих элементов
+    if (!sectionContainer || !nameSpan) {
+         console.error("Не найдены UI элементы секции или заголовка репертуара.");
          return;
     }
-    repertoireList.innerHTML = '';
-    repertoireSection.style.display = 'none';
+    // Получаем контейнер списка для первоначальной очистки/сообщения
+    const initialListContainer = document.getElementById('repertoire-list');
+     if (!initialListContainer) {
+          console.error("Элемент <div id='repertoire-list'> не найден.");
+          sectionContainer.style.display = 'none'; // Прячем секцию, если нет контейнера списка
+          return;
+     }
 
+    // Очищаем предыдущий список и скрываем секцию
+    initialListContainer.innerHTML = '';
+    sectionContainer.style.display = 'none';
+
+    // Если вокалист не выбран
     if (!vocalistId) {
-        repertoireVocalistName.textContent = '';
+        nameSpan.textContent = '';
         console.log("loadRepertoire: Вокалист не выбран.");
         return;
     }
-    repertoireVocalistName.textContent = currentVocalistName || vocalistId;
-    repertoireSection.style.display = 'block';
-    repertoireList.innerHTML = '<div>Загрузка репертуара...</div>';
 
+    // Если вокалист выбран: показываем секцию, имя и сообщение о загрузке
+    nameSpan.textContent = currentVocalistName || vocalistId;
+    sectionContainer.style.display = 'block';
+    initialListContainer.innerHTML = '<div>Загрузка репертуара...</div>';
+
+    // --- Настраиваем слушатель Firestore ---
     const repertoireColRef = collection(db, "vocalists", vocalistId, "repertoire");
-    const q = query(repertoireColRef, orderBy("name", "asc")); // Сортируем по имени
+    const q = query(repertoireColRef, orderBy("name", "asc"));
     console.log(`loadRepertoire: Установка слушателя для вокалиста ${vocalistId}`);
 
+    // Устанавливаем слушатель onSnapshot
     const unsubscribe = onSnapshot(q, (snapshot) => {
+        // *** ИСПРАВЛЕНИЕ: Получаем listContainer ЗДЕСЬ, внутри callback ***
+        const listContainer = document.getElementById('repertoire-list');
+        if (!listContainer) {
+             console.error("loadRepertoire (onSnapshot callback): Контейнер #repertoire-list не найден!");
+             return; // Не можем обновить UI
+        }
+        // *** КОНЕЦ ИСПРАВЛЕНИЯ ***
+
         console.log(`loadRepertoire: Получены данные для ${vocalistId}, количество: ${snapshot.size}`);
-        repertoireList.innerHTML = '';
+        listContainer.innerHTML = ''; // Очищаем контейнер
+
         if (snapshot.empty) {
-            repertoireList.innerHTML = '<div class="empty-message">В репертуаре этого вокалиста пока нет песен.</div>';
+            listContainer.innerHTML = '<div class="empty-message">В репертуаре этого вокалиста пока нет песен.</div>';
             return;
         }
+
+        // Отображаем песни
         snapshot.docs.forEach((doc) => {
             const song = doc.data();
             const repertoireDocId = doc.id;
-            // Создаем элемент списка (listItem)
             const listItem = document.createElement('div');
             listItem.className = 'favorite-item repertoire-item';
-            // Имя песни и тональность
+
+            // Имя и тональность
             const songInfo = document.createElement('span');
             songInfo.className = 'song-name';
             songInfo.textContent = `${song.name} — ${song.preferredKey}`;
             listItem.appendChild(songInfo);
+
             // Кнопка удаления
             const removeBtn = document.createElement('button');
             removeBtn.textContent = '❌';
@@ -346,11 +377,12 @@ function loadRepertoire(vocalistId) {
                  removeFromRepertoire(vocalistId, repertoireDocId);
             });
             listItem.appendChild(removeBtn);
-            // Клик по элементу для загрузки песни
+
+            // Клик по элементу
             listItem.addEventListener('click', async () => {
-                // Логика клика по песне репертуара... (оставлена как есть)
-                if (!cachedData[song.sheet] || !cachedData[song.sheet][song.index]) {
-                     console.warn(`Данные песни ${song.name} не найдены в кэше. Попытка загрузить лист ${song.sheet}...`);
+                // ... (остальная логика клика без изменений) ...
+                 if (!cachedData[song.sheet] || !cachedData[song.sheet][song.index]) {
+                     console.warn(`Данные песни ${song.name} не найдены в кэше...`);
                      await fetchSheetData(song.sheet);
                      if (!cachedData[song.sheet] || !cachedData[song.sheet][song.index]){
                          alert('Не удалось найти исходные данные песни.'); return;
@@ -364,12 +396,22 @@ function loadRepertoire(vocalistId) {
                  displaySongDetails(originalSongData, song.index, song.preferredKey);
                  if (favoritesPanel) favoritesPanel.classList.remove('open');
             });
-            listContainer.appendChild(listItem);
+
+            listContainer.appendChild(listItem); // Используем listContainer, определенный ВНУТРИ callback
         });
-    }, (error) => {
+
+    }, (error) => { // Обработчик ошибок слушателя
+        // *** ИСПРАВЛЕНИЕ: Получаем listContainer ЗДЕСЬ тоже, внутри callback ошибки ***
+        const listContainer = document.getElementById('repertoire-list');
+        if (listContainer) {
+             listContainer.innerHTML = '<div class="empty-message">Ошибка загрузки репертуара.</div>';
+        }
+        // *** КОНЕЦ ИСПРАВЛЕНИЯ ***
         console.error(`Ошибка при прослушивании репертуара для ${vocalistId}:`, error);
-        repertoireList.innerHTML = '<div class="empty-message">Ошибка загрузки репертуара.</div>';
     });
+
+    // Сохранение функции отписки (опционально)
+    // vocalistSelect.dataset.unsubscribe = unsubscribe;
 }
 
 /** Добавление/Обновление песни в репертуаре вокалиста (Firestore) */
