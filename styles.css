@@ -119,6 +119,25 @@ select, input, button {
     text-align: center;
 }
 
+
+/* --- Общие стили для боковых панелей --- */
+.side-panel {
+    position: fixed;
+    top: 0;
+    width: 90%; /* Ширина панелей */
+    max-width: 380px; /* Макс ширина */
+    height: 100%;
+    background-color: #202020;
+    box-shadow: 3px 0 10px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease-in-out;
+    z-index: 1000;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+}
+
 #sheet-select, #song-select, #search-input {
     padding: 5px 15px;
     border: 3px solid var(--border-color);
@@ -369,23 +388,126 @@ button:active {
     }
 }
 
-/* Стиль для выдвижной панели "Группа" */
-#favorites-panel {
-    position: fixed;
-    top: 0;
-    left: -80%;
-    width: 80%;
-    height: 100%;
-    background-color: #1c1c1c; /* Темно-серый матовый */
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease;
-    z-index: 1000;
-    overflow-y: auto;
+/* --- Стили для панели "Списки" (#favorites-panel) --- */
+.favorites-panel {
+    /* Сдвигаем вправо, скрываем за правым краем */
+    right: 0;
+    left: auto; /* Убираем left */
+    transform: translateX(100%);
+    border-left: 1px solid var(--border-color); /* Граница слева */
+    border-right: none; /* Убираем правую */
+}
+.favorites-panel.open {
+    transform: translateX(0); /* Выдвигаем влево */
 }
 
-#favorites-panel.open {
-    transform: translateX(100%);
+/* --- Стили для НОВОЙ панели "Репертуар" (#repertoire-panel) --- */
+.repertoire-panel {
+    /* Остается слева, скрыта за левым краем */
+    left: 0;
+    right: auto; /* Убираем right */
+    transform: translateX(-100%);
+    border-right: 1px solid var(--border-color); /* Граница справа */
+    border-left: none; /* Убираем левую */
 }
+.repertoire-panel.open {
+    transform: translateX(0); /* Выдвигаем вправо */
+}
+
+
+.toggle-button { /* Общий класс, если нужен, или стилизуем по ID */
+    position: fixed;
+    top: 10px;
+    width: 45px; height: 45px;
+    border-radius: 50%;
+    z-index: 1001;
+    font-size: 0.85rem; /* Поменьше текст/иконка */
+    padding: 5px;
+    /* Основной стиль кнопки (градиент и т.д.) применится через селектор button */
+}
+.lists-toggle { /* Кнопка "Списки" справа */
+    right: 10px;
+    left: auto;
+}
+.repertoire-toggle { /* НОВАЯ Кнопка "Репертуар" слева */
+    left: 10px;
+    right: auto;
+}
+/* Можно убрать текст и использовать иконки Font Awesome */
+/* .repertoire-toggle::before { content: "\f02d"; font-family: 'Font Awesome 6 Free'; font-weight: 900; } */
+/* .lists-toggle::before { content: "\f03a"; font-family: 'Font Awesome 6 Free'; font-weight: 900; } */
+
+/* --- Стили для контента внутри панели Репертуара --- */
+#repertoire-panel h3 {
+     font-size: 1.1rem;
+     margin-top: 0;
+     margin-bottom: 15px;
+     padding-bottom: 8px;
+     border-bottom: 1px solid var(--border-color);
+     color: var(--accent-color);
+}
+#repertoire-panel h3 span { /* Имя вокалиста */
+     color: var(--text-color);
+     font-weight: normal;
+     font-size: 0.9em;
+}
+.repertoire-list-container { /* Контейнер списка */
+     flex-grow: 1; /* Занимает оставшееся место */
+     overflow-y: auto;
+     /* Стили скроллбара (если нужно) */
+     &::-webkit-scrollbar { width: 6px; }
+     &::-webkit-scrollbar-track { background: var(--border-color); border-radius: 3px;}
+     &::-webkit-scrollbar-thumb { background: var(--primary-color); border-radius: 3px;}
+}
+
+/* Стили для заголовков группировки (добавим позже, когда будет JS) */
+.repertoire-key-heading {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-color);
+    background-color: var(--input-bg-color);
+    padding: 6px 10px;
+    margin-top: 12px;
+    margin-bottom: 5px;
+    border-radius: 4px;
+    border-left: 3px solid var(--primary-color);
+}
+.repertoire-sheet-heading { /* Заголовок для листа */
+     font-size: 0.8rem;
+     font-weight: 500;
+     color: var(--label-color);
+     padding: 3px 10px 3px 15px; /* С отступом */
+     margin-top: 5px;
+     /* border-bottom: 1px dashed var(--border-color); */
+}
+.repertoire-list-container > .repertoire-key-heading:first-child {
+    margin-top: 0;
+}
+
+/* Элементы списка репертуара */
+.repertoire-item {
+     display: flex; justify-content: space-between; align-items: center;
+     padding: 8px 10px 8px 20px; /* Отступ слева для вложенности под заголовками */
+     border-bottom: 1px solid var(--border-color);
+     cursor: pointer;
+     transition: background-color 0.2s ease;
+     font-size: 0.9rem;
+}
+.repertoire-item:last-child { border-bottom: none; }
+.repertoire-item:hover { background-color: var(--hover-color); }
+
+/* Переопределяем стили для кнопок удаления внутри #repertoire-panel */
+#repertoire-panel .remove-button {
+     background: none; border: none; color: var(--danger-color); cursor: pointer;
+     padding: 0 6px; font-size: 1.1rem; line-height: 1; flex-shrink: 0;
+     box-shadow: none; /* Убираем тень от базового стиля button */
+     transition: color 0.2s ease;
+}
+#repertoire-panel .remove-button:hover { color: #ff1a1a; transform: none; box-shadow: none; }
+#repertoire-panel .remove-button:active { transform: none; box-shadow: none; }
+
+
+
 
 /* Стиль для кнопки "Группа" */
 .toggle-favorites {
