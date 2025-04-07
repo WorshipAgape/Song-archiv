@@ -388,56 +388,92 @@ async function loadSheetSongs() {
 }
 
 
-// Функция для отображения текста песни
+// --- Функция для отображения текста песни (и видео) --- ИСПРАВЛЕННАЯ ВЕРСИЯ
 function displaySongDetails(songData, index, key) {
-    if (!songData) return;
+    // Получаем ссылки на элементы плеера
+    const playerContainer = document.getElementById('youtube-player-container');
+    const playerSection = document.getElementById('youtube-player-section');
+    // Ссылка на основной контейнер текста (убедитесь, что он определен глобально)
+    // const songContent = document.getElementById('song-content');
 
-    const originalKey = key || songData[2]; // Используем сохраненную тональность, если она передана
+    // Проверка наличия данных и элементов
+    if (!songData || !playerContainer || !playerSection || !songContent) {
+        console.error("Не найдены данные песни или элементы DOM (songContent, playerContainer, playerSection).");
+        // Очищаем все, если чего-то не хватает
+        if (playerContainer) playerContainer.innerHTML = '';
+        if (playerSection) playerSection.style.display = 'none';
+        if (songContent) songContent.innerHTML = '<h2>Выберите песню</h2><pre></pre>';
+        return;
+    }
+
+    // --- Получаем данные песни ---
+    const originalKey = key || songData[2]; // Используем переданный ключ (из репертуара/избранного) или оригинальный
     const bpm = songData[4] || 'N/A';
-    const lyrics = songData[1] || '';
-    const sourceUrl = songData[3] || '#';
+    const lyrics = songData[1] || '';       // Текст песни
+    const sourceUrl = songData[3] || '#';   // Ссылка на Holychords
+    const songTitle = songData[0];          // Название песни
+    const youtubeLink = songData[5];        // Ссылка YouTube (из нового столбца F)
 
-// Обновляем BPM
-    updateBPM(bpm);
-
+    // --- Обновляем BPM ---
+    updateBPM(bpm); // Предполагаем, что функция updateBPM существует
     bpmDisplay.textContent = bpm;
 
-    // Обновляем ссылку для кнопки Holychords
-    if (sourceUrl && sourceUrl.trim() !== '') {
-        holychordsButton.href = sourceUrl; // Устанавливаем ссылку
-        holychordsButton.style.display = 'inline-block'; // Показываем кнопку
+    // --- Обновляем кнопку Holychords ---
+    if (sourceUrl && sourceUrl.trim() !== '' && sourceUrl.trim() !== '#') {
+        holychordsButton.href = sourceUrl;
+        holychordsButton.style.display = 'inline-block';
     } else {
-        holychordsButton.href = '#'; // Если ссылки нет, делаем её неактивной
-        holychordsButton.style.display = 'none'; // Скрываем кнопку
+        holychordsButton.href = '#';
+        holychordsButton.style.display = 'none';
     }
 
-    // Обрабатываем и выделяем аккорды
-    const highlightedLyrics = highlightChords(processLyrics(lyrics));
+    // --- Обрабатываем и подсвечиваем текст ---
+    // Важно: Обработка и подсветка оригинального текста БЕЗ транспонирования
+    const processedOriginalLyrics = processLyrics(lyrics);
+    const highlightedOriginalLyrics = highlightChords(processedOriginalLyrics);
 
-    // Обновляем содержимое страницы
+    // --- Обновляем ОСНОВНОЕ содержимое (Название + Текст) ---
+    // Эта строка обновляет название и ПОКА оригинальный текст песни
     songContent.innerHTML = `
-        ${songData[0]} — ${originalKey}
-${highlightedLyrics}
-    `;
+        <h2>${songTitle} — ${originalKey}</h2>
+        <pre>${highlightedOriginalLyrics}</pre>
+    `; // <-- Вот здесь единый блок для H2 и PRE
 
+    // --- Обновляем селектор тональности и вызываем транспонирование ---
+    // Устанавливаем селектор на текущую (оригинальную или предпочтительную) тональность
     keySelect.value = originalKey;
+    // Сохраняем оригинальный индекс песни для функции транспонирования
     keySelect.dataset.index = index;
+    // Вызываем функцию, которая прочитает выбранную тональность (keySelect.value)
+    // и применит транспонирование к тексту внутри songContent -> pre
+    updateTransposedLyrics(); // Эта функция должна перезаписать текст в <pre> уже транспонированным
 
-    // Вызываем функцию для транспонирования аккордов
-    updateTransposedLyrics();
-}
+    // --- Обновляем YouTube плеер ---
+    const videoId = extractYouTubeVideoId(youtubeLink); // Извлекаем ID видео
 
-// Обработчик кнопки Holychords
-holychordsButton.addEventListener('click', (event) => {
-    if (holychordsButton.href === '#' || holychordsButton.href === '') {
-        event.preventDefault(); // Предотвращаем переход, если ссылка пустая
-        alert('Ссылка на Holychords отсутствует для этой песни.');
+    if (videoId) {
+        console.log("Найден YouTube Video ID:", videoId);
+        // Создаем HTML для встраивания iframe
+        playerContainer.innerHTML = `
+            <iframe
+                width="100%"
+                height="315" /* Будет изменено CSS для адаптивности */
+                src="https://www.youtube.com/embed/${videoId}?autoplay=0&modestbranding=1&rel=0"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen>
+            </iframe>
+        `;
+        // Показываем секцию с плеером
+        playerSection.style.display = 'block';
+    } else {
+        console.log("Ссылка YouTube для этой песни не найдена или невалидна.");
+        // Если ссылки нет, очищаем контейнер и скрываем секцию
+        playerContainer.innerHTML = '';
+        playerSection.style.display = 'none';
     }
-});
-
-keySelect.addEventListener('change', () => {
-    updateTransposedLyrics();
-});
+    // --- Конец блока YouTube ---
+}
 
 // Функционал кнопки "Разделить текст"
 if (!splitTextButton || !songContent) {
@@ -1327,4 +1363,68 @@ async function removeFromRepertoire(vocalistId, repertoireDocId) {
          console.error("Ошибка при удалении песни из репертуара:", error);
          alert("Произошла ошибка при удалении песни. См. консоль.");
      }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+**
+ * Извлекает ID видео YouTube из URL.
+ * Поддерживает форматы:
+ * - https://www.youtube.com/watch?v=VIDEO_ID
+ * - https://youtu.be/VIDEO_ID
+ * - https://www.youtube.com/embed/VIDEO_ID
+ * @param {string} url - Ссылка на YouTube видео.
+ * @returns {string|null} - ID видео или null, если не найдено.
+ */
+function extractYouTubeVideoId(url) {
+    if (!url) return null;
+    let videoId = null;
+    try {
+        const urlObj = new URL(url);
+        if (urlObj.hostname.includes('youtube.com')) {
+            if (urlObj.pathname === '/watch') {
+                videoId = urlObj.searchParams.get('v');
+            } else if (urlObj.pathname.startsWith('/embed/')) {
+                videoId = urlObj.pathname.substring('/embed/'.length);
+            }
+        } else if (urlObj.hostname.includes('youtu.be')) {
+            videoId = urlObj.pathname.substring(1); // Убираем /
+        }
+    } catch (e) {
+        console.error("Error parsing YouTube URL:", e);
+        return null; // Невалидный URL
+    }
+
+    // Простая проверка на валидность ID (обычно 11 символов)
+    if (videoId && /^[a-zA-Z0-9_-]{11}$/.test(videoId)) {
+        return videoId;
+    }
+    return null;
 }
