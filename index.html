@@ -36,6 +36,12 @@
             <option value="">-- Сначала выберите лист --</option>
         </select>
     </div>
+<div class="control-group">
+    <label for="vocalist-select">Вокалист:</label>
+    <select id="vocalist-select">
+        <option value="">-- Выберите вокалиста --</option>
+        </select>
+</div>
         <div class="control-group">
             <label for="key-select">Тональность:</label>
             <select id="key-select">
@@ -82,10 +88,14 @@
         <button id="metronome-button">▶️ Включить метроном</button>
     </div>
     <a id="holychords-button" href="#" target="_blank">Holychords</a>
+<button id="add-to-repertoire-button" aria-label="Добавить в мой репертуар">🎤 В мой репертуар</button>
 </div>
 </main>
 <!-- Панель "Группа" -->
 <div id="favorites-panel" class="favorites-panel">
+<div id="repertoire-section" class="list-section" style="display: none;"> <h3>Мой репертуар (<span id="repertoire-vocalist-name"></span>)</h3>
+     <div id="repertoire-list" class="favorites-list"> </div>
+</div>
     <div id="my-list" class="list-section">
         <h3>Мой список</h3>
         <div id="favorites-list" class="favorites-list"></div>
