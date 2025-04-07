@@ -1394,15 +1394,7 @@ async function removeFromRepertoire(vocalistId, repertoireDocId) {
 
 
 
-**
- * Извлекает ID видео YouTube из URL.
- * Поддерживает форматы:
- * - https://www.youtube.com/watch?v=VIDEO_ID
- * - https://youtu.be/VIDEO_ID
- * - https://www.youtube.com/embed/VIDEO_ID
- * @param {string} url - Ссылка на YouTube видео.
- * @returns {string|null} - ID видео или null, если не найдено.
- */
+
 function extractYouTubeVideoId(url) {
     if (!url) return null;
     let videoId = null;
