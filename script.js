@@ -12,9 +12,9 @@ const firebaseConfig = {
 
 // Initialize Firebase
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import { getFirestore, collection, addDoc, query, onSnapshot, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+// Добавьте orderBy, getDocs, where сюда, если их нет
+import { getFirestore, collection, addDoc, query, onSnapshot, deleteDoc, doc, orderBy, getDocs, where } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 import { getStorage, ref, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js";
-
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
@@ -619,23 +619,62 @@ toggleFavoritesButton.addEventListener('click', () => {
 
 
 // Функция для добавления песни в общий список
-function addToSharedList(songData) {
+// Функция для добавления песни в общий список (с проверками лимита и дублей)
+async function addToSharedList(songData) { // Делаем функцию асинхронной
     const sheetName = SHEETS[sheetSelect.value];
     const songIndex = songSelect.value;
 
-    if (!sheetName || !songIndex) return;
+    // Проверка, что все нужные данные существуют
+    if (!sheetName || !songIndex || !songData || !songData[0]) {
+         console.error("Данные для добавления песни отсутствуют или некорректны.");
+         alert("Не удалось добавить песню: недостаточно данных. Выберите песню.");
+         return;
+    }
 
     const song = {
         name: songData[0],
         sheet: sheetName,
         index: songIndex,
-        key: keySelect.value, // Сохраняем текущую тональность
-        timestamp: new Date().toISOString() // Для сортировки
+        key: keySelect.value, // Сохраняем текущую выбранную тональность
+        timestamp: new Date().toISOString() // Время добавления для сортировки
     };
 
-    addDoc(sharedListCollection, song)
-        
-        .catch((error) => console.error("Ошибка при добавлении песни:", error));
+    const maxSongs = 8; // Устанавливаем лимит
+
+    try {
+        // --- ПРОВЕРКА 1: Лимит количества песен ---
+        const countQuery = query(sharedListCollection); // Запрос для подсчета
+        const countSnapshot = await getDocs(countQuery); // Получаем все документы
+
+        if (countSnapshot.size >= maxSongs) {
+            alert(`В общем списке уже ${countSnapshot.size} песен. Достигнут лимит (${maxSongs}).`);
+            return; // Выходим, если лимит достигнут
+        }
+
+        // --- ПРОВЕРКА 2: Дубликаты ---
+        // Ищем песню с таким же листом (sheet) и индексом строки (index)
+        const duplicateQuery = query(sharedListCollection,
+                                     where("sheet", "==", song.sheet),
+                                     where("index", "==", song.index));
+        const duplicateSnapshot = await getDocs(duplicateQuery);
+
+        // Если запрос вернул хотя бы один документ, значит дубликат найден
+        if (!duplicateSnapshot.empty) {
+            alert(`Песня "${song.name}" уже есть в общем списке.`);
+            return; // Выходим, если найден дубликат
+        }
+
+        // --- ДОБАВЛЕНИЕ ПЕСНИ ---
+        // Если обе проверки пройдены, добавляем песню
+        await addDoc(sharedListCollection, song);
+        console.log(`Песня "${song.name}" успешно добавлена в общий список.`);
+        // Панель обновится сама благодаря onSnapshot в loadSharedList,
+        // вызывать loadGroupPanel() здесь не нужно.
+
+    } catch (error) {
+        console.error("Ошибка при добавлении песни в общий список:", error);
+        alert("Произошла ошибка при добавлении песни. Пожалуйста, попробуйте еще раз.");
+    }
 }
 
 // Обработчик кнопки "Добавить в список"
@@ -665,9 +704,9 @@ function loadSharedList(container = document.getElementById('shared-songs-list')
     // >>>>> ВОТ ЭТА СТРОКА ДОЛЖНА БЫТЬ <<<<<
     // Создаем запрос к коллекции sharedList.
     // Если нужна сортировка, добавьте ее сюда, например:
-    // const q = query(sharedListCollection, orderBy("timestamp", "desc"));
-    const q = query(sharedListCollection);
-    // >>>>> КОНЕЦ ВАЖНОЙ СТРОКИ <<<<<
+    // Было: const q = query(sharedListCollection);
+// Стало (сортировка по возрастанию timestamp - старые вверху):
+const q = query(sharedListCollection, orderBy("timestamp", "asc"));
 
     // Устанавливаем слушатель изменений в реальном времени
     onSnapshot(q, (snapshot) => {
