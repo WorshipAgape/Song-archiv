@@ -678,8 +678,7 @@ function displaySongDetails(songData, index, key) {
     }
 
     // Обрабатываем и подсвечиваем ОРИГИНАЛЬНЫЙ текст
-    const processedOriginalLyrics = processLyrics(lyrics);
-    const highlightedOriginalLyrics = highlightChords(processedOriginalLyrics);
+    const highlightedOriginalLyrics = highlightChords(lyrics);
 
     // Обновляем основной контент (Название + ОРИГИНАЛЬНЫЙ текст)
     songContent.innerHTML = `
@@ -745,8 +744,7 @@ function updateTransposedLyrics() {
     // Транспонируем оригинальный текст
     const transposedLyrics = transposeLyrics(lyrics, transposition);
     // Обрабатываем пробелы и подсвечиваем аккорды в транспонированном тексте
-    const processedTransposedLyrics = processLyrics(transposedLyrics);
-    const highlightedTransposedLyrics = highlightChords(processedTransposedLyrics);
+   const highlightedTransposedLyrics = highlightChords(transposedLyrics);
 
     // Обновляем текст в <pre>
     preElement.innerHTML = highlightedTransposedLyrics;
