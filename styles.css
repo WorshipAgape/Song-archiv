@@ -1,33 +1,35 @@
 /* ======================================== */
-/* Styles for Agape Worship (v4)        */
-/* Original HTML + Consistent Buttons */
+/* Styles for Agape Worship (v5)        */
+/* TARGETING ORIGINAL HTML STRUCTURE      */
+/* With Consistent Button Styling       */
 /* ======================================== */
 
 /* --- Theme Variables --- */
 :root {
-    --primary-color: #ff1493; /* Темно-розовый */
-    --secondary-color: #c71585; /* Более темный розовый */
-    --background-color: #151515; /* Черный фон */
-    --container-background-color: #1c1c1c; /* Темно-серый матовый контейнер */
-    --text-color: #fff; /* Белый текст */
-    --label-color: #ccc; /* Цвет для label */
-    --border-color: #333; /* Темная граница */
-    --input-bg-color: #252525; /* Фон для полей ввода */
-    --hover-color: #2f2f2f; /* Цвет при наведении на неактивные элементы */
-    --shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* Тень */
-    --radius: 10px; /* Скругление углов */
-    --accent-color: #ff69b4; /* Светло-розовый для аккордов */
+    --primary-color: #ff1493;
+    --secondary-color: #c71585;
+    --background-color: #151515;
+    --container-background-color: #1c1c1c;
+    --text-color: #fff;
+    --label-color: #ccc;
+    --border-color: #333;
+    --input-bg-color: #252525;
+    --hover-color: #2f2f2f;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    --radius: 8px;
+    --accent-color: #ff69b4;
     --button-text-color: #fff;
-    --danger-color: #ff4d4d; /* Красный для удаления */
+    --danger-color: #ff4d4d;
+    --link-color: var(--accent-color);
 }
 
-/* --- Base Styles --- */
+/* --- Base & Body --- */
 *, *::before, *::after {
     box-sizing: border-box;
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     margin: 0;
     padding: 10px;
     background: var(--background-color);
@@ -37,7 +39,7 @@ body {
     font-size: 16px;
 }
 
-/* --- Layout Containers --- */
+/* --- Layout & Header --- */
 .container {
     max-width: 700px;
     margin: 15px auto;
@@ -56,12 +58,11 @@ header {
     margin-bottom: 25px;
 }
 
-/* --- Typography --- */
 h1 {
     text-align: center;
     color: var(--primary-color);
     margin: 0;
-    font-size: 2rem;
+    font-size: 1.8rem; /* Adjusted */
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 2px;
@@ -73,102 +74,19 @@ h1 {
     to { text-shadow: 0 0 15px var(--accent-color), 0 0 25px var(--accent-color); }
 }
 
-#song-content h2 { /* Заголовок песни */
-    text-align: center;
-    color: var(--text-color);
-    margin-top: 0;
-    margin-bottom: 20px; /* Больше отступ перед текстом */
-    font-size: 1.4rem;
-    font-weight: 500;
-}
-
-h3 { /* Заголовки секций (в панели и для плеера) */
-    text-align: center;
-    color: var(--accent-color);
-    margin-top: 15px;
-    margin-bottom: 15px;
-    font-size: 1.15rem;
-    font-weight: 500;
-}
-.list-section h3 { /* Отменяем центрирование в панели */
-    text-align: left;
-    margin-bottom: 10px;
-    padding-bottom: 5px;
-    border-bottom: 1px solid var(--border-color);
-}
-
-label {
-    display: block;
-    font-size: 0.8rem;
-    color: var(--label-color);
-    margin-bottom: 5px;
-    font-weight: 500;
-}
-
-/* --- Forms: Input, Select --- */
-select, input[type="text"] {
-    display: block;
-    width: 100%;
-    padding: 10px 12px;
-    font-size: 0.95rem;
-    font-family: inherit;
-    color: var(--text-color);
-    background-color: var(--input-bg-color);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius);
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    outline: none;
-    appearance: none;
-}
-
-select {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23cccccc'%3E%3Cpath fill-rule='evenodd' d='M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z' clip-rule='evenodd' /%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 10px center;
-    background-size: 16px;
-    padding-right: 35px;
-    cursor: pointer;
-}
-
-select:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-input[type="text"]:focus, select:focus {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(255, 20, 147, 0.25);
-}
-
-#key-select { /* Немного специфики для селекта тональности */
-    width: auto; /* Не на всю ширину */
-    min-width: 65px;
-    padding: 8px 10px; /* Чуть меньше паддинг */
-    font-size: 0.9rem;
-    text-align: center;
-    margin-left: 5px; /* Отступ от label */
-}
-
-#time-signature { /* Селект размера такта */
-    width: auto;
-    min-width: 65px;
-    padding: 8px 10px;
-    font-size: 0.9rem;
-    text-align: center;
-}
-
-/* --- Buttons (Consistent Styling) --- */
+/* --- Base Button Style --- */
+/* Applies to <button> and links styled as buttons */
 button,
-a#holychords-button /* Стилизуем ссылку как кнопку */
+a.button-styled /* Add this class to links you want styled as buttons */
 {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 9px 15px; /* Базовый паддинг */
+    padding: 9px 15px;
     font-size: 0.9rem;
     font-weight: 500;
     line-height: 1.4;
-    color: var(--button-text-color);
+    color: var(--button-text-color) !important; /* !important to override link color if needed */
     background: linear-gradient(145deg, var(--primary-color), var(--secondary-color));
     border: none;
     border-radius: var(--radius);
@@ -178,18 +96,17 @@ a#holychords-button /* Стилизуем ссылку как кнопку */
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
     transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
     outline: none;
-    appearance: none;
-    vertical-align: middle; /* Выравнивание в строке */
+    vertical-align: middle;
 }
 
 button:hover,
-a#holychords-button:hover {
+a.button-styled:hover {
     transform: translateY(-2px);
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
 }
 
 button:active,
-a#holychords-button:active {
+a.button-styled:active {
     transform: translateY(0);
     box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
 }
@@ -198,91 +115,111 @@ button:disabled {
     opacity: 0.5; cursor: not-allowed; box-shadow: none; transform: none;
 }
 
-/* --- Specific Button Size/Padding Adjustments --- */
-
-/* Кнопка открытия панели */
-.toggle-favorites {
-    width: 45px; height: 45px;
-    padding: 5px; /* Убираем лишний паддинг */
-    border-radius: 50%;
-    font-size: 0.9rem;
-}
-.toggle-favorites:hover { transform: scale(1.1); } /* Возвращаем ховер эффект */
-.toggle-favorites:active { transform: scale(1); box-shadow: inset 0 1px 3px rgba(0,0,0,0.2); }
-
-/* Кнопки Масштаба */
-.font-size-controls { display: flex; gap: 8px; margin-left: 10px; }
-.font-size-controls button { /* #zoom-in, #zoom-out */
-    min-width: 38px; height: 38px; /* Квадратные */
-    padding: 5px; /* Убираем лишний паддинг */
-    font-size: 1.1rem; /* Крупнее символы +/- */
-    line-height: 1; /* Убираем лишнюю высоту строки */
+/* --- Top Controls Section (`.controls`) --- */
+.controls {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Space between control groups */
+    margin-bottom: 25px;
 }
 
-/* Кнопки в .control-buttons */
-.control-buttons {
-    display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-top: 20px; margin-bottom: 15px;
-}
-.control-buttons button {
-    padding: 9px 12px; /* Немного меньше боковой паддинг */
-    font-size: 0.9rem;
-    flex: 0 1 auto; /* Не растягивать сильно */
-}
-.control-buttons #favorite-button { font-size: 1.1rem; } /* Emodji крупнее */
-
-/* Кнопки в .controls-footer */
-.controls-footer {
-    display: flex; flex-wrap: wrap; justify-content: center; align-items: center;
-    gap: 15px; margin-top: 20px; padding-top: 15px;
-    border-top: 1px solid var(--border-color); /* Разделитель */
-}
-.bpm-controls {
-    display: flex; align-items: center; gap: 10px;
-}
-#bpm-display { /* Спан с BPM */
-     padding: 8px 10px; min-width: 55px; font-size: 0.95rem; cursor: text;
-     border: 1px solid var(--border-color); background-color: var(--input-bg-color);
-     border-radius: var(--radius); text-align: center; color: var(--text-color);
-}
-#metronome-button { /* Кнопка метронома */
-    min-width: 40px; height: 40px; padding: 5px; font-size: 1.1rem;
-}
-#add-to-repertoire-button { /* Кнопка репертуара */
-    padding: 9px 12px; font-size: 0.9rem;
-}
-#holychords-button { /* Ссылка Holychords */
-     padding: 9px 12px; font-size: 0.9rem;
+.control-group {
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping */
+    align-items: flex-end; /* Align items (label+input) along their bottom edge */
+    gap: 10px; /* Space between items in a group if wrapped */
 }
 
+.control-group label {
+    flex-basis: 100%; /* Label takes full width initially */
+    margin-bottom: 4px;
+    font-size: 0.8rem;
+    color: var(--label-color);
+}
 
-/* --- Top Controls Section --- */
-.controls { display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px; }
-.control-group { display: flex; flex-wrap: wrap; align-items: flex-end; /* Выравнивание по низу */ gap: 10px; }
-.control-group label { margin-bottom: 3px; flex-basis: 100%; } /* Метка над полем */
-/* Располагаем Тон и Масштаб в одной группе */
-.control-group:has(#key-select) {
-     align-items: flex-end; /* Выравниваем по низу */
-     gap: 15px;
+/* Input fields and Selects */
+select, input[type="text"] {
+    display: block;
+    width: 100%; /* Take full width of their container */
+    padding: 10px 12px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    color: var(--text-color);
+    background-color: var(--input-bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    outline: none;
+}
+
+select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23cccccc'%3E%3Cpath fill-rule='evenodd' d='M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z' clip-rule='evenodd' /%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 16px;
+    padding-right: 35px;
+    cursor: pointer;
+}
+select:disabled { opacity: 0.5; cursor: not-allowed; }
+input[type="text"]:focus, select:focus { border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(255, 20, 147, 0.25); }
+
+/* Specific styling for Key Select and Zoom in the top controls */
+.control-group:has(#key-select) { /* Target the group containing key select */
+    align-items: flex-end; /* Align label, select, buttons nicely */
+    gap: 15px;
 }
 .control-group:has(#key-select) label[for="key-select"] {
-     flex-basis: auto; /* Label для тона не на всю ширину */
-     margin-bottom: 0; /* Убираем отступ снизу у label */
-     margin-right: -5px; /* Придвигаем label к select */
+    flex-basis: auto; /* Label doesn't take full width */
+    margin-bottom: 0; /* Align with bottom of select */
 }
-.control-group:has(#key-select) .font-size-controls {
-     margin-left: auto; /* Сдвигаем масштаб вправо */
+.control-group #key-select {
+    width: auto; /* Auto width based on content */
+    min-width: 65px;
+    padding: 8px 10px;
+    font-size: 0.9rem;
+    text-align: center;
+    flex-grow: 0; /* Don't grow */
 }
-.control-group:has(#key-select) .font-size-controls label {
-     /* Скрываем label "Масштаб", если нужно */
-     /* display: none; */
+.control-group .font-size-controls {
+    display: flex;
+    gap: 5px;
+    margin-left: auto; /* Push zoom buttons to the right */
+}
+.control-group .font-size-controls button { /* Zoom buttons */
+    min-width: 38px; height: 38px;
+    padding: 5px;
+    font-size: 1.1rem;
+    line-height: 1;
+    /* Base button style is already applied */
 }
 
+/* Search results */
+#search-results { /* Position relative to the search input group */
+     width: 100%;
+     margin-top: 2px;
+     border-radius: 0 0 var(--radius) var(--radius);
+     overflow: hidden;
+     z-index: 10;
+}
+.search-result {
+    padding: 10px 15px;
+    background-color: var(--input-bg-color);
+    border: 1px solid var(--border-color);
+    border-top: none;
+    cursor: pointer; font-size: 0.95rem;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+.search-result:hover { background-color: var(--primary-color); color: var(--button-text-color); }
+.search-result:last-child { border-bottom-left-radius: var(--radius); border-bottom-right-radius: var(--radius); }
 
-/* --- Song Display Area --- */
+
+/* --- Song Content --- */
 #song-content {
     background: var(--container-background-color); padding: 20px; border-radius: var(--radius);
     margin-top: 20px; border: 1px solid var(--border-color); position: relative; overflow: hidden;
 }
+#song-content h2 { font-size: 1.4rem; margin-bottom: 15px; }
 #song-content pre {
     font-family: 'Courier New', Courier, monospace; white-space: pre-wrap; word-wrap: break-word;
     line-height: 1.7; font-size: var(--lyrics-font-size, 1rem); color: var(--text-color);
@@ -290,13 +227,59 @@ button:disabled {
 }
 .chord {
     font-weight: 600; color: var(--accent-color); background-color: rgba(255, 105, 180, 0.08);
-    padding: 1px 3px; border-radius: 3px; margin: 0 1px; vertical-align: middle;
+    padding: 1px 3px; border-radius: 3px; margin: 0 1px; vertical-align: baseline; /* Changed alignment */
 }
 #song-content.split-columns pre { column-count: 2; column-gap: 25px; }
 
+/* --- Control Buttons (Below Song Content) --- */
+.control-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* Center buttons */
+    gap: 12px; /* Space between buttons */
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border-color); /* Separator */
+}
+.control-buttons button {
+    padding: 9px 12px;
+    font-size: 0.9rem;
+    flex: 0 1 auto; /* Don't grow too much */
+}
+.control-buttons #favorite-button { font-size: 1.1rem; } /* Make heart bigger */
+
+/* --- Controls Footer (BPM, Metronome, Links) --- */
+.controls-footer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 15px; /* Space between items */
+    margin-top: 0; /* Removed top margin */
+    padding-top: 0; /* Removed top padding */
+}
+.bpm-controls { display: flex; align-items: center; gap: 10px; }
+.bpm-controls span:not(#bpm-display) { font-size: 0.85rem; color: var(--label-color); }
+.bpm-controls #time-signature { padding: 8px 10px; font-size: 0.9rem; min-width: 65px; }
+.bpm-controls #bpm-display {
+    padding: 8px 10px; min-width: 55px; font-size: 0.95rem; cursor: text;
+    border: 1px solid var(--border-color); background-color: var(--input-bg-color);
+    border-radius: var(--radius); text-align: center; color: var(--text-color);
+}
+.bpm-controls #metronome-button {
+    min-width: 40px; height: 40px; padding: 5px; font-size: 1.1rem;
+}
+/* Repertoire button & Holychords link in footer */
+.controls-footer #add-to-repertoire-button,
+.controls-footer #holychords-button {
+    padding: 9px 15px; /* Use base button padding */
+    font-size: 0.9rem;
+    /* Base button style is already applied */
+}
 
 /* --- YouTube Player --- */
-#youtube-player-section { margin-top: 25px; } /* Отступ сверху */
+#youtube-player-section { margin-top: 25px; }
 #youtube-player-section h3 { text-align: center; margin-bottom: 15px; font-size: 1.15rem; color: var(--text-color); border: none; padding: 0;}
 #youtube-player-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; background: #000; border-radius: var(--radius); margin-bottom: 15px; }
 #youtube-player-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
@@ -310,6 +293,14 @@ button:disabled {
     display: flex; flex-direction: column; gap: 20px; overflow-y: auto;
 }
 #favorites-panel.open { transform: translateX(0); }
+
+.toggle-favorites { /* Panel toggle button */
+    position: fixed; top: 10px; right: 10px; width: 45px; height: 45px;
+    border-radius: 50%; font-size: 0.9rem; z-index: 1001;
+    /* Base button style applied */
+}
+.toggle-favorites:hover { transform: scale(1.1); /* Override base hover */ }
+.toggle-favorites:active { transform: scale(1); box-shadow: inset 0 1px 3px rgba(0,0,0,0.2); }
 
 .list-section { margin-bottom: 0; }
 .list-section h3 { font-size: 1.05rem; margin-top: 0; margin-bottom: 10px; color: var(--accent-color); border-bottom: 1px solid var(--border-color); padding-bottom: 5px; text-align: left; }
@@ -325,8 +316,31 @@ button:disabled {
 .favorite-item:last-child, .shared-item:last-child, .repertoire-item:last-child { border-bottom: none; }
 .favorite-item:hover, .shared-item:hover, .repertoire-item:hover { background-color: var(--hover-color); }
 .list-container .song-name { flex-grow: 1; margin-right: 8px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-.list-container .remove-button, .list-container .delete-button { background: none; border: none; color: var(--danger-color); cursor: pointer; padding: 0 6px; font-size: 1.1rem; line-height: 1; flex-shrink: 0; transition: color 0.2s ease; }
-.list-container .remove-button:hover, .list-container .delete-button:hover { color: #ff1a1a; }
+/* Remove buttons in lists - override base button style */
+.list-container .remove-button,
+.list-container .delete-button {
+    background: none;
+    border: none;
+    color: var(--danger-color);
+    cursor: pointer;
+    padding: 0 6px;
+    font-size: 1.1rem;
+    line-height: 1;
+    flex-shrink: 0;
+    box-shadow: none; /* Override */
+    transition: color 0.2s ease;
+}
+.list-container .remove-button:hover,
+.list-container .delete-button:hover {
+    color: #ff1a1a;
+    transform: none; /* Override */
+    box-shadow: none; /* Override */
+}
+.list-container .remove-button:active,
+.list-container .delete-button:active {
+     transform: none; /* Override */
+     box-shadow: none; /* Override */
+}
 .empty-message { padding: 15px; text-align: center; color: var(--label-color); font-style: italic; font-size: 0.9rem; }
 
 /* --- Loading Indicator --- */
@@ -335,7 +349,10 @@ button:disabled {
 /* --- Responsiveness --- */
 @media (max-width: 700px) {
     .container { padding: 15px; }
-    .control-group:has(#key-select) .font-size-controls { margin-left: 10px; } /* Чуть больше отступ для зума */
+    /* Adjust top controls group with key/zoom */
+    .control-group:has(#key-select) { justify-content: space-between; } /* Spread items */
+    .control-group:has(#key-select) label[for="key-select"] { margin-right: 0;}
+    .control-group:has(#key-select) .font-size-controls { margin-left: 0; } /* Remove margin push */
 }
 
 @media (max-width: 500px) {
@@ -348,25 +365,27 @@ button:disabled {
 
     select, input[type="text"] { padding: 9px 10px; font-size: 0.9rem; }
     select { padding-right: 30px; background-size: 14px; }
-    button, a#holychords-button { padding: 8px 12px; font-size: 0.85rem; }
+    button, a#holychords-button { padding: 8px 10px; font-size: 0.85rem; } /* Smaller buttons */
 
-    .control-group { flex-direction: column; align-items: stretch; } /* Все группы вертикально */
-    .control-group label { flex-basis: auto; margin-right: 0; text-align: left;}
-    .control-group:has(#key-select) { flex-direction: row; align-items: flex-end; } /* Тон и масштаб в строку */
-    .control-group:has(#key-select) label[for="key-select"] { margin-bottom: 0; }
-    .control-group:has(#key-select) .font-size-controls { margin-left: auto; } /* Сдвигаем масштаб */
+    .controls { gap: 12px; }
+    .control-group { flex-direction: column; align-items: stretch; gap: 5px; }
+    .control-group label { margin-bottom: 3px; }
+    /* Keep key/zoom row layout */
+    .control-group:has(#key-select) { flex-direction: row; align-items: flex-end; justify-content: space-between; }
+    .control-group:has(#key-select) label { flex-basis: auto; }
+    .control-group:has(#key-select) .font-size-controls { margin-left: 0; }
 
-    .control-buttons { justify-content: center; gap: 8px; }
-     .control-buttons button { flex-grow: 1; flex-basis: 60px; font-size: 0.8rem; padding: 8px 5px; }
-     .control-buttons #favorite-button { font-size: 1rem; }
+    .control-buttons { justify-content: space-around; gap: 8px; }
+    .control-buttons button { padding: 8px 8px; }
 
-    .controls-footer { flex-direction: column; gap: 10px; }
-     .bpm-controls { flex-wrap: wrap; justify-content: center; gap: 8px;}
-     .controls-footer a#holychords-button, .controls-footer button { width: 100%; text-align: center;} /* Кнопки футера на всю ширину */
+    .controls-footer { flex-direction: column; align-items: stretch; gap: 10px; }
+    .bpm-controls { justify-content: center; }
+    .controls-footer a#holychords-button,
+    .controls-footer #add-to-repertoire-button { width: 100%; text-align: center; } /* Footer buttons full width */
 
     #song-content { padding: 12px; }
     #song-content pre { font-size: 0.85rem; line-height: 1.6; }
-    #song-content.split-columns pre { column-count: 1; } /* Отключаем колонки */
+    #song-content.split-columns pre { column-count: 1; } /* Disable columns */
 
     #favorites-panel { width: 95%; padding: 15px; }
     .list-container { max-height: 180px; }
