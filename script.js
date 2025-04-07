@@ -845,6 +845,35 @@ function loadFavorites(container = favoritesList) {
     });
 }
 
+// Функция для удаления песни из избранного (localStorage)
+function removeFromFavorites(fav) {
+    console.log("Попытка удаления из избранного:", fav); // Лог 1: Что удаляем
+    // Находим индекс элемента в текущем массиве favorites
+    const index = favorites.findIndex(item =>
+        item.name === fav.name &&
+        item.sheet === fav.sheet &&
+        item.index === fav.index &&
+        item.key === fav.key // Добавим проверку ключа на всякий случай
+    );
+    console.log("Найденный индекс для удаления:", index); // Лог 2: Результат поиска
+
+    if (index !== -1) {
+        favorites.splice(index, 1); // Удаляем из массива в памяти
+        localStorage.setItem('favorites', JSON.stringify(favorites)); // Обновляем localStorage
+        console.log("Элемент удален, localStorage обновлен.");
+
+        // *** ИЗМЕНЕНИЕ: Обновляем ТОЛЬКО список избранного, а не всю панель ***
+        if (favoritesPanel.classList.contains('open') && favoritesList) {
+             loadFavorites(favoritesList); // Перерисовываем список избранного
+        }
+        // loadGroupPanel(); // Убрали вызов полной перезагрузки панели
+        alert("Песня удалена из 'Моего списка'."); // Добавим подтверждение
+    } else {
+        console.warn("Не удалось найти песню для удаления в массиве favorites.");
+        alert("Не удалось удалить песню из 'Моего списка'.");
+    }
+}
+
 /** Загрузка содержимого панели "Группа" (Избранное + Общий список + Репертуар) */
 function loadGroupPanel() {
     console.log("Загрузка панели 'Группа'");
