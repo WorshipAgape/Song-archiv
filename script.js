@@ -1065,51 +1065,139 @@ async function loadVocalists() {
     }
 }
 
-// --- Заглушка для функции загрузки репертуара (реализуем на след. шаге) ---
+// --- Функция для загрузки и отображения репертуара вокалиста ---
 function loadRepertoire(vocalistId) {
-    // Проверка наличия элемента списка
-    if (!repertoireList) {
-         console.error("Элемент <div id='repertoire-list'> не найден.");
+    // Получаем ссылки на элементы интерфейса
+    const listContainer = document.getElementById('repertoire-list');
+    const sectionContainer = document.getElementById('repertoire-section');
+    const nameSpan = document.getElementById('repertoire-vocalist-name');
+
+    // Проверки на наличие элементов
+    if (!listContainer || !sectionContainer || !nameSpan) {
+         console.error("Не найдены UI элементы для отображения репертуара.");
          return;
     }
-    // Очищаем предыдущий список
-    repertoireList.innerHTML = '';
-    // Скрываем секцию репертуара по умолчанию
-    if (repertoireSection) repertoireSection.style.display = 'none';
 
+    // Очищаем предыдущий список и скрываем секцию
+    listContainer.innerHTML = '';
+    sectionContainer.style.display = 'none';
 
+    // Если вокалист не выбран (например, выбрали "-- Выберите ...")
     if (!vocalistId) {
-        // Если вокалист не выбран (выбрали "-- Выберите вокалиста --")
-        console.log("Вокалист не выбран, репертуар не загружается.");
-        if (repertoireVocalistName) repertoireVocalistName.textContent = ''; // Очищаем имя
-        return;
+        nameSpan.textContent = ''; // Очищаем имя в заголовке
+        console.log("loadRepertoire: Вокалист не выбран.");
+        return; // Выходим из функции
     }
 
-    // Если вокалист выбран
-    console.log(`Загрузка репертуара для вокалиста: ${currentVocalistName} (ID: ${vocalistId})`);
-    if (repertoireVocalistName) repertoireVocalistName.textContent = currentVocalistName; // Показываем имя
-    if (repertoireSection) repertoireSection.style.display = 'block'; // Показываем секцию
-    repertoireList.innerHTML = '<div>Загрузка репертуара...</div>'; // Временное сообщение
+    // Если вокалист выбран: показываем секцию, имя и сообщение о загрузке
+    nameSpan.textContent = currentVocalistName || vocalistId; // Показываем имя (или ID, если имя не загрузилось)
+    sectionContainer.style.display = 'block'; // Показываем блок репертуара
+    listContainer.innerHTML = '<div>Загрузка репертуара...</div>';
 
-    // !!! Здесь на следующем шаге будет код для onSnapshot !!!
-}
+    // --- Настраиваем слушатель Firestore ---
+    // Создаем ссылку на под-коллекцию 'repertoire' конкретного вокалиста
+    const repertoireColRef = collection(db, "vocalists", vocalistId, "repertoire");
+    // Создаем запрос (например, сортируем песни по названию)
+    const q = query(repertoireColRef, orderBy("name", "asc"));
 
-// --- Добавляем слушатель событий на выбор вокалиста ---
-if (vocalistSelect) {
-    vocalistSelect.addEventListener('change', (event) => {
-        // Получаем ID выбранного вокалиста из value опции
-        currentVocalistId = event.target.value;
-        // Получаем имя выбранного вокалиста из текста опции
-        const selectedIndex = event.target.selectedIndex;
-        currentVocalistName = selectedIndex > 0 ? event.target.options[selectedIndex].text : null;
+    console.log(`loadRepertoire: Установка слушателя для вокалиста ${vocalistId}`);
 
-        // Вызываем функцию загрузки репертуара с новым ID
-        loadRepertoire(currentVocalistId);
+    // Используем onSnapshot для получения данных и обновлений в реальном времени
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+        console.log(`loadRepertoire: Получены данные для ${vocalistId}, количество: ${snapshot.size}`);
+        // Очищаем контейнер перед отображением обновленного списка
+        listContainer.innerHTML = '';
+
+        // Проверяем, есть ли песни в репертуаре
+        if (snapshot.empty) {
+            listContainer.innerHTML = '<div class="empty-message">В репертуаре этого вокалиста пока нет песен.</div>';
+            return; // Выходим, если пусто
+        }
+
+        // Перебираем документы (песни) из репертуара
+        snapshot.docs.forEach((doc) => {
+            const song = doc.data(); // Данные песни: { sheet, index, name, preferredKey, addedAt? }
+            const repertoireDocId = doc.id; // ID документа в под-коллекции repertoire
+
+            // Создаем элемент списка для песни
+            const listItem = document.createElement('div');
+            // Используем те же классы, что и для избранного/общего списка для единообразия
+            listItem.className = 'favorite-item repertoire-item'; // Добавил класс repertoire-item на всякий случай
+
+            // --- Информация о песне (название + тональность) ---
+            const songInfo = document.createElement('span');
+            songInfo.className = 'song-name'; // Используем существующий класс
+            songInfo.textContent = `${song.name} — ${song.preferredKey}`; // Показываем ИМЯ и ПРЕДПОЧТИТЕЛЬНУЮ ТОНАЛЬНОСТЬ
+            listItem.appendChild(songInfo);
+
+            // --- Кнопка удаления ---
+            const removeBtn = document.createElement('button');
+            removeBtn.textContent = '❌';
+            removeBtn.className = 'remove-button'; // Используем существующий класс
+            removeBtn.title = 'Удалить из репертуара'; // Подсказка при наведении
+            removeBtn.addEventListener('click', (e) => {
+                 e.stopPropagation(); // Останавливаем всплытие, чтобы не сработал клик по listItem
+                 console.log(`Клик на удаление: ${repertoireDocId} у ${vocalistId}`);
+                 // Вызываем функцию удаления (реализуем на следующем шаге)
+                 removeFromRepertoire(vocalistId, repertoireDocId);
+            });
+            listItem.appendChild(removeBtn);
+
+            // --- Обработчик клика по элементу списка (для загрузки песни) ---
+            listItem.addEventListener('click', async () => {
+                console.log(`Клик по репертуару: ${song.name}, тональность ${song.preferredKey}`);
+
+                // Находим оригинальные данные песни в кэше
+                 if (!cachedData[song.sheet] || !cachedData[song.sheet][song.index]) {
+                     console.warn(`Данные песни ${song.name} не найдены в кэше. Попытка загрузить лист ${song.sheet}...`);
+                     // Можно попытаться дозагрузить лист, если нужно
+                     await fetchSheetData(song.sheet);
+                     // Повторная проверка
+                     if (!cachedData[song.sheet] || !cachedData[song.sheet][song.index]){
+                         alert('Не удалось найти исходные данные песни. Возможно, она была удалена из Google Таблицы.');
+                         return;
+                     }
+                 }
+                const originalSongData = cachedData[song.sheet][song.index];
+
+                // (Опционально) Обновляем select'ы для наглядности
+                sheetSelect.value = Object.keys(SHEETS).find(key => SHEETS[key] === song.sheet);
+                await loadSheetSongs(); // Обновляем список песен для выбранного листа
+                songSelect.value = song.index; // Выбираем нужную песню
+
+                // Отображаем детали песни, передавая ПРЕДПОЧТИТЕЛЬНУЮ ТОНАЛЬНОСТЬ вокалиста
+                displaySongDetails(originalSongData, song.index, song.preferredKey);
+
+                // Закрываем панель "Группа"
+                if (favoritesPanel) {
+                    favoritesPanel.classList.remove('open');
+                }
+            });
+
+            // Добавляем готовый элемент в контейнер списка
+            listContainer.appendChild(listItem);
+        });
+
+    }, (error) => { // Обработка ошибок самого слушателя onSnapshot
+        console.error(`Ошибка при прослушивании репертуара для ${vocalistId}:`, error);
+        listContainer.innerHTML = '<div class="empty-message">Ошибка загрузки репертуара.</div>';
     });
-} else {
-     console.error("Элемент <select id='vocalist-select'> не найден, слушатель не добавлен.");
+
+    // Можно сохранить функцию unsubscribe, чтобы потом отключать слушатель,
+    // но для простоты пока оставим его активным.
+    // Пример: vocalistSelect.dataset.listener = unsubscribe;
 }
 
+// --- Заглушка для функции удаления (реализуем на след. шаге) ---
+async function removeFromRepertoire(vocalistId, repertoireDocId) {
+     console.log(`ЗАГЛУШКА: Удалить песню ${repertoireDocId} для вокалиста ${vocalistId}`);
+     if (!vocalistId || !repertoireDocId) {
+         console.error("Не переданы ID для удаления из репертуара.");
+         return;
+     }
+     // TODO: Добавить вызов deleteDoc из Firestore
+     alert(`Здесь будет удаление песни с ID: ${repertoireDocId}`); // Временное сообщение
+}
 
 // --- Вызов загрузки вокалистов при старте ---
 // Внутри вашего основного обработчика DOMContentLoaded:
