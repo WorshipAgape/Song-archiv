@@ -13,12 +13,14 @@ const firebaseConfig = {
 // Initialize Firebase
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 // Добавьте orderBy, getDocs, where сюда, если их нет
-import { getFirestore, collection, addDoc, query, onSnapshot, deleteDoc, doc, orderBy, getDocs, where } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, query, onSnapshot, deleteDoc, setDoc, doc, orderBy, getDocs, where } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 import { getStorage, ref, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js";
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const storage = getStorage(app);
+
+
 
 // Reference to the shared list collection
 const sharedListCollection = collection(db, "sharedList");
@@ -36,6 +38,10 @@ const chords = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "H"]
 let cachedData = {};
 let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
 
+
+let currentVocalistId = null;
+let currentVocalistName = null; // Для отображения имени
+
 // Объявление всех элементов DOM в начале файла
 const sheetSelect = document.getElementById('sheet-select');
 const songSelect = document.getElementById('song-select');
@@ -52,6 +58,11 @@ const favoritesPanel = document.getElementById('favorites-panel');
 const toggleFavoritesButton = document.getElementById('toggle-favorites');
 const favoritesList = document.getElementById('favorites-list');
 const sharedSongsList = document.getElementById('shared-songs-list');
+const vocalistSelect = document.getElementById('vocalist-select');
+const repertoireSection = document.getElementById('repertoire-section'); // Секция для репертуара
+const repertoireVocalistName = document.getElementById('repertoire-vocalist-name'); // Span для имени в заголовке репертуара
+const repertoireList = document.getElementById('repertoire-list'); // Div для списка песен репертуара
+
 
 
 // Переменные для работы с аудио
@@ -1008,3 +1019,114 @@ function updateBPM(newBPM) {
         toggleMetronome(newBPM);
     }
 }
+
+
+
+//функции вокалистов
+
+
+
+
+
+// --- Новая функция для загрузки вокалистов ---
+async function loadVocalists() {
+    // Проверка наличия элемента select
+    if (!vocalistSelect) {
+        console.error("Элемент <select id='vocalist-select'> не найден.");
+        return;
+    }
+    try {
+        console.log("Загрузка списка вокалистов...");
+        // Запрашиваем все документы из коллекции 'vocalists'
+        const querySnapshot = await getDocs(collection(db, "vocalists"));
+
+        // Очищаем старые опции (кроме первой "Выберите...")
+        vocalistSelect.innerHTML = '<option value="">-- Выберите вокалиста --</option>';
+
+        if (querySnapshot.empty) {
+            console.warn("В коллекции 'vocalists' не найдено ни одного документа.");
+            // Можно добавить сообщение для пользователя или заблокировать select
+        } else {
+            // Перебираем полученные документы
+            querySnapshot.forEach((doc) => {
+                const vocalist = doc.data(); // Получаем данные документа
+                const option = document.createElement('option');
+                option.value = doc.id; // Значение = ID документа Firestore
+                // Текст = поле 'name' из документа, если его нет - используем ID
+                option.textContent = vocalist.name || doc.id;
+                vocalistSelect.appendChild(option); // Добавляем опцию в select
+            });
+            console.log("Список вокалистов успешно загружен.");
+        }
+    } catch (error) {
+        console.error("Ошибка при загрузке вокалистов:", error);
+        vocalistSelect.innerHTML = '<option value="">Ошибка загрузки</option>';
+        // Сообщить пользователю об ошибке
+    }
+}
+
+// --- Заглушка для функции загрузки репертуара (реализуем на след. шаге) ---
+function loadRepertoire(vocalistId) {
+    // Проверка наличия элемента списка
+    if (!repertoireList) {
+         console.error("Элемент <div id='repertoire-list'> не найден.");
+         return;
+    }
+    // Очищаем предыдущий список
+    repertoireList.innerHTML = '';
+    // Скрываем секцию репертуара по умолчанию
+    if (repertoireSection) repertoireSection.style.display = 'none';
+
+
+    if (!vocalistId) {
+        // Если вокалист не выбран (выбрали "-- Выберите вокалиста --")
+        console.log("Вокалист не выбран, репертуар не загружается.");
+        if (repertoireVocalistName) repertoireVocalistName.textContent = ''; // Очищаем имя
+        return;
+    }
+
+    // Если вокалист выбран
+    console.log(`Загрузка репертуара для вокалиста: ${currentVocalistName} (ID: ${vocalistId})`);
+    if (repertoireVocalistName) repertoireVocalistName.textContent = currentVocalistName; // Показываем имя
+    if (repertoireSection) repertoireSection.style.display = 'block'; // Показываем секцию
+    repertoireList.innerHTML = '<div>Загрузка репертуара...</div>'; // Временное сообщение
+
+    // !!! Здесь на следующем шаге будет код для onSnapshot !!!
+}
+
+// --- Добавляем слушатель событий на выбор вокалиста ---
+if (vocalistSelect) {
+    vocalistSelect.addEventListener('change', (event) => {
+        // Получаем ID выбранного вокалиста из value опции
+        currentVocalistId = event.target.value;
+        // Получаем имя выбранного вокалиста из текста опции
+        const selectedIndex = event.target.selectedIndex;
+        currentVocalistName = selectedIndex > 0 ? event.target.options[selectedIndex].text : null;
+
+        // Вызываем функцию загрузки репертуара с новым ID
+        loadRepertoire(currentVocalistId);
+    });
+} else {
+     console.error("Элемент <select id='vocalist-select'> не найден, слушатель не добавлен.");
+}
+
+
+// --- Вызов загрузки вокалистов при старте ---
+// Внутри вашего основного обработчика DOMContentLoaded:
+document.addEventListener('DOMContentLoaded', () => {
+    // ... ваш существующий код инициализации ...
+
+    loadVocalists(); // <--- ДОБАВЬТЕ ЭТОТ ВЫЗОВ
+
+    // Убедитесь, что другие важные загрузки тоже вызываются
+    loadAllSheetsData();
+    // loadFavorites(); // Возможно, их стоит вызывать только при открытии панели
+    // loadSharedList(); // Аналогично
+
+    // Первоначально скрыть секцию репертуара
+    if (repertoireSection) {
+        repertoireSection.style.display = 'none';
+    }
+
+    // ... остальные ваши слушатели и инициализация ...
+});
