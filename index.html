@@ -41,7 +41,25 @@
                      <option value="">-- Выберите вокалиста --</option>
                      </select>
              </div>
+        
+<div class="control-group utility-controls">
+        <div class="select-wrapper key-select-wrapper"> <label for="key-select">Тон:</label>
+            <select id="key-select">
+                <option value="C">C</option><option value="C#">C#</option><option value="D">D</option>
+                <option value="D#">D#</option><option value="E">E</option><option value="F">F</option>
+                <option value="F#">F#</option><option value="G">G</option><option value="G#">G#</option>
+                <option value="A">A</option><option value="A#">A#</option><option value="H">H</option>
+            </select>
         </div>
+        <div class="button-wrapper zoom-wrapper"> <label>Масштаб:</label> <div class="font-size-controls">
+                <button id="zoom-out" title="Уменьшить шрифт">-</button>
+                <button id="zoom-in" title="Увеличить шрифт">+</button>
+            </div>
+        </div>
+        <div class="button-wrapper split-wrapper"> <label>&nbsp;</label> <button id="split-text-button" title="Разделить/Объединить текст">Разделить текст</button> </div>
+    </div>
+    </section> ```
+
     </section>
 
     <section id="song-display-area">
@@ -51,23 +69,10 @@
         </div>
 
         <div class="song-actions">
-             <div class="action-group key-zoom-group">
-                 <label for="key-select">Тон:</label>
-                 <select id="key-select">
-                     <option value="C">C</option><option value="C#">C#</option><option value="D">D</option>
-                     <option value="D#">D#</option><option value="E">E</option><option value="F">F</option>
-                     <option value="F#">F#</option><option value="G">G</option><option value="G#">G#</option>
-                     <option value="A">A</option><option value="A#">A#</option><option value="H">H</option>
-                 </select>
-                 <div class="font-size-controls">
-                      <button id="zoom-out" title="Уменьшить шрифт">-</button>
-                      <button id="zoom-in" title="Увеличить шрифт">+</button>
-                 </div>
-             </div>
              <div class="action-group main-actions">
                 <button id="favorite-button" title="Добавить/Удалить из Моего списка">❤️</button> <button id="add-to-list-button" title="Добавить в Общий список">📝</button>
                 <button id="add-to-repertoire-button" title="Добавить в Мой репертуар">🎤</button>
-                <button id="split-text-button" title="Разделить/Объединить текст">||</button> <a id="holychords-button" href="#" target="_blank" title="Открыть на Holychords">HC</a> </div>
+                </button> <a id="holychords-button" href="#" target="_blank" title="Открыть на Holychords">Holychords</a> </div>
         </div>
 
         <div class="song-tools">
