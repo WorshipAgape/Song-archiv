@@ -508,35 +508,22 @@ function resetFontSize() {
 
 
 // Функция для загрузки избранных песен из localStorage
+// Функция для загрузки избранных песен из localStorage
 function loadFavorites(container = document.getElementById('favorites-list')) {
-    if (!container) {
-        console.error("Контейнер для избранных песен не найден.");
-        return;
-    }
-
-    container.innerHTML = ''; // Очищаем предыдущие результаты
-
-    if (favorites.length === 0) {
-        const emptyMessage = document.createElement('div');
-        emptyMessage.textContent = 'Нет избранных песен';
-        emptyMessage.className = 'empty-message';
-        container.appendChild(emptyMessage);
-        return;
-    }
+    // ... (код для очистки контейнера и проверки на пустоту) ...
 
     favorites.forEach(fav => {
         const favoriteItem = document.createElement('div');
         favoriteItem.textContent = `${fav.name} — ${fav.key}`; // Добавляем тональность
         favoriteItem.className = 'favorite-item';
 
-        // Кнопка удаления
+        // Кнопка удаления (ваш код кнопки) ...
         const removeBtn = document.createElement('button');
         removeBtn.textContent = '❌';
         removeBtn.className = 'remove-button';
         removeBtn.addEventListener('click', () => {
             removeFromFavorites(fav);
         });
-
         favoriteItem.appendChild(removeBtn);
 
         // Обработчик клика по песне
@@ -563,8 +550,14 @@ function loadFavorites(container = document.getElementById('favorites-list')) {
             // Отображаем детали песни
             displaySongDetails(cachedData[sheetName][songIndex], songIndex, fav.key);
 
-            // Обновляем транспонирование аккордов
-            updateTransposedLyrics();
+            // Обновляем транспонирование аккордов (уже вызывается в displaySongDetails, можно убрать дубль)
+            // updateTransposedLyrics();
+
+            // >>>>> ВОТ ЭТА СТРОКА: Закрываем панель <<<<<
+            if (favoritesPanel) {
+                 favoritesPanel.classList.remove('open');
+            }
+            // >>>>> КОНЕЦ ДОБАВЛЕННОЙ СТРОКИ <<<<<
         });
 
         container.appendChild(favoriteItem);
@@ -661,23 +654,12 @@ document.getElementById('add-to-list-button').addEventListener('click', () => {
 
 
 // Функция для загрузки и отображения общего списка песен
+// Функция для загрузки и отображения общего списка песен
 function loadSharedList(container = document.getElementById('shared-songs-list')) {
-    if (!container) {
-        console.error("Контейнер для общего списка песен не найден.");
-        return;
-    }
+    // ... (код для очистки контейнера и запроса к Firestore) ...
 
-    container.innerHTML = ''; // Очищаем предыдущие результаты
-
-    const q = query(sharedListCollection);
     onSnapshot(q, (snapshot) => {
-        if (snapshot.docs.length === 0) {
-            const emptyMessage = document.createElement('div');
-            emptyMessage.textContent = 'Нет песен в общем списке';
-            emptyMessage.className = 'empty-message';
-            container.appendChild(emptyMessage);
-            return;
-        }
+        // ... (код проверки на пустой список) ...
 
         snapshot.docs.forEach((doc) => {
             const song = doc.data();
@@ -688,43 +670,51 @@ function loadSharedList(container = document.getElementById('shared-songs-list')
 
             // Отображаем название песни и тональность
             const songNameElement = document.createElement('span');
-            songNameElement.textContent = `${song.name} — ${song.key}`; // Добавляем тональность
+            songNameElement.textContent = `${song.name} — ${song.key}`;
             songNameElement.className = 'song-name';
+
             songNameElement.addEventListener('click', async () => {
-    const sheetName = song.sheet;
-    const songIndex = song.index;
+                const sheetName = song.sheet;
+                const songIndex = song.index;
 
-    // Устанавливаем выбранный лист
-    sheetSelect.value = Object.keys(SHEETS).find(key => SHEETS[key] === sheetName);
+                // Устанавливаем выбранный лист
+                sheetSelect.value = Object.keys(SHEETS).find(key => SHEETS[key] === sheetName);
 
-    // Загружаем данные листа, если они ещё не загружены
-    if (!cachedData[sheetName]) {
-        await fetchSheetData(sheetName);
-    }
+                // Загружаем данные листа, если они ещё не загружены
+                if (!cachedData[sheetName]) {
+                    await fetchSheetData(sheetName);
+                }
 
-    // Обновляем выпадающий список песен
-    await loadSheetSongs();
+                // Обновляем выпадающий список песен
+                await loadSheetSongs();
 
-    // Устанавливаем выбранную песню
-    songSelect.value = songIndex;
+                // Устанавливаем выбранную песню
+                songSelect.value = songIndex;
 
-    // Отображаем детали песни
-    displaySongDetails(cachedData[sheetName][songIndex], songIndex, song.key);
+                // Отображаем детали песни
+                displaySongDetails(cachedData[sheetName][songIndex], songIndex, song.key);
 
-    // Обновляем транспонирование аккордов
-    updateTransposedLyrics();
-});
+                 // Обновляем транспонирование аккордов (уже вызывается в displaySongDetails, можно убрать дубль)
+                // updateTransposedLyrics();
 
-            // Кнопка удаления
+                // >>>>> ВОТ ЭТА СТРОКА: Закрываем панель <<<<<
+                if (favoritesPanel) {
+                     favoritesPanel.classList.remove('open');
+                }
+                // >>>>> КОНЕЦ ДОБАВЛЕННОЙ СТРОКИ <<<<<
+            });
+
+            // Кнопка удаления (ваш код кнопки) ...
             const deleteButton = document.createElement('button');
             deleteButton.textContent = '❌';
             deleteButton.className = 'delete-button';
             deleteButton.addEventListener('click', () => {
                 if (confirm(`Удалить песню "${song.name}" из общего списка?`)) {
                     deleteFromSharedList(docId);
-                    loadSharedList(container); // Перезагружаем список после удаления
+                    // loadSharedList(container); // Перезагрузка уже происходит через onSnapshot или loadGroupPanel
                 }
             });
+
 
             listItem.appendChild(songNameElement);
             listItem.appendChild(deleteButton);
