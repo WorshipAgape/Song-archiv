@@ -1026,6 +1026,24 @@ function updateBPM(newBPM) {
 
 
 
+// Сначала проверка, что сам select найден
+const vocalistSelectElement = document.getElementById('vocalist-select'); // Получаем элемент еще раз для надежности
+
+if (vocalistSelectElement) {
+    vocalistSelectElement.addEventListener('change', (event) => {
+        // Получаем ID выбранного вокалиста из value опции
+        currentVocalistId = event.target.value;
+        // Получаем имя выбранного вокалиста из текста опции
+        const selectedIndex = event.target.selectedIndex;
+        // Обновляем глобальную переменную с именем
+        currentVocalistName = selectedIndex > 0 ? event.target.options[selectedIndex].text : null;
+
+        // Вызываем функцию загрузки репертуара с новым ID
+        loadRepertoire(currentVocalistId);
+    });
+} else {
+     console.error("Элемент <select id='vocalist-select'> не найден при добавлении слушателя.");
+}
 
 
 // --- Новая функция для загрузки вокалистов ---
