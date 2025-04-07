@@ -1,9 +1,3 @@
-/* ======================================== */
-/* Styles for Agape Worship         */
-/* (Adapted for New HTML Structure) */
-/* ======================================== */
-
-/* --- Theme Variables --- */
 :root {
     --primary-color: #ff1493; /* Темно-розовый */
     --secondary-color: #c71585; /* Более темный розовый */
@@ -12,573 +6,513 @@
     --text-color: #fff; /* Белый текст */
     --border-color: #333; /* Темная граница */
     --hover-color: #262626; /* Цвет при наведении */
-    --shadow: 0 4px 15px rgba(0, 0, 0, 0.25); /* Слегка измененная тень */
-    --radius: 10px; /* Слегка уменьшил радиус для компактности */
+    --shadow: 0 8px 20px rgba(0, 0, 0, 0.3); /* Тень */
+    --radius: 14px; /* Скругление углов */
     --accent-color: #ff69b4; /* Светло-розовый для аккордов */
-    --input-bg-color: #252525; /* Фон для полей ввода */
-    --button-text-color: #fff;
-    --label-color: #ccc; /* Цвет для label */
 }
 
-/* --- Base Styles --- */
-*, *::before, *::after {
-    box-sizing: border-box; /* Стандартный box-sizing */
-}
-
+/* Базовые стили */
 body {
     font-family: 'Tahoma', sans-serif;
     margin: 0;
-    padding: 10px; /* Небольшой отступ для body */
+    padding: 0;
     background: var(--background-color);
     color: var(--text-color);
     line-height: 1.6;
     min-height: 100vh;
-    font-size: 16px; /* Базовый размер шрифта */
-}
-
-/* --- Layout Containers --- */
-.container {
-    max-width: 700px; /* Немного увеличим максимальную ширину */
-    margin: 20px auto;
-    padding: 15px;
-    border-radius: var(--radius);
-    background: var(--container-background-color);
-    box-shadow: var(--shadow);
-}
-
-header {
-    display: flex; /* Размещаем заголовок и кнопку */
-    justify-content: center; /* Центрируем заголовок */
-    align-items: center;
-    position: relative; /* Для позиционирования кнопки */
-    padding: 0 60px; /* Оставляем место для кнопки справа */
-    margin-bottom: 20px;
-}
-
-/* --- Typography --- */
-h1 {
-    text-align: center;
-    color: var(--primary-color); /* Используем основной розовый */
-    margin: 0; /* Убираем лишние отступы */
-    font-size: 1.8rem; /* Слегка уменьшим */
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    /* Анимацию свечения можно оставить или убрать, если мешает */
-    /* animation: glow 3s infinite alternate; */
-}
-
-/* @keyframes glow { ... } */ /* Оставим анимацию, если нужна */
-
-h2 { /* Заголовок песни */
-    text-align: center;
-    color: var(--text-color);
-    margin-top: 0;
-    margin-bottom: 15px;
-    font-size: 1.3rem;
-    font-weight: bold;
-    letter-spacing: 0.5px;
-}
-
-h3 { /* Заголовки секций */
-    text-align: center;
-    color: var(--accent-color); /* Используем светлый розовый для акцента */
-    margin-top: 10px;
-    margin-bottom: 15px;
-    font-size: 1.1rem;
-    font-weight: 500;
-}
-
-label {
-    display: block; /* Метки над элементами */
-    font-size: 0.85rem;
-    color: var(--label-color);
-    margin-bottom: 4px;
-}
-
-/* --- Top Controls Section --- */
-.top-controls {
     display: flex;
     flex-direction: column;
-    gap: 15px;
-    margin-bottom: 20px;
 }
 
-.control-group { /* Общий стиль для групп контролов */
-     display: flex;
-     flex-direction: column; /* По умолчанию вертикально */
-     gap: 5px; /* Небольшой отступ внутри группы */
+.container {
+    max-width: 600px;
+    margin: auto;
+    padding: 10px;
+    box-shadow: var(--shadow);
+    border-radius: var(--radius);
+    background: var(--container-background-color);
+    margin-top: 20px;
+    position: relative;
 }
 
-.search-group input {
-    width: 100%;
+/* Главный заголовок */
+h1 {
+    text-align: center;
+    color: #fff; /* Розовый цвет для акцента */
+    margin-bottom: 15px;
+    font-size: 2.4rem;
+    
+    
+    text-transform: uppercase; /* Все буквы в верхнем регистре */
+    letter-spacing: 2px; /* Пространство между буквами */
+    animation: glow 3s infinite alternate; /* Мягкое сияние */
 }
 
-.selection-group {
+@keyframes glow {
+    from {
+        text-shadow: 0 0 10px #ff69b4;
+    }
+    to {
+        text-shadow: 0 0 20px #ff69b4;
+    }
+}
+
+/* Подзаголовок */
+h2 {
+    text-align: center;
+    color: #fff; /* Белый цвет */
+    margin-bottom: 15px;
+    font-size: 1.4rem;
+    font-weight: bold; /* Полужирный шрифт */
+    letter-spacing: 1px; /* Небольшое пространство между буквами */
+    
+}
+
+
+/* Панель управления */
+.controls {
     display: flex;
-    flex-direction: row; /* В строку на широких экранах */
-    gap: 15px;
-    flex-wrap: wrap; /* Разрешаем перенос */
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 15px;
 }
 
-.select-wrapper {
-    flex: 1; /* Растягиваем обертки */
-    min-width: 150px; /* Минимальная ширина для селектов */
+.control-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
-.select-wrapper select {
-    width: 100%; /* Селект занимает всю ширину обертки */
-}
-
-/* Стили для полей ввода и селектов */
-select, input[type="text"] {
-    padding: 10px 12px;
-    font-size: 0.95rem;
+select, input, button {
+    padding: 14px;
+    font-size: 1rem;
     border: 1px solid var(--border-color);
     border-radius: var(--radius);
-    background-color: var(--input-bg-color);
-    color: var(--text-color);
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    transition: all 0.3s ease;
     outline: none;
-    appearance: none; /* Убираем стандартный вид селекта */
-    width: 100%; /* По умолчанию на всю ширину */
+    appearance: none;
+    background: #222;
+    color: #fff;
 }
 
-select {
-     /* Добавляем стрелку для селектов */
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23cccccc'%3E%3Cpath fill-rule='evenodd' d='M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z' clip-rule='evenodd' /%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 10px center;
-    background-size: 16px;
-    padding-right: 35px; /* Место для стрелки */
+.font-size-controls {
+    display: flex;
+    gap: 8px;
+    margin-top: 0;
+}
+
+.font-size-controls button {
+    padding: 5px 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: var(--radius);
     cursor: pointer;
 }
 
-select:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
+#key-select {
+    padding: 8px 5px;
+    border: 3px solid var(--border-color);
+    border-radius: var(--radius);
+    font-size: 12px;
+    width: 15%;
+    text-align: center;
 }
 
-input[type="text"]:focus, select:focus {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 2px rgba(255, 20, 147, 0.3); /* Подсветка фокуса */
+#sheet-select, #song-select, #search-input {
+    padding: 5px 15px;
+    border: 3px solid var(--border-color);
+    border-radius: var(--radius);
+    font-size: 17px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
-/* Результаты поиска */
-#search-results {
-    position: relative; /* Можно сделать абсолютным, если нужно */
-    z-index: 5; /* Поверх других элементов */
-    /* Стили для фона, рамки и т.д. при появлении */
+button {
+    background: linear-gradient(145deg, var(--primary-color), var(--secondary-color));
+    color: #fff;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    border-radius: var(--radius);
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+    padding: 12px;
 }
-.search-result {
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+button:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Стиль для кнопок масштабирования */
+#zoom-in, #zoom-out {
+    background: linear-gradient(145deg, var(--primary-color), var(--secondary-color)); /* Используем те же цвета */
+    color: #fff;
+    font-weight: 500;
+    border: none;
+    border-radius: var(--radius);
+    padding: 8px 12px; /* Отступы внутри кнопки */
+    font-size: 14px; /* Размер шрифта */
+    cursor: pointer;
+    transition: none; /* Убираем все переходные эффекты */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Добавляем тень для объемного эффекта */
+}
+
+/* Убираем эффект наведения */
+#zoom-in:hover, #zoom-out:hover {
+    transform: none; /* Нет подъема */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Тень остается неизменной */
+}
+
+#zoom-in:active, #zoom-out:active {
+    transform: none; /* Нет эффекта нажатия */
+    box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.2); /* Внутренняя тень при нажатии */
+}
+
+/* Кнопки управления */
+.control-buttons {
+    display: flex;
+    justify-content: space-around;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.control-buttons button {
     padding: 8px 12px;
-    background-color: var(--hover-color);
-    border: 1px solid var(--border-color);
-    border-top: none;
+    font-size: 14px;
+    border: none;
+    border-radius: var(--radius);
     cursor: pointer;
-    transition: background-color 0.2s ease;
-}
-.search-result:first-child {
-     border-top: 1px solid var(--border-color);
-     border-top-left-radius: var(--radius);
-     border-top-right-radius: var(--radius);
-}
-.search-result:last-child {
-     border-bottom-left-radius: var(--radius);
-     border-bottom-right-radius: var(--radius);
-}
-.search-result:hover {
-    background-color: var(--primary-color);
-    color: var(--button-text-color);
+    transition: all 0.3s ease;
+    flex: 1;
 }
 
-/* --- Song Display Area --- */
-#song-display-area {
-    margin-top: 25px;
+.controls-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Центрируем по горизонтали */
+    gap: 15px; /* Отступ между элементами */
+    margin-top: 10px; /* Отступ сверху */
+    padding: 10px;
+    text-align: center; /* Текст внутри элементов также центрируется */
 }
 
-/* Содержимое песни */
+.bpm-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+#bpm-display {
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    min-width: 50px;
+    text-align: center;
+}
+
+#bpm-display:focus {
+    outline: none;
+    background-color: #151515;
+}
+
+#metronome-button {
+    padding: 8px 12px;
+    font-size: 14px;
+    border: none;
+    border-radius: var(--radius);
+    background: linear-gradient(145deg, var(--primary-color), var(--secondary-color));
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#time-signature {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 14px; /* Увеличенные отступы для лучшей видимости */
+    font-size: 1rem; /* Размер шрифта адаптирован под мобильные устройства */
+    border: 2px solid var(--border-color); /* Утолщенные границы для акцента */
+    border-radius: var(--radius);
+    
+    color: var(--text-color);
+    box-shadow: var(--shadow); /* Добавляем тень для объемного эффекта */
+    transition: all 0.3s ease; /* Плавные переходы */
+    min-width: 60px; /* Минимальная ширина для удобства нажатия */
+    text-align: center;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+#time-signature:hover {
+    transform: translateY(-2px); /* Легкий подъем при наведении */
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15); /* Усиленная тень */
+    background-color: var(--hover-color); /* Изменение фона */
+}
+
+#time-signature:active {
+    transform: translateY(0); /* Возвращаем на место при нажатии */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Уменьшаем тень */
+}
+
+
+
+/* Текст песни */
 #song-content {
     background: var(--container-background-color);
-    padding: 15px;
+    padding: 20px;
     border-radius: var(--radius);
-    margin-bottom: 15px; /* Отступ до панели действий */
-    border: 1px solid var(--border-color);
-    min-height: 150px; /* Минимальная высота, чтобы блок не схлопывался */
+    box-shadow: var(--shadow);
+    margin-top: 20px;
+    position: relative;
+    overflow: hidden;
 }
 
 #song-content pre {
-    font-family: 'Courier New', Courier, monospace; /* Моноширинный шрифт лучше для аккордов */
+    font-family: 'Tahoma', monospace;
     white-space: pre-wrap;
     word-wrap: break-word;
-    line-height: 1.6; /* Увеличим для читаемости */
-    font-size: var(--lyrics-font-size, 1rem); /* Размер шрифта по умолчанию, можно менять JS */
+    overflow-wrap: anywhere;
+    line-height: 1.2;
+    font-size: clamp(10px, 2vw, 20px);
     color: var(--text-color);
     margin: 0;
-    overflow-x: auto; /* Горизонтальный скролл, если строки слишком длинные */
+    max-width: 100%;
 }
 
-/* Аккорды */
+
+
+/* Базовый стиль для аккордов */
 .chord {
     font-weight: bold;
-    color: var(--accent-color);
-    /* background-color: rgba(255, 105, 180, 0.1); */ /* Легкий фон для аккордов - опционально */
-    /* padding: 0 2px; */
-    /* border-radius: 3px; */
-}
-
-/* --- Song Actions & Tools Bars --- */
-.song-actions, .song-tools {
-    display: flex;
-    flex-wrap: wrap; /* Перенос элементов */
-    justify-content: space-between; /* Распределяем группы */
-    align-items: center;
-    gap: 15px; /* Отступ между группами */
-    padding: 10px 0;
-    margin-bottom: 15px;
-    border-bottom: 1px solid var(--border-color); /* Разделитель */
-}
-.song-tools {
-     border-bottom: none; /* Убираем нижнюю границу у последней панели */
-     justify-content: center; /* Центрируем инструменты */
-}
-
-.action-group, .tool-group {
-    display: flex;
-    align-items: center;
-    gap: 10px; /* Отступ между элементами внутри группы */
-}
-
-/* Группа Тон + Масштаб */
-.key-zoom-group label { margin-bottom: 0; } /* Убираем нижний отступ у label */
-.key-zoom-group #key-select {
-     width: auto; /* Автоширина */
-     min-width: 55px;
-     padding: 6px 8px;
-     font-size: 0.9rem;
-     text-align: center;
-     flex-shrink: 0; /* Не сжиматься */
-}
-.font-size-controls button {
-     padding: 6px 10px;
-     font-size: 1rem;
-     line-height: 1;
-     min-width: 35px;
-     background: var(--input-bg-color); /* Фон как у инпутов */
-     color: var(--text-color);
-     border: 1px solid var(--border-color);
-     box-shadow: none;
-     transition: background-color 0.2s ease, border-color 0.2s ease;
-}
-.font-size-controls button:hover {
-     background-color: var(--hover-color);
-     border-color: var(--accent-color);
-     transform: none; /* Убираем скачок */
-     box-shadow: none;
-}
-.font-size-controls button:active {
-    background-color: var(--primary-color);
-    transform: none;
-    box-shadow: none;
+    color: var(--accent-color); /* Светло-розовый */
+    margin-right: 4px;
 }
 
 
-/* Группа основных действий (кнопки) */
-.main-actions button, .main-actions a {
-    padding: 8px 10px; /* Уменьшаем паддинг */
-    font-size: 1rem; /* Размер для иконок/символов */
-    min-width: 40px; /* Делаем кнопки компактнее */
-    line-height: 1;
-    flex: 0 0 auto; /* Не растягивать */
-}
-#holychords-button { /* Специфичные стили для ссылки */
-     background: none;
-     border: 1px solid var(--accent-color);
-     color: var(--accent-color);
-     box-shadow: none;
-}
-#holychords-button:hover {
-     background-color: var(--accent-color);
-     color: var(--button-text-color);
-     transform: none;
-     box-shadow: none;
-}
 
-/* Группа инструментов (BPM) */
-.bpm-group label, .bpm-group span:not(#bpm-display) {
-     font-size: 0.9rem;
-     color: var(--label-color);
-}
-.bpm-group #time-signature {
-     width: auto;
-     padding: 6px 10px;
-     font-size: 0.9rem;
-     min-width: 60px;
-     border-width: 1px;
-     box-shadow: none;
-}
-.bpm-group #time-signature:hover { transform: none; box-shadow: none; background-color: var(--hover-color); }
-.bpm-group #time-signature:active { transform: none; box-shadow: none; }
-
-.bpm-group #bpm-display {
-     padding: 6px 10px;
-     font-size: 0.95rem;
-     min-width: 45px;
-     background-color: var(--input-bg-color);
-     cursor: text;
-}
-.bpm-group #metronome-button {
-     padding: 7px 10px;
-     font-size: 1rem;
-     min-width: 38px;
-     line-height: 1;
-}
-
-/* --- YouTube Player --- */
+/* Секция с плеером */
 #youtube-player-section h3 {
   text-align: center;
   margin-bottom: 10px;
-  font-size: 1.1rem;
-  color: var(--text-color);
+  font-size: 1.2rem; /* Или другой размер */
 }
+
+/* Контейнер для адаптивного iframe */
 #youtube-player-container {
   position: relative;
-  padding-bottom: 56.25%; /* 16:9 */
+  padding-bottom: 56.25%; /* Соотношение сторон 16:9 (height / width * 100) */
   height: 0;
   overflow: hidden;
-  max-width: 100%;
-  background: #000;
-  border-radius: var(--radius);
-  margin-bottom: 15px;
+  max-width: 100%; /* Ширина контейнера */
+  background: #000; /* Черный фон на время загрузки */
+  border-radius: var(--radius); /* Скругление как у других блоков */
+  margin-bottom: 15px; /* Отступ снизу */
 }
+
 #youtube-player-container iframe {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  border: 0;
+  border: 0; /* Убираем стандартную рамку iframe */
 }
 
-/* --- Side Panel (Lists) --- */
-#favorites-panel { /* Используем aside в HTML, стилизуем по ID */
+
+
+
+
+
+
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    #key-select {
+        width: 30%;
+        font-size: 14px;
+        margin-right: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 5px;
+    }
+    h1, h2 {
+        font-size: 1.2rem;
+    }
+    select, input, button {
+        font-size: 16px;
+        padding: 12px;
+    }
+    #key-select {
+        width: 15%;
+        font-size: 16px;
+        margin-right: 10px;
+    }
+    #song-content {
+        padding: 15px;
+    }
+    #song-content pre {
+        font-size: 10px;
+        line-height: 1.1;
+    }
+}
+
+/* Стиль для выдвижной панели "Группа" */
+#favorites-panel {
     position: fixed;
     top: 0;
-    left: 0; /* Начинаем слева */
-    width: 85%; /* Ширина панели */
-    max-width: 350px; /* Максимальная ширина */
+    left: -80%;
+    width: 80%;
     height: 100%;
-    background-color: var(--container-background-color);
-    border-right: 1px solid var(--border-color); /* Граница справа */
-    box-shadow: 4px 0 15px rgba(0, 0, 0, 0.2);
-    transform: translateX(-100%); /* Скрыта за левым краем */
-    transition: transform 0.3s ease-in-out;
+    background-color: #1c1c1c; /* Темно-серый матовый */
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
     z-index: 1000;
-    padding: 15px;
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto; /* Внутренний скролл */
+    overflow-y: auto;
 }
 
 #favorites-panel.open {
-    transform: translateX(0); /* Показываем */
+    transform: translateX(100%);
 }
 
-.toggle-favorites { /* Кнопка открытия панели */
+/* Стиль для кнопки "Группа" */
+.toggle-favorites {
     position: fixed;
-    background: linear-gradient(145deg, var(--primary-color), var(--secondary-color));
-    top: 10px;
-    right: 10px;
-    width: 45px; /* Уменьшим кнопку */
-    height: 45px;
-    color: var(--button-text-color);
+    background: linear-gradient(145deg, #ff1493, #c71585); /* Темно-розовый градиент */
+    top: 10px; /* Небольшой отступ сверху */
+    right: 10px; /* Перемещаем кнопку в правый угол */
+    width: 50px;
+    height: 50px;
+    color: white; /* Белый текст */
     border: none;
-    border-radius: 50%;
+    border-radius: 50%; /* Круглая форма */
     cursor: pointer;
-    font-size: 0.9rem; /* Уменьшим шрифт */
+    font-size: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    z-index: 1001; /* Поверх панели */
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-.toggle-favorites:hover {
-    transform: scale(1.1);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-}
-.toggle-favorites:active {
-    transform: scale(1);
-    box-shadow: inset 1px 1px 4px rgba(0, 0, 0, 0.2);
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); /* Тень для объемного эффекта */
+    z-index: 1001;
 }
 
-/* Секции внутри панели */
+/* Анимация при наведении */
+.toggle-favorites:hover {
+    transform: scale(1.05); /* Легкое увеличение */
+    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.3); /* Усиленная тень */
+}
+
+/* Эффект при нажатии */
+.toggle-favorites:active {
+    transform: scale(1); /* Возвращаем к исходному размеру */
+    box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.2); /* Внутренняя тень */
+}
+
 .list-section {
+    flex: 1;
+    overflow-y: auto;
     margin-bottom: 20px;
 }
-.list-section:last-child {
-     margin-bottom: 0;
-}
+
 .list-section h3 {
     font-size: 1rem;
-    margin-top: 0;
     margin-bottom: 10px;
-    color: var(--accent-color);
-    border-bottom: 1px solid var(--border-color);
-    padding-bottom: 5px;
-    text-align: left; /* Выравниваем по левому краю */
-}
-.list-section h3 span { /* Имя вокалиста */
-     font-weight: normal;
-     color: var(--text-color);
+    color: var(--text-color);
 }
 
-/* Контейнер для списков внутри панели */
-.list-container {
-    max-height: 250px; /* Ограничиваем высоту */
+.favorites-list, .shared-songs-list {
+    max-height: 300px;
     overflow-y: auto;
-    /* Стилизация скроллбара (опционально, для Webkit) */
-    &::-webkit-scrollbar { width: 6px; }
-    &::-webkit-scrollbar-track { background: var(--border-color); border-radius: 3px;}
-    &::-webkit-scrollbar-thumb { background: var(--primary-color); border-radius: 3px;}
-    &::-webkit-scrollbar-thumb:hover { background: var(--secondary-color); }
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    background: var(--hover-color);
 }
 
-/* Элементы списков (общие стили) */
-.favorite-item, .shared-item, .repertoire-item {
+.favorite-item, .shared-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 8px 5px; /* Уменьшим паддинг */
+    padding: 10px;
     border-bottom: 1px solid var(--border-color);
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-    font-size: 0.9rem; /* Уменьшим шрифт */
+    border-radius: var(--radius);
+    transition: background 0.3s ease;
 }
-.favorite-item:last-child, .shared-item:last-child, .repertoire-item:last-child {
+
+.favorite-item:last-child, .shared-item:last-child {
     border-bottom: none;
 }
-.favorite-item:hover, .shared-item:hover, .repertoire-item:hover {
-    background-color: var(--hover-color);
+
+.favorite-item:hover, .shared-item:hover {
+    background-color: #262626; /* Темный серый при наведении */
 }
 
-.list-container .song-name { /* Имя песни внутри списков */
+.song-name {
     flex-grow: 1;
-    margin-right: 8px;
-    overflow: hidden; /* Обрезаем слишком длинные названия */
-    white-space: nowrap;
-    text-overflow: ellipsis;
+    margin-right: 10px;
 }
-/* Кнопки удаления внутри списков */
-.list-container .remove-button, .list-container .delete-button {
+
+.remove-button, .delete-button {
     background: none;
     border: none;
-    color: #ff5555; /* Красный для удаления */
+    color: red;
     cursor: pointer;
-    padding: 0 5px; /* Небольшой отступ */
-    font-size: 1.1rem; /* Размер иконки */
-    line-height: 1;
-    flex-shrink: 0; /* Не сжимать кнопку */
-    transition: color 0.2s ease;
-}
-.list-container .remove-button:hover, .list-container .delete-button:hover {
-    color: #ff0000;
-    text-decoration: none; /* Убираем подчеркивание */
 }
 
-/* Сообщение, если список пуст */
-.empty-message {
-     padding: 10px;
-     text-align: center;
-     color: var(--label-color);
-     font-style: italic;
-     font-size: 0.9rem;
+.remove-btn:hover, .delete-button:hover {
+    text-decoration: underline;
 }
 
-/* --- Loading Indicator --- */
-#loading-indicator {
-    display: none; /* Скрыт по умолчанию */
-    position: fixed;
-    top: 15px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: rgba(0, 0, 0, 0.7);
-    color: white;
-    padding: 8px 15px;
+/* Стиль для кнопки Holychords */
+#holychords-button {
+    display: inline-block;
+    padding: 8px 12px;
+    font-size: 14px;
+    color: var(--accent-color);
+    text-decoration: none;
+    border: 1px solid var(--accent-color);
     border-radius: var(--radius);
-    z-index: 1002;
-    font-size: 0.9rem;
+    transition: all 0.3s ease;
 }
 
-/* --- Split Columns Style --- */
+#holychords-button:hover {
+    background-color: var(--accent-color);
+    color: #fff;
+}
+
+
+/* Стиль для разделения текста на две колонки */
 #song-content.split-columns pre {
     column-count: 2;
-    column-gap: 20px; /* Немного увеличим разрыв */
-    position: relative; /* Нужно для псевдоэлемента */
+    column-gap: 13px;
+    line-height: 1.2;
+    position: relative;
 }
-/* Убираем линию-разделитель (::before), она может плохо смотреться */
-/* #song-content.split-columns pre::before { ... } */
 
+#song-content.split-columns pre::after {
+    content: "";
+    display: table;
+    clear: both;
+}
 
-/* --- Responsiveness --- */
-
-@media (max-width: 650px) { /* Точка для мобильных */
-    body {
-         padding: 5px;
-         font-size: 15px; /* Чуть меньше базовый шрифт */
-    }
-    .container {
-        padding: 10px;
-        margin-top: 10px;
-    }
-    header {
-        padding: 0 50px; /* Уменьшаем место для кнопки */
-        margin-bottom: 15px;
-    }
-    h1 { font-size: 1.5rem; }
-    h2 { font-size: 1.2rem; }
-    h3 { font-size: 1rem; }
-
-    .selection-group {
-         flex-direction: column; /* Селекты друг под другом */
-         gap: 10px;
-    }
-    .select-wrapper { min-width: 100%; } /* Селекты на всю ширину */
-
-    .song-actions, .song-tools {
-        gap: 10px; /* Уменьшаем отступы */
-        padding: 8px 0;
-    }
-    .action-group, .tool-group {
-        gap: 8px;
-        flex-basis: 100%; /* Группы могут занимать всю ширину */
-        justify-content: center; /* Центрируем элементы в группах */
-    }
-    .main-actions button, .main-actions a {
-        padding: 6px 8px;
-        min-width: 35px;
-        font-size: 0.9rem;
-    }
-    .key-zoom-group #key-select {
-        padding: 5px 6px;
-        font-size: 0.85rem;
-    }
-    .font-size-controls button {
-        padding: 5px 8px;
-    }
-    .bpm-group #time-signature, .bpm-group #bpm-display {
-         padding: 5px 8px;
-         font-size: 0.9rem;
-    }
-     .bpm-group #metronome-button {
-         padding: 6px 8px;
-         min-width: 35px;
-    }
-
-    #song-content { padding: 10px; }
-    #song-content pre { font-size: 0.9rem; line-height: 1.5; } /* Адаптируем шрифт текста */
-
-    #favorites-panel { width: 90%; } /* Панель чуть шире */
-
-
-    .toggle-favorites { width: 40px; height: 40px; font-size: 0.8rem; }
+#song-content.split-columns pre::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 1px;
+    background-color: #ccc;
+    z-index: 1;
 }
