@@ -626,7 +626,7 @@ async function addToSharedList(songData) { // Делаем функцию аси
 
     // Проверка, что все нужные данные существуют
     if (!sheetName || !songIndex || !songData || !songData[0]) {
-         console.error("Данные для добавления песни отсутствуют или некорректны.");
+         console.error("addToSharedList: Данные для добавления песни отсутствуют или некорректны.");
          alert("Не удалось добавить песню: недостаточно данных. Выберите песню.");
          return;
     }
@@ -634,61 +634,72 @@ async function addToSharedList(songData) { // Делаем функцию аси
     const song = {
         name: songData[0],
         sheet: sheetName,
-        index: songIndex,
-        key: keySelect.value, // Сохраняем текущую выбранную тональность
-        timestamp: new Date().toISOString() // Время добавления для сортировки
+        index: songIndex, // <- Убедитесь, что index здесь строка
+        key: keySelect.value,
+        timestamp: new Date().toISOString()
     };
 
-    const maxSongs = 8; // Устанавливаем лимит
+    console.log("addToSharedList: Попытка добавить песню:", song); // Выводим объект песни
+
+    const maxSongs = 8;
 
     try {
         // --- ПРОВЕРКА 1: Лимит количества песен ---
-        const countQuery = query(sharedListCollection); // Запрос для подсчета
-        const countSnapshot = await getDocs(countQuery); // Получаем все документы
+        console.log("addToSharedList: Проверка лимита...");
+        const countQuery = query(sharedListCollection);
+        const countSnapshot = await getDocs(countQuery);
+        console.log(`addToSharedList: Текущий размер списка: ${countSnapshot.size}`); // Выводим размер
 
         if (countSnapshot.size >= maxSongs) {
+            console.log("addToSharedList: ПРОВЕРКА ЛИМИТА НЕ ПРОЙДЕНА.");
             alert(`В общем списке уже ${countSnapshot.size} песен. Достигнут лимит (${maxSongs}).`);
-            return; // Выходим, если лимит достигнут
+            return;
         }
+        console.log("addToSharedList: Проверка лимита ПРОЙДЕНА.");
 
         // --- ПРОВЕРКА 2: Дубликаты ---
-        // Ищем песню с таким же листом (sheet) и индексом строки (index)
+        console.log(`addToSharedList: Проверка дубликатов для sheet: ${song.sheet}, index: ${song.index} (тип ${typeof song.index})`);
         const duplicateQuery = query(sharedListCollection,
                                      where("sheet", "==", song.sheet),
-                                     where("index", "==", song.index));
+                                     where("index", "==", song.index)); // Сравниваем sheet и index
         const duplicateSnapshot = await getDocs(duplicateQuery);
+        console.log(`addToSharedList: Найдено дубликатов: ${duplicateSnapshot.size}`); // Выводим кол-во найденных дублей
 
-        // Если запрос вернул хотя бы один документ, значит дубликат найден
-        if (!duplicateSnapshot.empty) {
+        if (!duplicateSnapshot.empty) { // duplicateSnapshot.empty это true, если size = 0
+            console.log("addToSharedList: ПРОВЕРКА ДУБЛИКАТОВ НЕ ПРОЙДЕНА.");
             alert(`Песня "${song.name}" уже есть в общем списке.`);
-            return; // Выходим, если найден дубликат
+            return;
         }
+        console.log("addToSharedList: Проверка дубликатов ПРОЙДЕНА.");
+
 
         // --- ДОБАВЛЕНИЕ ПЕСНИ ---
-        // Если обе проверки пройдены, добавляем песню
+        console.log("addToSharedList: Добавляем песню в Firestore...");
         await addDoc(sharedListCollection, song);
-        console.log(`Песня "${song.name}" успешно добавлена в общий список.`);
-        // Панель обновится сама благодаря onSnapshot в loadSharedList,
-        // вызывать loadGroupPanel() здесь не нужно.
+        console.log(`addToSharedList: Песня "${song.name}" успешно добавлена.`);
 
     } catch (error) {
-        console.error("Ошибка при добавлении песни в общий список:", error);
+        // Выводим ошибку, если что-то пошло не так внутри try
+        console.error("addToSharedList: Ошибка при проверке или добавлении:", error);
         alert("Произошла ошибка при добавлении песни. Пожалуйста, попробуйте еще раз.");
     }
 }
 
 // Обработчик кнопки "Добавить в список"
+// Обработчик кнопки "Добавить в список" (ОБНОВЛЕННЫЙ)
 document.getElementById('add-to-list-button').addEventListener('click', () => {
     const sheetName = SHEETS[sheetSelect.value];
     const songIndex = songSelect.value;
 
-    if (!sheetName || !songIndex) return;
+    // Улучшенная проверка перед вызовом
+    if (!sheetName || !songIndex || !cachedData[sheetName] || !cachedData[sheetName][songIndex]) {
+         alert("Сначала выберите песню для добавления.");
+         return;
+    }
 
     const songData = cachedData[sheetName][songIndex];
-    if (!songData) return;
-
-    addToSharedList(songData);
-    loadGroupPanel(); // Перезагружаем панель "Группа"
+    addToSharedList(songData); // Просто вызываем async функцию
+    // loadGroupPanel(); // <-- УБРАЛИ ЭТУ СТРОКУ
 });
 
 
