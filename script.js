@@ -786,22 +786,21 @@ function displaySongDetails(songData, index, key) {
         holychordsButton.style.display = 'none';
     }
 
-// --- Обрабатываем и подсвечиваем текст ---
-   const processedOriginalLyrics = processLyrics(lyrics); // <--- ВОССТАНОВИЛИ ВЫЗОВ
-const highlightedOriginalLyrics = highlightChords(processedOriginalLyrics); // Используем обработанный текст
+ // --- Обрабатываем и подсвечиваем текст ---
+    const processedOriginalLyrics = processLyrics(lyrics);
+    const highlightedOriginalLyrics = highlightChords(processedOriginalLyrics);
 
-   // --- Обновляем ОСНОВНОЕ содержимое (Название + Текст) ---
-songContent.innerHTML = `
-    <h2>${songTitle} — <span class="math-inline">\{currentKey\}</h2\>
+    // --- Обновляем ОСНОВНОЕ содержимое (Название + Текст) --- ИСПРАВЛЕНО
+    songContent.innerHTML = `
+        <h2>${songTitle} — ${currentKey}</h2>
         <pre>${highlightedOriginalLyrics}</pre>
-    `;
+    `; // <-- Убедитесь, что строка заканчивается именно так
 
-    // Устанавливаем селектор тональности и индекс для транспонирования
+    // --- Обновляем селектор тональности и вызываем транспонирование ---
     keySelect.value = currentKey;
-    keySelect.dataset.index = index; // Важно для updateTransposedLyrics
-
-    // Применяем транспонирование, если нужно
+    keySelect.dataset.index = index;
     updateTransposedLyrics();
+
 
     // Обновляем YouTube плеер
     const videoId = extractYouTubeVideoId(youtubeLink);
