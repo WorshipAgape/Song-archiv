@@ -1228,17 +1228,29 @@ function setupEventListeners() {
     }
 
     // Кнопка открытия/закрытия панели "Группа"
-    if (toggleFavoritesButton && favoritesPanel) {
-         toggleFavoritesButton.addEventListener('click', () => {
-             favoritesPanel.classList.toggle('open');
-             if (favoritesPanel.classList.contains('open')) {
-                 console.log("Панель 'Группа' открыта, загрузка содержимого...");
-                 loadGroupPanel(); // Загружаем всё содержимое при открытии
-             } else {
-                 console.log("Панель 'Группа' закрыта.");
+if (toggleFavoritesButton && favoritesPanel) {
+     toggleFavoritesButton.addEventListener('click', () => {
+         console.log("--- КЛИК: Кнопка 'Список' ---");
+         console.log("Переменная favoritesPanel:", favoritesPanel);
+         console.log("Классы ДО:", favoritesPanel.className);
+         const isOpen = favoritesPanel.classList.toggle('open'); // Переключаем класс
+         console.log("Классы ПОСЛЕ:", favoritesPanel.className); // Есть ли 'open'?
+         console.log("Панель 'Списки' должна быть открыта:", isOpen);
+
+         if (isOpen) {
+             if (repertoirePanel && repertoirePanel.classList.contains('open')) {
+                 repertoirePanel.classList.remove('open');
+                 console.log("Панель 'Репертуар' принудительно закрыта.");
              }
-         });
-    }
+             loadGroupPanel();
+         } else {
+              console.log("Панель 'Списки' была закрыта.");
+         }
+     });
+     // console.log("Слушатель для кнопки 'Списки' добавлен."); // Можно оставить для проверки
+} else {
+     console.error("Не найдены элементы для кнопки 'Списки'");
+}
 
     // Кнопка метронома
     if (metronomeButton) {
