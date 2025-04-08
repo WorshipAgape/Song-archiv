@@ -136,47 +136,58 @@ button:not(.remove-button):not(.delete-button):active { transform: translateY(0)
 #youtube-player-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; background: #000; border-radius: var(--radius); margin-bottom: 15px; }
 #youtube-player-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
 
-/* === СТИЛИ ДЛЯ БОКОВЫХ ПАНЕЛЕЙ === */
+/* ============================================ */
+/* СТИЛИ ДЛЯ БОКОВЫХ ПАНЕЛЕЙ (v.Clean+Fix)    */
+/* ============================================ */
+
+/* --- Общий стиль боковых панелей --- */
 .side-panel {
-    position: fixed !important; /* Гарантируем */
-    top: 0; width: 90%; max-width: 380px; height: 100%;
+    position: fixed; /* Фиксированное позиционирование */
+    top: 0;
+    width: 90%;
+    max-width: 380px; /* Макс ширина */
+    height: 100%;
     background-color: var(--container-background-color);
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
-    transition: transform 0.3s ease-in-out; z-index: 1000; padding: 20px;
-    display: flex; flex-direction: column; gap: 15px; overflow-y: auto;
+    transition: transform 0.3s ease-in-out; /* Плавная анимация */
+    z-index: 1000;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    overflow-y: auto; /* Внутренний скролл */
 }
-* Панель Списков (#favorites-panel) - ВЫЕЗД СЛЕВА */
+
+/* --- Панель Списков (#favorites-panel) - ВЫЕЗД СЛЕВА --- */
 #favorites-panel {
-    position: fixed !important; /* Гарантируем */
-    top: 0; left: 0; right: auto;
-    width: 90%; max-width: 380px; height: 100%;
-    background-color: var(--container-background-color);
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
-    transition: transform 0.3s ease-in-out;
-    z-index: 1000; padding: 20px;
-    display: flex; flex-direction: column; gap: 15px;
-    overflow-y: auto;
+    left: 0; right: auto;
+    transform: translateX(-100%); /* Скрыта слева по умолчанию */
     border-right: 2px solid var(--primary-color);
-    transform: translateX(-100%); /* Скрыта слева */
+    /* Наследует position, transition и др. из .side-panel */
 }
 #favorites-panel.open {
-    transform: translateX(0) !important; /* <<<< ДОБАВЛЕНО !important ДЛЯ ТЕСТА */
+    transform: translateX(0); /* Показываем (БЕЗ !important) */
 }
 
-/* Панель Репертуара (#repertoire-panel) - ВЫЕЗД СПРАВА */
+/* --- Панель Репертуара (#repertoire-panel) - ВЫЕЗД СПРАВА --- */
 #repertoire-panel {
     right: 0; left: auto;
-    transform: translateX(100%); /* Скрыта справа */
+    transform: translateX(100%); /* Скрыта справа по умолчанию */
     border-left: 2px solid var(--primary-color);
+     /* Наследует position, transition и др. из .side-panel */
 }
-#repertoire-panel.open { transform: translateX(0); }
+#repertoire-panel.open {
+    transform: translateX(0); /* Показываем (БЕЗ !important) */
+}
 
-/* Кнопки открытия панелей */
-.toggle-button { /* Класс для ОБЕИХ кнопок */
-    position: fixed !important; /* Гарантируем */
-    top: 10px; width: auto; height: 45px; z-index: 1001;
-    padding: 0 15px; border-radius: var(--radius);
-    /* Базовый стиль button применится */
+/* --- Кнопки открытия панелей --- */
+.toggle-button { /* Общий класс для кнопок панелей */
+    position: fixed !important; /* Оставим !important только здесь для надежности Z-index */
+    top: 10px;
+    width: auto; height: 45px;
+    z-index: 1001; /* Поверх панелей */
+    padding: 0 15px;
+    /* Стиль кнопки берется из базового 'button' */
 }
 .lists-toggle { /* Кнопка "Список" (СЛЕВА) */
     left: 10px; right: auto;
@@ -187,18 +198,24 @@ button:not(.remove-button):not(.delete-button):active { transform: translateY(0)
 .toggle-button:hover { transform: scale(1.05); }
 .toggle-button:active { transform: scale(1); box-shadow: inset 1px 1px 4px rgba(0,0,0,0.2); }
 
-/* Содержимое панелей */
+/* --- Содержимое панелей --- */
+/* (Эти стили остаются как в CSS #81) */
 .list-section { margin-bottom: 0; flex-shrink: 0;}
 .list-section h3 { text-align: left; font-size: 1rem; margin-top: 0; margin-bottom: 10px; color: var(--accent-color); border-bottom: 1px solid var(--border-color); padding-bottom: 5px;}
 #repertoire-panel h3 { font-size: 1.1rem; }
 #repertoire-panel h3 span { font-weight: normal; color: var(--text-color); font-size: 0.9em; }
 
-.list-container { max-height: 250px; overflow-y: auto; margin-bottom: 10px; padding: 10px; border: 1px solid var(--border-color); border-radius: var(--radius); background: var(--hover-color); }
+.list-container,
+#favorites-list,
+#shared-songs-list {
+    max-height: 250px; overflow-y: auto; margin-bottom: 10px;
+    padding: 10px; border: 1px solid var(--border-color);
+    border-radius: var(--radius); background: var(--hover-color);
+}
 .list-container::-webkit-scrollbar { width: 6px; }
 .list-container::-webkit-scrollbar-track { background: var(--border-color); border-radius: 3px;}
 .list-container::-webkit-scrollbar-thumb { background: var(--primary-color); border-radius: 3px;}
 
-/* Элементы списков */
 .favorite-item, .shared-item, .repertoire-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid var(--border-color); transition: background 0.3s ease; font-size: 0.9rem; cursor: pointer;}
 .favorite-item:last-child, .shared-item:last-child, .repertoire-item:last-child { border-bottom: none; }
 .favorite-item:hover, .shared-item:hover, .repertoire-item:hover { background-color: #262626; }
@@ -219,6 +236,8 @@ button:not(.remove-button):not(.delete-button):active { transform: translateY(0)
 .repertoire-sheet-heading { font-size: 0.75rem; font-weight: 500; color: var(--label-color); padding: 2px 8px 2px 12px; margin-top: 4px; }
 #repertoire-panel .list-container > .repertoire-key-heading:first-child { margin-top: 0; }
 #repertoire-panel .repertoire-item { padding-left: 15px; }
+
+/* === КОНЕЦ БЛОКА СТИЛЕЙ ДЛЯ ПАНЕЛЕЙ === */
 
 /* --- Loading Indicator --- */
 #loading-indicator { display: none; position: fixed; top: 15px; left: 50%; transform: translateX(-50%); background-color: rgba(40, 40, 40, 0.85); color: white; padding: 8px 18px; border-radius: var(--radius); z-index: 1002; font-size: 0.9rem; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
