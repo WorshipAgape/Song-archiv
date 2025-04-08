@@ -69,24 +69,32 @@ const keySelect = document.getElementById('key-select');
 const searchInput = document.getElementById('search-input');
 const searchResults = document.getElementById('search-results');
 const loadingIndicator = document.getElementById('loading-indicator');
+const vocalistSelect = document.getElementById('vocalist-select'); // Вокалист
+
 // Song Display Area
 const songContent = document.getElementById('song-content');
+
 // Action Buttons
 const favoriteButton = document.getElementById('favorite-button');
 const addToListButton = document.getElementById('add-to-list-button');
 const addToRepertoireButton = document.getElementById('add-to-repertoire-button');
 const splitTextButton = document.getElementById('split-text-button');
-// Panel ("Group") Elements
-const toggleFavoritesButton = document.getElementById('toggle-favorites');
-const favoritesPanel = document.getElementById('favorites-panel');
-const favoritesList = document.getElementById('favorites-list'); // Container for "My List"
-const sharedSongsList = document.getElementById('shared-songs-list'); // Container for "Shared List"
-// Repertoire Elements
-const vocalistSelect = document.getElementById('vocalist-select');
-const repertoirePanel = document.getElementById('repertoire-panel'); // Главный элемент панели
-const repertoirePanelVocalistName = document.getElementById('repertoire-vocalist-name');
-const repertoirePanelList = document.getElementById('repertoire-panel-list');
-const repertoirePanelTitle = document.getElementById('repertoire-panel-title'); // Заголовок панели (если нужен)
+
+// Panel Toggle Buttons
+const toggleFavoritesButton = document.getElementById('toggle-favorites'); // Кнопка Списки
+const toggleRepertoireButton = document.getElementById('toggle-repertoire'); // Кнопка Репертуар
+
+// Favorites Panel ("Lists") Elements
+const favoritesPanel = document.getElementById('favorites-panel');       // Сама панель Списки
+const favoritesList = document.getElementById('favorites-list');          // Контейнер "Мой список"
+const sharedSongsList = document.getElementById('shared-songs-list');   // Контейнер "Общий список"
+
+// Repertoire Panel Elements
+const repertoirePanel = document.getElementById('repertoire-panel');               // Сама панель Репертуар
+const repertoirePanelVocalistName = document.getElementById('repertoire-panel-vocalist-name'); // Span для имени
+const repertoirePanelList = document.getElementById('repertoire-panel-list');             // Контейнер списка репертуара
+const repertoirePanelTitle = document.getElementById('repertoire-panel-title'); // Заголовок (h3) панели репертуара
+
 // Footer Controls
 const bpmDisplay = document.getElementById('bpm-display');
 const holychordsButton = document.getElementById('holychords-button');
@@ -94,11 +102,10 @@ const timeSignatureSelect = document.getElementById('time-signature');
 const metronomeButton = document.getElementById('metronome-button');
 const zoomInButton = document.getElementById('zoom-in');
 const zoomOutButton = document.getElementById('zoom-out');
+
 // YouTube Player
 const playerContainer = document.getElementById('youtube-player-container');
 const playerSection = document.getElementById('youtube-player-section');
-// Новые элементы для панели репертуара
-const toggleRepertoireButton = document.getElementById('toggle-repertoire');
 
 
 
@@ -926,36 +933,41 @@ function loadGroupPanel() {
 // Модифицируем слушатель для кнопки "Списки" (#toggle-favorites)
 if (toggleFavoritesButton && favoritesPanel) {
      toggleFavoritesButton.addEventListener('click', () => {
-         const isOpen = favoritesPanel.classList.toggle('open'); // Переключаем и запоминаем состояние
+         console.log("--- КЛИК: Кнопка 'Списки' ---"); // <-- ДОБАВИТЬ ЛОГ
+         console.log("Панель 'Списки' ДО:", favoritesPanel.classList.contains('open')); // <-- ДОБАВИТЬ ЛОГ
+         const isOpen = favoritesPanel.classList.toggle('open');
+         console.log("Панель 'Списки' ПОСЛЕ:", isOpen); // <-- ДОБАВИТЬ ЛОГ
          if (isOpen) {
-             console.log("Панель 'Списки' открыта");
-             // Закрываем панель репертуара, если она открыта
              if (repertoirePanel && repertoirePanel.classList.contains('open')) {
                  repertoirePanel.classList.remove('open');
+                 console.log("Панель 'Репертуар' принудительно закрыта.");
              }
-             loadGroupPanel(); // Загружаем списки
-         } else {
-             console.log("Панель 'Списки' закрыта.");
+             loadGroupPanel();
          }
      });
+     console.log("Слушатель для кнопки 'Списки' добавлен.");
+} else {
+     console.error("Не найдены элементы для кнопки 'Списки'");
 }
 
-// ДОБАВЛЯЕМ слушатель для НОВОЙ кнопки "Репертуар" (#toggle-repertoire)
+// Слушатель для НОВОЙ кнопки "Репертуар" (#toggle-repertoire)
  if (toggleRepertoireButton && repertoirePanel) {
      toggleRepertoireButton.addEventListener('click', () => {
-         const isOpen = repertoirePanel.classList.toggle('open'); // Переключаем панель репертуара
+         console.log("--- КЛИК: Кнопка 'Репертуар' ---"); // <-- ДОБАВИТЬ ЛОГ
+         console.log("Панель 'Репертуар' ДО:", repertoirePanel.classList.contains('open')); // <-- ДОБАВИТЬ ЛОГ
+         const isOpen = repertoirePanel.classList.toggle('open');
+         console.log("Панель 'Репертуар' ПОСЛЕ:", isOpen); // <-- ДОБАВИТЬ ЛОГ
          if (isOpen) {
-              console.log("Панель 'Репертуар' открыта");
-              // Закрываем панель списков, если она открыта
               if (favoritesPanel && favoritesPanel.classList.contains('open')) {
                   favoritesPanel.classList.remove('open');
+                  console.log("Панель 'Списки' принудительно закрыта.");
               }
-              // Загружаем репертуар (он сам проверит, выбран ли вокалист)
               loadRepertoire(currentVocalistId);
-         } else {
-              console.log("Панель 'Репертуар' закрыта.");
          }
      });
+     console.log("Слушатель для кнопки 'Репертуар' добавлен.");
+ } else {
+      console.error("Не найдены элементы для кнопки 'Репертуар'");
  }
 
  // В слушателе для vocalistSelect ничего менять не нужно,
