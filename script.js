@@ -1299,8 +1299,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     await loadAllSheetsData(); // Ждем загрузки всех данных перед дальнейшими действиями
     await loadVocalists();     // Загружаем вокалистов
 
-    // Начальное состояние UI
-    if (repertoireSection) repertoireSection.style.display = 'none'; // Скрываем репертуар
+   // Начальное состояние UI (ИСПРАВЛЕНО)
+    if (repertoirePanel) repertoirePanel.style.display = 'none'; // <-- Исправлено здесь
     displaySongDetails(null); // Показываем начальное состояние "Выберите песню"
 
     console.log("Инициализация приложения завершена.");
