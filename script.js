@@ -1287,7 +1287,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.log("DOM полностью загружен и разобран.");
 
     // Проверяем наличие основных контейнеров
-    if (!favoritesList || !sharedSongsList || !repertoireList || !vocalistSelect || !repertoirePanel) {
+    if (!favoritesList || !sharedSongsList || !repertoirePanelList || !vocalistSelect || !repertoirePanel) {
          console.error("Один или несколько ключевых контейнеров для списков не найдены! Проверьте HTML.");
          // Возможно, стоит показать сообщение пользователю
          return; // Прерываем инициализацию, если нет ключевых элементов
