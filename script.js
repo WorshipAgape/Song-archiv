@@ -83,7 +83,7 @@ const favoritesList = document.getElementById('favorites-list'); // Container fo
 const sharedSongsList = document.getElementById('shared-songs-list'); // Container for "Shared List"
 // Repertoire Elements
 const vocalistSelect = document.getElementById('vocalist-select');
-const repertoirePanelElement = document.getElementById('repertoire-panel');
+const repertoirePanel = document.getElementById('repertoire-panel'); // Главный элемент панели
 const repertoireVocalistName = document.getElementById('repertoire-vocalist-name');
 const repertoireList = document.getElementById('repertoire-panel-list');
 // Footer Controls
@@ -98,10 +98,7 @@ const playerContainer = document.getElementById('youtube-player-container');
 const playerSection = document.getElementById('youtube-player-section');
 // Новые элементы для панели репертуара
 const toggleRepertoireButton = document.getElementById('toggle-repertoire');
-const repertoirePanel = document.getElementById('repertoire-panel');
-const repertoirePanelTitle = document.getElementById('repertoire-panel-title'); // Не используется пока, но можно
-const repertoirePanelVocalistName = document.getElementById('repertoire-panel-vocalist-name');
-const repertoirePanelList = document.getElementById('repertoire-panel-list');
+
 
 
 // --- API FUNCTIONS (Sheets, Firestore) ---
@@ -1289,7 +1286,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.log("DOM полностью загружен и разобран.");
 
     // Проверяем наличие основных контейнеров
-    if (!favoritesList || !sharedSongsList || !repertoireList || !vocalistSelect || !repertoireSection) {
+    if (!favoritesList || !sharedSongsList || !repertoireList || !vocalistSelect || !repertoirePanel) {
          console.error("Один или несколько ключевых контейнеров для списков не найдены! Проверьте HTML.");
          // Возможно, стоит показать сообщение пользователю
          return; // Прерываем инициализацию, если нет ключевых элементов
