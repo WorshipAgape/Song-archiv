@@ -930,25 +930,7 @@ function loadGroupPanel() {
 
 // --- Настройка слушателей событий (дополнения) ---
 
-// Модифицируем слушатель для кнопки "Списки" (#toggle-favorites)
-if (toggleFavoritesButton && favoritesPanel) {
-     toggleFavoritesButton.addEventListener('click', () => {
-         console.log("--- КЛИК: Кнопка 'Списки' ---"); // <-- ДОБАВИТЬ ЛОГ
-         console.log("Панель 'Списки' ДО:", favoritesPanel.classList.contains('open')); // <-- ДОБАВИТЬ ЛОГ
-         const isOpen = favoritesPanel.classList.toggle('open');
-         console.log("Панель 'Списки' ПОСЛЕ:", isOpen); // <-- ДОБАВИТЬ ЛОГ
-         if (isOpen) {
-             if (repertoirePanel && repertoirePanel.classList.contains('open')) {
-                 repertoirePanel.classList.remove('open');
-                 console.log("Панель 'Репертуар' принудительно закрыта.");
-             }
-             loadGroupPanel();
-         }
-     });
-     console.log("Слушатель для кнопки 'Списки' добавлен.");
-} else {
-     console.error("Не найдены элементы для кнопки 'Списки'");
-}
+
 
 // Слушатель для НОВОЙ кнопки "Репертуар" (#toggle-repertoire)
  if (toggleRepertoireButton && repertoirePanel) {
