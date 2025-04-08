@@ -1,8 +1,8 @@
 /* ======================================== */
 /* Styles for Agape Worship             */
-/* FINAL ATTEMPT - Merged CSS           */
+/* FINAL COMPLETE CSS (Hopefully!)      */
 /* Base: User CSS #55 + Panel Fixes     */
-/* Panels: Список(L), Репертуар(R)     */
+/* Panels: Список(L), Репертуар(R)      */
 /* ======================================== */
 
 /* --- Theme Variables (From CSS #55) --- */
@@ -37,17 +37,29 @@ body {
 /* --- Header (From CSS #55 + Fixes) --- */
 header {
     display: flex; justify-content: center; align-items: center;
-    position: relative; padding: 10px 70px; /* Оставляем место кнопкам */
+    position: relative; padding: 10px 65px; /* Место для кнопок */
     margin-bottom: 20px;
 }
 h1 {
-    text-align: center; color: #fff; /* ВАШ ЦВЕТ */ margin: 0;
+    text-align: center; color: #fff; /* Ваш цвет H1 */ margin: 0;
     font-size: 2.4rem; text-transform: uppercase; letter-spacing: 2px;
     animation: glow 3s infinite alternate;
 }
 @keyframes glow { from { text-shadow: 0 0 10px #ff69b4; } to { text-shadow: 0 0 20px #ff69b4; } }
 
-/* --- Controls Section (From CSS #55) --- */
+/* Заголовок песни */
+#song-content h2 {
+    text-align: center; color: #fff; margin-top: 0; margin-bottom: 15px;
+    font-size: 1.4rem; font-weight: bold; letter-spacing: 1px;
+}
+/* Заголовки секций */
+h3 {
+    text-align: center; font-size: 1.1rem; margin-bottom: 10px;
+    color: var(--accent-color); padding-bottom: 5px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* --- Формы (Ваши стили) --- */
 .controls { display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; }
 .control-group { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .control-group label { font-size: 0.85rem; color: var(--label-color); margin-bottom: 3px; flex-basis: 100%; }
@@ -73,74 +85,54 @@ input:focus, select:focus { border-color: var(--primary-color); box-shadow: 0 0 
 .control-group:has(#key-select) label[for="key-select"] { flex-basis: auto; margin-bottom: 0; }
 .control-group:has(#key-select) .font-size-controls { margin-left: auto; }
 
-/* --- Buttons (From CSS #55 + Overrides) --- */
- Кнопки удаления в списках (Стили для иконки Font Awesome) */
-.remove-button, .delete-button {
-    background: none !important; /* Оставляем, чтобы точно перебить градиент */
-    border: none !important;
-    color: var(--danger-color); /* Красный цвет иконки */
-    box-shadow: none !important;
-    padding: 5px 8px; /* Небольшие отступы вокруг иконки */
-    font-size: 0.85rem; /* Размер иконки (подберите по вкусу) */
-    line-height: 1;     /* Выравнивание */
-    flex-shrink: 0;
-    min-width: auto; height: auto;
-    border-radius: 50%; /* Сделаем круглой? */
-    cursor: pointer;
-    transition: color 0.2s ease, background-color 0.2s ease; /* Плавный переход */
-    /* Убираем强制性 transform */
-    transform: none !important;
+/* --- Кнопки (Сохраняем ваш базовый стиль + стили для zoom) --- */
+/* Базовый стиль для ГРАДИЕНТНЫХ кнопок (применяется ко всем <button>, кроме исключений)*/
+button {
+    display: inline-flex; align-items: center; justify-content: center;
+    background: linear-gradient(145deg, var(--primary-color), var(--secondary-color));
+    color: var(--button-text-color) !important; /* Цвет текста */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); font-weight: 500; cursor: pointer;
+    border: none; border-radius: var(--radius);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    padding: 10px 15px; /* Паддинг по умолчанию */
+    font-size: 0.9rem; line-height: 1.4; text-decoration: none; vertical-align: middle;
 }
+button:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); }
+button:active { transform: translateY(0); box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15); }
 
-.remove-button:hover, .delete-button:hover {
-    color: #ff1a1a !important; /* Ярко-красный при наведении */
-    background-color: rgba(255, 255, 255, 0.1); /* Легкий фон при наведении */
-    text-decoration: none; /* Убираем подчеркивание */
-    transform: none !important;
-    box-shadow: none !important;
-}
-/* Убираем старый стиль с подчеркиванием */
-/* .remove-btn:hover, .delete-button:hover { text-decoration: underline; } */
-
-/* Кнопки Масштаба (Ваш стиль из #55) */
+/* Кнопки Масштаба +/- (Ваш ОСОБЫЙ стиль из #55) */
 .font-size-controls { display: flex; gap: 8px;}
 #zoom-in, #zoom-out {
     background: linear-gradient(145deg, var(--primary-color), var(--secondary-color));
     color: #fff; font-weight: 500; border: none; border-radius: var(--radius);
     padding: 8px 12px; font-size: 14px; cursor: pointer;
-    transition: none !important; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-    /* Сбросим display: inline-flex, если он применился от button */
-    display: inline-block;
+    transition: none !important; /* Ваш стиль без transition */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    display: inline-block; /* Важно для переопределения */
 }
 #zoom-in:hover, #zoom-out:hover { transform: none; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); }
 #zoom-in:active, #zoom-out:active { transform: none; box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.2); }
 
-/* Кнопки под текстом */
+/* --- Конкретные кнопки и ссылки --- */
 .control-buttons { display: flex; justify-content: center; gap: 10px; margin-top: 15px; flex-wrap: wrap; padding-bottom: 15px; border-bottom: 1px solid var(--border-color);}
-.control-buttons button { padding: 8px 12px; font-size: 14px; flex: 0 1 auto; /* Наследуют базовый стиль */ }
+.control-buttons button { padding: 8px 12px; font-size: 14px; flex: 0 1 auto; /* Базовый стиль */ }
 
-/* Элементы в футере */
-.controls-footer { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 15px; margin-top: 20px; padding-top: 0; /* Убрал верхний паддинг */}
+.controls-footer { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 15px; margin-top: 20px; padding-top: 0;}
 .bpm-controls { display: flex; align-items: center; gap: 10px; }
 .bpm-controls span:not(#bpm-display) { font-size: 0.85rem; color: var(--label-color); }
 .bpm-controls #time-signature { padding: 8px 12px; font-size: 0.9rem; min-width: 65px; border-width: 1px; }
 .bpm-controls #bpm-display { padding: 8px 10px; min-width: 50px; font-size: 0.95rem; cursor: text; border: 1px solid var(--border-color); background-color: var(--input-bg-color); border-radius: var(--radius); text-align: center; color: var(--text-color); }
-#metronome-button { min-width: 40px; height: 40px; padding: 5px; font-size: 1.1rem; /* Наследует базовый */ }
-#add-to-repertoire-button { padding: 8px 12px; /* Наследует базовый */ }
+#metronome-button { min-width: 40px; height: 40px; padding: 5px; font-size: 1.1rem; /* Базовый стиль */ }
+#add-to-repertoire-button { padding: 8px 12px; /* Базовый стиль */ }
 
 /* Ссылка Holychords (Ваш стиль из #55) */
-#holychords-button {
-    display: inline-block; padding: 8px 12px; font-size: 14px; color: var(--link-color);
-    text-decoration: none; border: 1px solid var(--link-color); border-radius: var(--radius);
-    transition: all 0.3s ease; background: none; box-shadow: none; font-weight: normal;
-}
+#holychords-button { display: inline-block; padding: 8px 12px; font-size: 14px; color: var(--link-color); text-decoration: none; border: 1px solid var(--link-color); border-radius: var(--radius); transition: all 0.3s ease; background: none; box-shadow: none; font-weight: normal; }
 #holychords-button:hover { background-color: var(--link-color); color: #fff; transform: none; box-shadow: none; }
 
 /* --- Отображение Песни (Ваши стили) --- */
 #song-content { background: var(--container-background-color); padding: 20px; border-radius: var(--radius); box-shadow: var(--shadow); margin-top: 20px; position: relative; overflow: hidden; border: 1px solid var(--border-color); }
-#song-content h2 { margin-bottom: 20px; } /* Увеличим отступ до контролов */
-#song-content pre { font-family: 'Tahoma', monospace; white-space: pre-wrap; word-wrap: break-word; line-height: 1.4; font-size: var(--lyrics-font-size, 1rem); color: var(--text-color); margin: 0; overflow-x: auto; }
-.chord { font-weight: bold; color: var(--accent-color); margin-right: 4px; }
+#song-content pre { font-family: 'Tahoma', monospace; /* Ваш шрифт */ white-space: pre-wrap; word-wrap: break-word; line-height: 1.4; font-size: var(--lyrics-font-size, 1rem); color: var(--text-color); margin: 0; overflow-x: auto; }
+.chord { font-weight: bold; color: var(--accent-color); margin-right: 4px; /* Ваш стиль */ }
 #song-content.split-columns pre { column-count: 2; column-gap: 25px; position: relative;}
 #song-content.split-columns pre::before { content: ""; position: absolute; top: 0; bottom: 0; left: 50%; width: 1px; background-color: var(--border-color); transform: translateX(-50%); z-index: 1;}
 
@@ -151,163 +143,120 @@ input:focus, select:focus { border-color: var(--primary-color); box-shadow: 0 0 
 #youtube-player-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
 
 /* ============================================ */
-/* СТИЛИ ДЛЯ БОКОВЫХ ПАНЕЛЕЙ (v.Clean+Fix)    */
+/* СТИЛИ ДЛЯ БОКОВЫХ ПАНЕЛЕЙ И ИХ КНОПОК       */
 /* ============================================ */
-
-/* --- Общий стиль боковых панелей --- */
+/* Общий стиль боковых панелей */
 .side-panel {
-    position: fixed; /* Фиксированное позиционирование */
-    top: 0;
-    width: 90%;
-    max-width: 380px; /* Макс ширина */
-    height: 100%;
+    position: fixed; top: 0; width: 90%; max-width: 380px; height: 100%;
     background-color: var(--container-background-color);
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
-    transition: transform 0.3s ease-in-out; /* Плавная анимация */
-    z-index: 1000;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    overflow-y: auto; /* Внутренний скролл */
+    transition: transform 0.3s ease-in-out; z-index: 1000; padding: 20px;
+    display: flex; flex-direction: column; gap: 15px; overflow-y: auto;
 }
-
-/* --- Панель Списков (#favorites-panel) - ВЫЕЗД СЛЕВА --- */
+/* Панель Списков (#favorites-panel) - ВЫЕЗД СЛЕВА */
 #favorites-panel {
     left: 0; right: auto;
-    transform: translateX(-100%); /* Скрыта слева по умолчанию */
+    transform: translateX(-100%); /* Скрыта слева */
     border-right: 2px solid var(--primary-color);
-    /* Наследует position, transition и др. из .side-panel */
 }
-#favorites-panel.open {
-    transform: translateX(0); /* Показываем (БЕЗ !important) */
-}
+#favorites-panel.open { transform: translateX(0); } /* Показываем */
 
-/* --- Панель Репертуара (#repertoire-panel) - ВЫЕЗД СПРАВА --- */
+/* Панель Репертуара (#repertoire-panel) - ВЫЕЗД СПРАВА */
 #repertoire-panel {
     right: 0; left: auto;
-    transform: translateX(100%); /* Скрыта справа по умолчанию */
+    transform: translateX(100%); /* Скрыта справа */
     border-left: 2px solid var(--primary-color);
-     /* Наследует position, transition и др. из .side-panel */
 }
-#repertoire-panel.open {
-    transform: translateX(0); /* Показываем (БЕЗ !important) */
-}
+#repertoire-panel.open { transform: translateX(0); } /* Показываем */
 
-/* --- Кнопки открытия панелей --- */
-.toggle-button { /* Общий класс для кнопок панелей */
-    position: fixed !important; /* Оставим !important только здесь для надежности Z-index */
-    top: 10px;
-    width: auto; height: 45px;
-    z-index: 1001; /* Поверх панелей */
-    padding: 0 15px;
-    /* Стиль кнопки берется из базового 'button' */
+/* Кнопки открытия панелей */
+.toggle-button { /* Класс для ОБЕИХ кнопок */
+    position: fixed !important; /* Важно для позиционирования */
+    top: 10px; width: auto; height: 45px; z-index: 1001;
+    padding: 0 15px; /* Отступы для текста */
+    /* Наследуют базовый стиль button */
 }
-.lists-toggle { /* Кнопка "Список" (СЛЕВА) */
-    left: 10px; right: auto;
+.lists-toggle { /* Кнопка "Список" */
+    left: 10px; right: auto; /* СЛЕВА */
 }
-.repertoire-toggle { /* Кнопка "Репертуар" (СПРАВА) */
-    right: 10px; left: auto;
+.repertoire-toggle { /* Кнопка "Репертуар" */
+    right: 10px; left: auto; /* СПРАВА */
 }
-.toggle-button:hover { transform: scale(1.05); }
-.toggle-button:active { transform: scale(1); box-shadow: inset 1px 1px 4px rgba(0,0,0,0.2); }
+/* Стили hover/active наследуются от базового button */
 
 /* --- Содержимое панелей --- */
-/* (Эти стили остаются как в CSS #81) */
 .list-section { margin-bottom: 0; flex-shrink: 0;}
 .list-section h3 { text-align: left; font-size: 1rem; margin-top: 0; margin-bottom: 10px; color: var(--accent-color); border-bottom: 1px solid var(--border-color); padding-bottom: 5px;}
 #repertoire-panel h3 { font-size: 1.1rem; }
 #repertoire-panel h3 span { font-weight: normal; color: var(--text-color); font-size: 0.9em; }
 
-/* Контейнер списка внутри панели репертуара */
-#repertoire-panel .list-container {
-    max-height: 60vh; /* Дадим еще немного высоты */
-    overflow-y: auto;
-    margin-bottom: 10px;
-    /* Убираем рамку и фон самого контейнера для чистоты */
-    border: none;
-    background: none;
-    padding: 0 5px 0 0; /* Убираем внутренний паддинг, кроме правого для скролла */
+.list-container {
+    max-height: 250px; overflow-y: auto; margin-bottom: 10px;
+    padding: 10px; border: 1px solid var(--border-color);
+    border-radius: var(--radius); background: var(--hover-color);
 }
-/* Скроллбар (оставляем) */
-#repertoire-panel .list-container::-webkit-scrollbar { width: 6px; }
-#repertoire-panel .list-container::-webkit-scrollbar-track { background: var(--border-color); border-radius: 3px;}
-#repertoire-panel .list-container::-webkit-scrollbar-thumb { background: var(--primary-color); border-radius: 3px;}
+.list-container::-webkit-scrollbar { width: 6px; }
+.list-container::-webkit-scrollbar-track { background: var(--border-color); border-radius: 3px;}
+.list-container::-webkit-scrollbar-thumb { background: var(--primary-color); border-radius: 3px;}
 
-/* Заголовок Тональности */
+/* Элементы списков */
+.favorite-item, .shared-item, .repertoire-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid var(--border-color); transition: background 0.3s ease; font-size: 0.9rem; cursor: pointer;}
+.favorite-item:last-child, .shared-item:last-child, .repertoire-item:last-child { border-bottom: none; }
+.favorite-item:hover, .shared-item:hover, .repertoire-item:hover { background-color: #262626; }
+.list-container .song-name { flex-grow: 1; margin-right: 10px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.empty-message { padding: 15px; text-align: center; color: var(--label-color); font-style: italic; font-size: 0.9rem; }
+
+/* Кнопки удаления в списках (Переопределение базового стиля button) */
+.remove-button, .delete-button {
+    background: none !important; border: none !important; color: var(--danger-color) !important;
+    box-shadow: none !important; padding: 0 5px !important; font-size: 0.9rem !important; /* УМЕНЬШИЛ РАЗМЕР */
+    line-height: 1 !important; flex-shrink: 0; min-width: auto !important; height: auto !important;
+    transition: color 0.2s ease, background-color 0.2s ease !important; /* Добавил фон */
+    transform: none !important; cursor: pointer;
+    border-radius: 50%; /* Круглый фон */
+}
+.remove-button:hover, .delete-button:hover {
+    color: #fff !important; /* Белый на красном */
+    background-color: var(--danger-color) !important; /* Красный фон при наведении */
+    transform: none !important; box-shadow: none !important; text-decoration: none; /* Убрал подчеркивание */
+}
+
+/* Стили для группировки репертуара (с улучшенной иерархией) */
 .repertoire-key-heading {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: var(--text-color);
-    background-color: #303030; /* Чуть темнее фон */
-    padding: 5px 10px;
-    margin-top: 15px; /* Отступ МЕЖДУ тональностями */
-    margin-bottom: 8px;
-    border-radius: 4px;
-    border-left: 3px solid var(--primary-color);
-    position: sticky; /* Липкий заголовок */
-    top: -1px; /* Прилипает к верху */
-    z-index: 1; /* Поверх песен */
+    font-size: 0.9rem; font-weight: 600; color: var(--text-color);
+    background-color: var(--input-bg-color); padding: 5px 10px;
+    margin-top: 15px; margin-bottom: 8px; border-radius: 4px;
+    border-left: 3px solid var(--primary-color); position: sticky; top: -1px; z-index: 1;
 }
-#repertoire-panel .list-container > .repertoire-key-heading:first-child {
-    margin-top: 0;
-}
+#repertoire-panel .list-container > .repertoire-key-heading:first-child { margin-top: 0; }
 
-/* Заголовок Листа */
 .repertoire-sheet-heading {
-    font-size: 0.8rem;
-    font-weight: 500;
-    color: var(--label-color); /* Сероватый */
-    padding: 4px 10px 4px 15px; /* Отступ слева (меньше чем у песни) */
-    margin-top: 8px;
-    margin-bottom: 2px;
-    border-top: 1px dotted var(--border-color); /* Линия НАД названием листа */
+    font-size: 0.8rem; font-weight: 500; color: var(--label-color);
+    padding: 4px 10px 4px 15px; margin-top: 8px; margin-bottom: 2px;
+    border-top: 1px dotted var(--border-color);
 }
-/* Убираем линию у первого листа под тональностью */
-.repertoire-key-heading + .repertoire-sheet-heading {
-     border-top: none;
-     margin-top: 4px; /* Уменьшаем отступ у первого листа */
-}
+.repertoire-key-heading + .repertoire-sheet-heading { border-top: none; margin-top: 4px; }
 
-/* Элемент Песни */
-.repertoire-item {
-    /* display, justify, align, cursor, transition - наследуются */
-    padding: 6px 10px 6px 30px; /* БОЛЬШОЙ ОТСТУП СЛЕВА */
-    border-bottom: 1px solid var(--border-color); /* Тонкий разделитель */
+#repertoire-panel .repertoire-item {
+    padding: 7px 10px 7px 25px; /* Отступ слева */
     font-size: 0.9rem;
 }
-.repertoire-item:last-child { border-bottom: none; }
-.repertoire-item:hover { background-color: var(--hover-color); }
-
-/* Имя песни */
-.repertoire-item .song-name {
-    line-height: 1.3;
-    color: var(--text-color);
-    font-weight: normal;
-}
-
-/* Кнопка удаления */
-#repertoire-panel .remove-button {
-    /* Стиль остается без изменений */
-    font-size: 1rem;
-    padding: 0 5px !important;
-}
-/* === КОНЕЦ БЛОКА СТИЛЕЙ ДЛЯ ПАНЕЛЕЙ === */
+#repertoire-panel .repertoire-item .song-name { line-height: 1.4; color: var(--text-color); font-weight: normal; }
 
 /* --- Loading Indicator --- */
 #loading-indicator { display: none; position: fixed; top: 15px; left: 50%; transform: translateX(-50%); background-color: rgba(40, 40, 40, 0.85); color: white; padding: 8px 18px; border-radius: var(--radius); z-index: 1002; font-size: 0.9rem; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
 
 /* --- Responsiveness (Ваша из #55 + коррекция) --- */
-@media (max-width: 768px) { /* Средние экраны */
-    /* Возможно, нужны подстройки для панелей или кнопок */
+@media (max-width: 768px) {
      .toggle-button { height: 40px; padding: 0 12px; }
-     .lists-toggle { width: 45px; } /* Правая кнопка */
+     .lists-toggle { width: auto; /* Автоширина */}
+     .repertoire-toggle { width: auto; /* Автоширина */}
 }
 
-@media (max-width: 480px) { /* Маленькие телефоны */
+@media (max-width: 480px) {
     body { padding: 5px; font-size: 15px;}
     .container { padding: 10px; margin: 10px auto; }
-    header { padding: 5px 50px; }
+    header { padding: 5px 55px; } /* Оставляем место кнопкам */
     h1 { font-size: 1.5rem; }
     #song-content h2 { font-size: 1.1rem; }
     h3 { font-size: 1rem; }
@@ -323,61 +272,13 @@ input:focus, select:focus { border-color: var(--primary-color); box-shadow: 0 0 
     .controls-footer #add-to-repertoire-button { width: 100%; text-align: center; }
 
     #song-content { padding: 12px; }
-    #song-
+    #song-content pre { font-size: 0.9rem; line-height: 1.5; }
+    #song-content.split-columns pre { column-count: 1; }
 
-/* Увеличиваем доступную высоту для списка */
-#repertoire-panel .list-container {
-    /* max-height: 250px; /* Старое значение */ */
-    max-height: 55vh; /* Пробуем 55% высоты видимой области экрана. Можно изменить (например, 60vh, 400px) */
-    /* Опционально: убрать фон/рамку у самого контейнера для экономии места */
-    /* background: none; */
-    /* border: none; */
-    /* padding: 0 5px; */ /* Легкий боковой паддинг, если убрали рамку */
-}
+    #favorites-panel, #repertoire-panel { width: 95%; padding: 15px; }
+    .list-container { max-height: 200px; }
+    .favorite-item, .shared-item, .repertoire-item { font-size: 0.85rem; padding: 7px 5px; }
+    #repertoire-panel .repertoire-item { padding-left: 15px; } /* Адаптивный отступ */
 
-/* Делаем заголовки тональностей компактнее */
-#repertoire-panel .repertoire-key-heading {
-    font-size: 0.8rem;  /* Уменьшаем шрифт */
-    padding: 4px 8px;   /* Уменьшаем паддинг */
-    margin-top: 8px;    /* Уменьшаем отступ сверху */
-    margin-bottom: 4px; /* Уменьшаем отступ снизу */
-    /* Можно сделать еще компактнее, убрав фон/рамку */
-    /* background: transparent; */
-    /* border-left-width: 2px; */
-}
-#repertoire-panel .list-container > .repertoire-key-heading:first-child {
-    margin-top: 0; /* Убираем отступ у самого первого заголовка */
-}
-
-/* Делаем заголовки листов компактнее */
-#repertoire-panel .repertoire-sheet-heading {
-    font-size: 0.75rem; /* Уменьшаем шрифт */
-    padding: 2px 8px 2px 15px; /* Уменьшаем паддинг */
-    margin-top: 4px;
-    margin-bottom: 2px; /* Уменьшаем отступ */
-}
-
-/* Делаем сами песни компактнее */
-#repertoire-panel .repertoire-item {
-    padding: 6px 5px 6px 20px; /* Уменьшаем вертикальный паддинг */
-    font-size: 0.85rem; /* Уменьшаем шрифт */
-}
-/* Имя песни внутри элемента */
-#repertoire-panel .repertoire-item .song-name {
-    line-height: 1.3; /* Можно чуть уменьшить высоту строки */
-}
-
-/* Кнопку удаления можно тоже чуть уменьшить */
-#repertoire-panel .remove-button {
-    font-size: 1rem; /* Меньше крестик */
-    padding: 0 4px !important;
-}
-
-/* --- Адаптация именно для мобильных --- */
-@media (max-width: 500px) {
- #repertoire-panel .list-container { max-height: 65vh; }
-    .repertoire-key-heading { font-size: 0.8rem; padding: 4px 8px; margin-top: 12px;}
-    .repertoire-sheet-heading { font-size: 0.75rem; padding: 3px 8px 3px 12px; }
-    .repertoire-item { padding: 5px 8px 5px 20px; font-size: 0.85rem; }
-    #repertoire-panel .remove-button { font-size: 0.9rem; }
+    .toggle-button { height: 40px; font-size: 0.85rem;}
 }
