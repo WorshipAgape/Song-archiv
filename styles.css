@@ -1,8 +1,7 @@
 /* ======================================== */
 /* Styles for Agape Worship             */
 /* Base: CSS from #55                   */
-/* Merged with Two-Panel Fixes          */
-/* Date: 2025-04-08                      */
+/* ADDED: Two-Panel CSS Fixes (v.Final) */
 /* ======================================== */
 
 /* --- Theme Variables --- */
@@ -23,13 +22,10 @@
 }
 
 /* --- Базовые стили --- */
-*, *::before, *::after {
-    box-sizing: border-box;
-}
 body {
-    font-family: 'Tahoma', sans-serif; /* Ваш шрифт */
+    font-family: 'Tahoma', sans-serif;
     margin: 0;
-    padding: 0; /* Убираем паддинг у body */
+    padding: 0;
     background: var(--background-color);
     color: var(--text-color);
     line-height: 1.6;
@@ -49,28 +45,16 @@ body {
 /* --- Заголовки --- */
 header {
     display: flex; justify-content: center; align-items: center;
-    position: relative; padding: 10px 65px; /* Место для кнопок по бокам */
-    margin-bottom: 20px;
+    position: relative; padding: 10px 65px; margin-bottom: 20px;
 }
 h1 {
-    text-align: center; color: #fff; /* Ваш цвет */ margin: 0;
+    text-align: center; color: #fff; /* Ваш цвет H1 */ margin: 0;
     font-size: 2.4rem; text-transform: uppercase; letter-spacing: 2px;
     animation: glow 3s infinite alternate;
 }
-@keyframes glow { /* Ваша анимация */
-    from { text-shadow: 0 0 10px #ff69b4; }
-    to { text-shadow: 0 0 20px #ff69b4; }
-}
-#song-content h2 { /* Заголовок песни */
-    text-align: center; color: #fff; margin-top: 0; margin-bottom: 15px;
-    font-size: 1.4rem; font-weight: bold; letter-spacing: 1px;
-}
-/* Общий стиль H3 */
-h3 {
-    text-align: center; font-size: 1.1rem; margin-bottom: 10px;
-    color: var(--accent-color); padding-bottom: 5px;
-    border-bottom: 1px solid var(--border-color);
-}
+@keyframes glow { from { text-shadow: 0 0 10px #ff69b4; } to { text-shadow: 0 0 20px #ff69b4; } }
+#song-content h2 { text-align: center; color: #fff; margin-top: 0; margin-bottom: 15px; font-size: 1.4rem; font-weight: bold; letter-spacing: 1px; }
+h3 { text-align: center; font-size: 1.1rem; margin-bottom: 10px; color: var(--accent-color); padding-bottom: 5px; border-bottom: 1px solid var(--border-color); }
 
 /* --- Формы --- */
 .controls { display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; }
@@ -78,7 +62,7 @@ h3 {
 .control-group label { font-size: 0.85rem; color: var(--label-color); margin-bottom: 3px; flex-basis: 100%; }
 
 select, input[type="text"] {
-    padding: 10px 12px; font-size: 1rem; border: 1px solid var(--border-color);
+    padding: 10px 14px; font-size: 1rem; border: 1px solid var(--border-color);
     border-radius: var(--radius); transition: all 0.2s ease; outline: none;
     appearance: none; background: #222; color: #fff; width: 100%;
     box-sizing: border-box;
@@ -91,16 +75,17 @@ select {
 select:disabled { opacity: 0.6; cursor: not-allowed; }
 input:focus, select:focus { border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(255, 20, 147, 0.2); }
 
-#key-select { padding: 8px 5px; font-size: 0.9rem; width: auto; min-width: 65px; text-align: center; border-width: 1px;}
+#key-select { padding: 8px 5px; font-size: 12px; width: auto; min-width: 65px; text-align: center; border-width: 1px; } /* Убрал % ширины */
 #sheet-select, #song-select, #vocalist-select { width: auto; flex-grow: 1; min-width: 140px;}
 #search-input { width: 100%; }
-.control-group:has(#key-select) { align-items: flex-end; }
+.control-group:has(#key-select) { align-items: flex-end; } /* Выравнивание Тон + Масштаб */
 .control-group:has(#key-select) label[for="key-select"] { flex-basis: auto; margin-bottom: 0; }
-.control-group:has(#key-select) .font-size-controls { margin-left: auto; }
+.control-group:has(#key-select) .font-size-controls { margin-left: auto; } /* Масштаб вправо */
+
 
 /* --- Кнопки --- */
-/* Базовый стиль для градиентных кнопок */
-button:not(.remove-button):not(.delete-button) {
+/* Базовый стиль для БОЛЬШИНСТВА кнопок (градиент) */
+button:not(.remove-button):not(.delete-button):not(#zoom-in):not(#zoom-out) {
     display: inline-flex; align-items: center; justify-content: center;
     background: linear-gradient(145deg, var(--primary-color), var(--secondary-color));
     color: var(--button-text-color) !important;
@@ -110,42 +95,41 @@ button:not(.remove-button):not(.delete-button) {
     padding: 10px 15px; font-size: 0.9rem; line-height: 1.4;
     text-decoration: none; vertical-align: middle;
 }
-button:not(.remove-button):not(.delete-button):hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); }
-button:not(.remove-button):not(.delete-button):active { transform: translateY(0); box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15); }
+button:not(.remove-button):not(.delete-button):not(#zoom-in):not(#zoom-out):hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); }
+button:not(.remove-button):not(.delete-button):not(#zoom-in):not(#zoom-out):active { transform: translateY(0); box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15); }
 
-/* Кнопки масштаба +/- (Ваш стиль из #55) */
-.font-size-controls { display: flex; gap: 8px;}
+/* Стиль для кнопок масштабирования +/- (ВАШ СТИЛЬ из #55) */
+.font-size-controls { display: flex; gap: 8px; }
 #zoom-in, #zoom-out {
     background: linear-gradient(145deg, var(--primary-color), var(--secondary-color));
     color: #fff; font-weight: 500; border: none; border-radius: var(--radius);
     padding: 8px 12px; font-size: 14px; cursor: pointer;
-    transition: none !important; /* Убираем базовый transition */
+    transition: none !important; /* Ваш стиль */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-    min-width: auto; height: auto; /* Сброс */
 }
 #zoom-in:hover, #zoom-out:hover { transform: none; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); }
 #zoom-in:active, #zoom-out:active { transform: none; box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.2); }
 
 /* Кнопки под текстом */
 .control-buttons { display: flex; justify-content: center; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
-.control-buttons button { padding: 8px 12px; font-size: 14px; flex: 0 1 auto; /* Не растягивать */}
+.control-buttons button { padding: 8px 12px; font-size: 14px; flex: 0 1 auto; /* Базовый стиль применится */ }
 
 /* Элементы в футере */
 .controls-footer { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 15px; margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border-color);}
 .bpm-controls { display: flex; align-items: center; gap: 10px; }
 .bpm-controls span:not(#bpm-display) { font-size: 0.85rem; color: var(--label-color); }
-.bpm-controls #time-signature { padding: 8px 12px; font-size: 0.9rem; min-width: 65px; border-width: 1px; }
+.bpm-controls #time-signature { padding: 8px 12px; font-size: 0.9rem; min-width: 65px; }
 .bpm-controls #bpm-display { padding: 8px 10px; min-width: 50px; font-size: 0.95rem; cursor: text; border: 1px solid var(--border-color); background-color: var(--input-bg-color); border-radius: var(--radius); text-align: center; color: var(--text-color); }
-.bpm-controls #metronome-button { min-width: 40px; height: 40px; padding: 5px; font-size: 1.1rem; } /* Базовый стиль применится */
-.controls-footer #add-to-repertoire-button { padding: 8px 12px; /* Базовый стиль применится */ }
+#metronome-button { min-width: 40px; height: 40px; padding: 5px; font-size: 1.1rem; /* Базовый стиль применится */ }
+#add-to-repertoire-button { padding: 8px 12px; /* Базовый стиль применится */ }
 
-/* Ссылка Holychords (Ваш стиль из #55) */
+/* Ссылка Holychords (ВАШ СТИЛЬ из #55) */
 #holychords-button {
-    display: inline-block; padding: 8px 12px; font-size: 14px; color: var(--accent-color);
-    text-decoration: none; border: 1px solid var(--accent-color); border-radius: var(--radius);
+    display: inline-block; padding: 8px 12px; font-size: 14px; color: var(--link-color);
+    text-decoration: none; border: 1px solid var(--link-color); border-radius: var(--radius);
     transition: all 0.3s ease; background: none; box-shadow: none; font-weight: normal;
 }
-#holychords-button:hover { background-color: var(--accent-color); color: #fff; transform: none; box-shadow: none; }
+#holychords-button:hover { background-color: var(--link-color); color: #fff; transform: none; box-shadow: none; }
 
 /* --- Отображение Песни --- */
 #song-content { background: var(--container-background-color); padding: 20px; border-radius: var(--radius); box-shadow: var(--shadow); margin-top: 20px; position: relative; overflow: hidden; border: 1px solid var(--border-color); }
@@ -160,111 +144,137 @@ button:not(.remove-button):not(.delete-button):active { transform: translateY(0)
 #youtube-player-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; background: #000; border-radius: var(--radius); margin-bottom: 15px; }
 #youtube-player-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
 
-/* === СТИЛИ ДЛЯ БОКОВЫХ ПАНЕЛЕЙ (ВАЖНО!) === */
+/* ============================================ */
+/* СТИЛИ ДЛЯ БОКОВЫХ ПАНЕЛЕЙ (ВАЖНО!)         */
+/* ============================================ */
 .side-panel {
-    position: fixed; top: 0; width: 90%; max-width: 380px; height: 100%;
+    position: fixed; /* ** ОБЯЗАТЕЛЬНО ** */
+    top: 0;
+    width: 90%;
+    max-width: 380px;
+    height: 100%;
     background-color: var(--container-background-color); /* Фон как у .container */
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
-    transition: transform 0.3s ease-in-out; z-index: 1000; padding: 20px;
-    display: flex; flex-direction: column; gap: 15px; overflow-y: auto;
+    transition: transform 0.3s ease-in-out; /* Анимация */
+    z-index: 1000;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    overflow-y: auto;
 }
-/* Панель Списков (СПРАВА) */
+/* Панель Списков (#favorites-panel) - ВЫЕЗД СЛЕВА */
 #favorites-panel {
-    right: 0; left: auto; transform: translateX(100%); /* Скрыта справа */
-    border-left: 2px solid var(--primary-color);
+    left: 0; right: auto;
+    transform: translateX(-100%); /* Скрыта слева */
+    border-right: 2px solid var(--primary-color);
 }
 #favorites-panel.open { transform: translateX(0); } /* Показываем */
 
-/* Панель Репертуара (СЛЕВА) */
+/* Панель Репертуара (#repertoire-panel) - ВЫЕЗД СПРАВА */
 #repertoire-panel {
-    left: 0; right: auto; transform: translateX(-100%); /* Скрыта слева */
-    border-right: 2px solid var(--primary-color);
+    right: 0; left: auto;
+    transform: translateX(100%); /* Скрыта справа */
+    border-left: 2px solid var(--primary-color);
 }
 #repertoire-panel.open { transform: translateX(0); } /* Показываем */
 
 /* Кнопки открытия панелей */
-.toggle-button { position: fixed; top: 10px; width: auto; height: 45px; /* Автоширина, высота фикс */ border-radius: var(--radius); z-index: 1001; padding: 0 15px; /* Паддинг для текста */ font-size: 0.9rem; /* Наследуют базовый стиль button */ }
-.lists-toggle { right: 10px; left: auto; }
-.repertoire-toggle { left: 10px; right: auto; }
-.toggle-button:hover { transform: scale(1.05); } /* Можно оставить эффект */
+.toggle-button { /* Класс для обеих кнопок */
+    position: fixed !important; /* Важно! */
+    top: 10px;
+    width: auto; /* Ширина по тексту */
+    height: 45px; /* Фиксированная высота */
+    z-index: 1001;
+    padding: 0 15px; /* Горизонтальные отступы */
+    border-radius: var(--radius); /* Скругление */
+    /* Градиентный стиль применится от 'button' */
+}
+.lists-toggle { /* Кнопка "Список" (ЛЕВАЯ) */
+    left: 10px; right: auto;
+}
+.repertoire-toggle { /* Кнопка "Репертуар" (ПРАВАЯ) */
+    right: 10px; left: auto;
+}
+.toggle-button:hover { transform: scale(1.05); }
 .toggle-button:active { transform: scale(1); box-shadow: inset 1px 1px 4px rgba(0,0,0,0.2); }
 
-/* Содержимое панелей */
-.list-section { margin-bottom: 0; } /* Убрали отступ между секциями */
-.list-section h3 { text-align: left; /* Выравнивание заголовков */ }
-#repertoire-panel h3 { text-align: left; }
+/* --- Содержимое панелей --- */
+.list-section { margin-bottom: 0; }
+.list-section h3 { font-size: 1rem; margin-top: 0; margin-bottom: 10px; color: var(--accent-color); border-bottom: 1px solid var(--border-color); padding-bottom: 5px; text-align: left; }
+#repertoire-panel h3 { font-size: 1.1rem; }
+#repertoire-panel h3 span { font-weight: normal; color: var(--text-color); font-size: 0.9em; }
 
-.list-container { max-height: 250px; overflow-y: auto; margin-bottom: 10px; border: 1px solid var(--border-color); border-radius: var(--radius); background: var(--hover-color); padding: 10px; }
+.list-container { /* Класс для ВСЕХ контейнеров списков */
+    max-height: 250px; overflow-y: auto; margin-bottom: 10px;
+    border: 1px solid var(--border-color); border-radius: var(--radius);
+    background: var(--hover-color); padding: 10px;
+}
 .list-container::-webkit-scrollbar { width: 6px; }
 .list-container::-webkit-scrollbar-track { background: var(--border-color); border-radius: 3px;}
 .list-container::-webkit-scrollbar-thumb { background: var(--primary-color); border-radius: 3px;}
 
-/* Элементы списков */
-.favorite-item, .shared-item, .repertoire-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 5px; border-bottom: 1px solid var(--border-color); cursor: pointer; transition: background-color 0.2s ease; font-size: 0.9rem; }
+/* Элементы списков (общие) */
+.favorite-item, .shared-item, .repertoire-item { display: flex; justify-content: space-between; align-items: center; padding: 9px 5px; border-bottom: 1px solid var(--border-color); cursor: pointer; transition: background-color 0.2s ease; font-size: 0.9rem; }
 .favorite-item:last-child, .shared-item:last-child, .repertoire-item:last-child { border-bottom: none; }
-.favorite-item:hover, .shared-item:hover, .repertoire-item:hover { background-color: #333; /* Темнее при наведении */ }
+.favorite-item:hover, .shared-item:hover, .repertoire-item:hover { background-color: #333; }
 .list-container .song-name { flex-grow: 1; margin-right: 8px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 .empty-message { padding: 15px; text-align: center; color: var(--label-color); font-style: italic; font-size: 0.9rem; }
 
-/* Кнопки удаления в списках (ПЕРЕОПРЕДЕЛЕНИЕ) */
+/* Кнопки удаления в списках (Переопределение базового стиля button) */
 .remove-button, .delete-button {
     background: none !important; border: none !important; color: var(--danger-color) !important;
     box-shadow: none !important; padding: 0 5px !important; font-size: 1.1rem !important;
     line-height: 1 !important; flex-shrink: 0; min-width: auto !important; height: auto !important;
-    transition: color 0.2s ease !important; transform: none !important; /* Убираем эффекты */
+    transition: color 0.2s ease !important; transform: none !important;
 }
-.remove-button:hover, .delete-button:hover { color: #ff1a1a !important; transform: none !important; box-shadow: none !important; }
+.remove-button:hover, .delete-button:hover { color: #ff1a1a !important; transform: none !important; box-shadow: none !important;}
 
 /* Стили для группировки репертуара */
 .repertoire-key-heading { font-size: 0.85rem; font-weight: 600; color: var(--text-color); background-color: var(--input-bg-color); padding: 5px 8px; margin-top: 10px; margin-bottom: 5px; border-radius: 4px; border-left: 3px solid var(--primary-color); }
 .repertoire-sheet-heading { font-size: 0.75rem; font-weight: 500; color: var(--label-color); padding: 2px 8px 2px 12px; margin-top: 4px; }
 #repertoire-panel .list-container > .repertoire-key-heading:first-child { margin-top: 0; }
-#repertoire-panel .repertoire-item { padding-left: 15px; } /* Отступ песен */
+#repertoire-panel .repertoire-item { padding-left: 15px; }
 
 /* --- Loading Indicator --- */
 #loading-indicator { display: none; position: fixed; top: 15px; left: 50%; transform: translateX(-50%); background-color: rgba(40, 40, 40, 0.85); color: white; padding: 8px 18px; border-radius: var(--radius); z-index: 1002; font-size: 0.9rem; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
 
-/* --- Responsiveness --- */
-@media (max-width: 700px) {
-    .container { max-width: 95%; padding: 15px;}
-    .control-group:has(#key-select) { justify-content: flex-start; }
+/* --- Responsiveness (Адаптивность из вашего CSS #55) --- */
+/* (Оставляем вашу адаптивность, но могут потребоваться правки для кнопок панелей) */
+@media (max-width: 768px) {
+     /* Можно увеличить область клика для кнопок панелей */
+      .toggle-button { padding: 0 10px; }
 }
 
-@media (max-width: 500px) { /* Мобильные */
-    body { font-size: 15px; padding: 5px; }
+@media (max-width: 480px) {
+    body { padding: 5px; font-size: 15px;}
     .container { padding: 10px; margin: 10px auto; }
-    header { padding: 5px 60px; margin-bottom: 15px; } /* Немного больше места кнопкам */
-    h1 { font-size: 1.5rem; letter-spacing: 1px; }
+    header { padding: 5px 55px; } /* Место для кнопок */
+    h1 { font-size: 1.5rem; }
     #song-content h2 { font-size: 1.1rem; }
     h3 { font-size: 1rem; }
 
     select, input[type="text"] { padding: 9px 10px; font-size: 0.9rem; }
-    select { padding-right: 30px; background-size: 14px; }
-    button, a#holychords-button { padding: 8px 10px; font-size: 0.85rem; }
+    button { padding: 8px 10px; } /* Уменьшаем кнопки */
 
-    .controls { gap: 12px; }
     .control-group { flex-direction: column; align-items: stretch; gap: 8px; }
     .control-group label { margin-bottom: 3px; }
     .control-group:has(#key-select) { flex-direction: row; align-items: flex-end; flex-wrap: wrap; justify-content: space-between; }
     #key-select { min-width: 60px;}
 
-    .control-buttons { justify-content: space-around; gap: 8px; }
-     .control-buttons button { padding: 8px; }
-
-    .controls-footer { flex-direction: column; align-items: stretch; gap: 10px; }
-    .bpm-controls { justify-content: center; }
+    .control-buttons { gap: 8px; }
+    .controls-footer { align-items: stretch; gap: 10px; }
     .controls-footer a#holychords-button,
     .controls-footer #add-to-repertoire-button { width: 100%; text-align: center; }
 
     #song-content { padding: 12px; }
     #song-content pre { font-size: 0.9rem; line-height: 1.5; }
-    #song-content.split-columns pre { column-count: 1; } /* Отключаем колонки */
+    #song-content.split-columns pre { column-count: 1; }
 
     #favorites-panel, #repertoire-panel { width: 95%; padding: 15px; }
     .list-container { max-height: 200px; }
     .favorite-item, .shared-item, .repertoire-item { font-size: 0.85rem; padding: 7px 5px; }
-    .repertoire-item { padding-left: 15px; }
 
-    .toggle-button { width: auto; height: 40px; font-size: 0.8rem; } /* Автоширина кнопок */
-    .lists-toggle { width: 45px; height: 40px; } /* Правую кнопку можно оставить круглой */
+    .toggle-button { width: auto; height: 40px; font-size: 0.8rem; } /* Уменьшаем кнопки панелей */
+    .lists-toggle { width: 45px; height: 40px; } /* Правая кнопка */
 }
