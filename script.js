@@ -407,7 +407,8 @@ function loadRepertoire(vocalistId) {
                     listItem.appendChild(songInfo);
 
                     const removeBtn = document.createElement('button');
-                    removeBtn.textContent = '❌';
+                 // Используем иконку Font Awesome вместо текста
+removeBtn.innerHTML = '<i class="fas fa-times"></i>'; // Иконка крестика
                     removeBtn.className = 'remove-button';
                     removeBtn.title = 'Удалить из репертуара';
                     removeBtn.addEventListener('click', (e) => {
@@ -857,7 +858,8 @@ function loadFavorites(container = favoritesList) {
         favoriteItem.appendChild(songInfo);
         // Кнопка удаления
         const removeBtn = document.createElement('button');
-        removeBtn.textContent = '❌';
+        // Используем иконку Font Awesome вместо текста
+removeBtn.innerHTML = '<i class="fas fa-times"></i>'; // Иконка крестика
         removeBtn.className = 'remove-button';
         removeBtn.addEventListener('click', (e) => {
             e.stopPropagation();
