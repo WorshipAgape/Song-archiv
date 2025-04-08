@@ -53,6 +53,7 @@ let currentVocalistName = null; // Имя выбранного вокалист�
 let allSheetsData = []; // Данные всех листов для поиска
 let searchIndex = []; // Индекс для поиска (пока не используется эффективно)
 let currentFontSize = DEFAULT_FONT_SIZE; // Текущий размер шрифта
+let currentSharedListData = []; // Для режима презентации
 
 // Metronome State
 let audioContext;
@@ -106,6 +107,12 @@ const zoomOutButton = document.getElementById('zoom-out');
 // YouTube Player
 const playerContainer = document.getElementById('youtube-player-container');
 const playerSection = document.getElementById('youtube-player-section');
+
+// Presentation Mode Elements
+const presentationOverlay = document.getElementById('presentation-overlay');
+const presentationContent = document.getElementById('presentation-content');
+const presentationCloseBtn = document.getElementById('presentation-close-btn');
+const sharedListHeading = document.getElementById('shared-list-heading'); // Заголовок для клика
 
 
 
@@ -206,6 +213,12 @@ function loadSharedList(container = sharedSongsList) {
             container.innerHTML = '<div class="empty-message">Нет песен в общем списке</div>';
             return;
         }
+
+ currentSharedListData = snapshot.docs.map(doc => ({
+        id: doc.id, // Сохраняем ID документа Firestore
+        ...doc.data() // Сохраняем остальные данные (name, key, sheet, index, timestamp)
+    }));
+
         snapshot.docs.forEach((doc) => {
             const song = doc.data();
             const docId = doc.id;
@@ -671,6 +684,68 @@ function extractYouTubeVideoId(url) {
 
 // --- UI UPDATE FUNCTIONS ---
 
+
+/** Отображает песни из переданного списка в режиме презентации */
+async function showPresentationView(songsToShow) {
+    if (!presentationOverlay || !presentationContent) return;
+
+    presentationContent.innerHTML = '<div>Загрузка песен... <span id="presentation-loading-count"></span></div>';
+    let loadedCount = 0;
+    const totalCount = songsToShow.length;
+    const loadingCountSpan = document.getElementById('presentation-loading-count');
+    if(loadingCountSpan) loadingCountSpan.textContent = `(0/${totalCount})`;
+
+    let contentHtml = ''; // Собираем весь HTML здесь
+
+    for (const song of songsToShow) {
+        // Проверяем наличие данных в кэше
+        if (!cachedData[song.sheet]?.[song.index]) {
+            console.log(`Presentation: Fetching data for <span class="math-inline">\{song\.name\} \(</span>{song.sheet})`);
+            await fetchSheetData(song.sheet); // Дозагружаем, если нет
+        }
+
+        const originalSongData = cachedData[song.sheet]?.[song.index];
+        if (!originalSongData) {
+            console.error(`Presentation: Failed to get original data for ${song.name}`);
+            contentHtml += `<div class="presentation-song"><h2>${song.name} - ОШИБКА ЗАГРУЗКИ</h2></div>`;
+            continue; // Пропускаем песню, если данных нет
+        }
+
+        const songTitle = originalSongData[0];
+        const originalLyrics = originalSongData[1] || '';
+        const originalKey = originalSongData[2] || chords[0]; // Оригинальный ключ
+        const targetKey = song.key; // Ключ из общего списка
+
+        // Транспонирование
+        const transposition = getTransposition(originalKey, targetKey);
+        const transposedLyrics = transposeLyrics(originalLyrics, transposition);
+
+        // Обработка и подсветка
+        const processedLyrics = processLyrics(transposedLyrics);
+        const highlightedLyrics = highlightChords(processedLyrics);
+
+        // Добавляем HTML для песни
+        contentHtml += `
+            <div class="presentation-song">
+                <h2>${songTitle} — <span class="math-inline">\{targetKey\}</h2\>
+               <pre>{highlightedLyrics}</pre>
+                 </div>
+                        `;
+
+// Обновляем счетчик загрузки
+        loadedCount++;
+        if(loadingCountSpan) loadingCountSpan.textContent = `(<span class="math-inline">\{loadedCount\}/</span>{totalCount})`;
+    }
+
+    presentationContent.innerHTML = contentHtml; // Вставляем весь готовый HTML
+    presentationOverlay.classList.add('visible'); // Показываем оверлей
+    presentationOverlay.scrollTop = 0; // Прокручиваем наверх при открытии
+}
+
+```
+
+
+
 /** Отображение деталей песни (текст, ключ, BPM, плеер) */
 function displaySongDetails(songData, index, key) {
     if (!playerContainer || !playerSection || !songContent) {
@@ -1106,6 +1181,54 @@ function setupEventListeners() {
              displaySongDetails(null); // Очищаем детали песни
         });
     }
+
+
+/ Клик по заголовку "Общий список" для входа в режим презентации
+    if (sharedListHeading) {
+         sharedListHeading.addEventListener('click', () => {
+              console.log("Клик по заголовку Общий список");
+              if (currentSharedListData && currentSharedListData.length > 0) {
+                   // Закрываем боковые панели, если открыты
+                   if (favoritesPanel?.classList.contains('open')) favoritesPanel.classList.remove('open');
+                   if (repertoirePanel?.classList.contains('open')) repertoirePanel.classList.remove('open');
+                   // Показываем презентацию
+                   showPresentationView(currentSharedListData);
+              } else {
+                   alert("Общий список пуст. Добавьте песни для презентации.");
+              }
+         });
+    } else {
+        console.warn("Заголовок shared-list-heading не найден.");
+    }
+
+    // Клик по кнопке закрытия презентации
+    if (presentationCloseBtn && presentationOverlay) {
+         presentationCloseBtn.addEventListener('click', () => {
+              presentationOverlay.classList.remove('visible');
+               // Выход из полноэкранного режима, если он был включен
+               if (document.fullscreenElement) {
+                   document.exitFullscreen();
+               }
+         });
+    }
+
+    // Опционально: Клик по кнопке Fullscreen
+    /*
+    const presentationFullscreenBtn = document.getElementById('presentation-fullscreen-btn');
+    if (presentationFullscreenBtn && presentationOverlay) {
+        presentationFullscreenBtn.addEventListener('click', () => {
+            if (!document.fullscreenElement) {
+                presentationOverlay.requestFullscreen().catch(err => {
+                    alert(`Ошибка входа в полноэкранный режим: <span class="math-inline">\{err\.message\} \(</span>{err.name})`);
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        });
+    }
+    */
+
+// ... остальные слушатели ...
 
     // Выбор песни
     if (songSelect) {
