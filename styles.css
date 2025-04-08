@@ -269,3 +269,75 @@ button:not(.remove-button):not(.delete-button):active { transform: translateY(0)
 
     #song-content { padding: 12px; }
     #song-
+
+/* Увеличиваем доступную высоту для списка */
+#repertoire-panel .list-container {
+    /* max-height: 250px; /* Старое значение */ */
+    max-height: 55vh; /* Пробуем 55% высоты видимой области экрана. Можно изменить (например, 60vh, 400px) */
+    /* Опционально: убрать фон/рамку у самого контейнера для экономии места */
+    /* background: none; */
+    /* border: none; */
+    /* padding: 0 5px; */ /* Легкий боковой паддинг, если убрали рамку */
+}
+
+/* Делаем заголовки тональностей компактнее */
+#repertoire-panel .repertoire-key-heading {
+    font-size: 0.8rem;  /* Уменьшаем шрифт */
+    padding: 4px 8px;   /* Уменьшаем паддинг */
+    margin-top: 8px;    /* Уменьшаем отступ сверху */
+    margin-bottom: 4px; /* Уменьшаем отступ снизу */
+    /* Можно сделать еще компактнее, убрав фон/рамку */
+    /* background: transparent; */
+    /* border-left-width: 2px; */
+}
+#repertoire-panel .list-container > .repertoire-key-heading:first-child {
+    margin-top: 0; /* Убираем отступ у самого первого заголовка */
+}
+
+/* Делаем заголовки листов компактнее */
+#repertoire-panel .repertoire-sheet-heading {
+    font-size: 0.75rem; /* Уменьшаем шрифт */
+    padding: 2px 8px 2px 15px; /* Уменьшаем паддинг */
+    margin-top: 4px;
+    margin-bottom: 2px; /* Уменьшаем отступ */
+}
+
+/* Делаем сами песни компактнее */
+#repertoire-panel .repertoire-item {
+    padding: 6px 5px 6px 20px; /* Уменьшаем вертикальный паддинг */
+    font-size: 0.85rem; /* Уменьшаем шрифт */
+}
+/* Имя песни внутри элемента */
+#repertoire-panel .repertoire-item .song-name {
+    line-height: 1.3; /* Можно чуть уменьшить высоту строки */
+}
+
+/* Кнопку удаления можно тоже чуть уменьшить */
+#repertoire-panel .remove-button {
+    font-size: 1rem; /* Меньше крестик */
+    padding: 0 4px !important;
+}
+
+/* --- Адаптация именно для мобильных --- */
+@media (max-width: 500px) {
+    #repertoire-panel .list-container {
+        max-height: 65vh; /* Даем еще больше высоты на маленьких экранах */
+    }
+    /* Можно еще немного уменьшить шрифты/отступы на совсем маленьких экранах */
+    #repertoire-panel .repertoire-key-heading {
+         font-size: 0.75rem;
+         padding: 3px 6px;
+         margin-top: 6px;
+    }
+    #repertoire-panel .repertoire-sheet-heading {
+        font-size: 0.7rem;
+        padding: 2px 6px 2px 12px;
+    }
+     #repertoire-panel .repertoire-item {
+         padding: 5px 5px 5px 15px;
+         font-size: 0.8rem;
+     }
+     #repertoire-panel .remove-button {
+         font-size: 0.9rem;
+     }
+}
