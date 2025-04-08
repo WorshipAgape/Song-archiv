@@ -361,23 +361,9 @@ button:not(.remove-button):not(.delete-button):active { transform: translateY(0)
 
 /* --- Адаптация именно для мобильных --- */
 @media (max-width: 500px) {
-    #repertoire-panel .list-container {
-        max-height: 65vh; /* Даем еще больше высоты на маленьких экранах */
-    }
-    /* Можно еще немного уменьшить шрифты/отступы на совсем маленьких экранах */
-    #repertoire-panel .repertoire-key-heading {
-       font-size: 0.8rem;
-         padding: 4px 8px;
-         margin-top: 12px;
-    #repertoire-panel .repertoire-sheet-heading {
-         font-size: 0.75rem;
-        padding: 2px 8px 2px 12px;
-    }
-     #repertoire-panel .repertoire-item {
-          padding: 6px 8px 6px 20px; /* Уменьшаем отступ */
-         font-size: 0.85rem;
-     }
-     #repertoire-panel .remove-button {
-           font-size: 0.9rem;
-     }
+ #repertoire-panel .list-container { max-height: 65vh; }
+    .repertoire-key-heading { font-size: 0.8rem; padding: 4px 8px; margin-top: 12px;}
+    .repertoire-sheet-heading { font-size: 0.75rem; padding: 3px 8px 3px 12px; }
+    .repertoire-item { padding: 5px 8px 5px 20px; font-size: 0.85rem; }
+    #repertoire-panel .remove-button { font-size: 0.9rem; }
 }
