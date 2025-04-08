@@ -84,8 +84,9 @@ const sharedSongsList = document.getElementById('shared-songs-list'); // Contain
 // Repertoire Elements
 const vocalistSelect = document.getElementById('vocalist-select');
 const repertoirePanel = document.getElementById('repertoire-panel'); // Главный элемент панели
-const repertoireVocalistName = document.getElementById('repertoire-vocalist-name');
-const repertoireList = document.getElementById('repertoire-panel-list');
+const repertoirePanelVocalistName = document.getElementById('repertoire-vocalist-name');
+const repertoirePanelList = document.getElementById('repertoire-panel-list');
+const repertoirePanelTitle = document.getElementById('repertoire-panel-title'); // Заголовок панели (если нужен)
 // Footer Controls
 const bpmDisplay = document.getElementById('bpm-display');
 const holychordsButton = document.getElementById('holychords-button');
