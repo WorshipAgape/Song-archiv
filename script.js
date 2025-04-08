@@ -83,9 +83,9 @@ const favoritesList = document.getElementById('favorites-list'); // Container fo
 const sharedSongsList = document.getElementById('shared-songs-list'); // Container for "Shared List"
 // Repertoire Elements
 const vocalistSelect = document.getElementById('vocalist-select');
-const repertoireSection = document.getElementById('repertoire-section');
+const repertoirePanelElement = document.getElementById('repertoire-panel');
 const repertoireVocalistName = document.getElementById('repertoire-vocalist-name');
-const repertoireList = document.getElementById('repertoire-list');
+const repertoireList = document.getElementById('repertoire-panel-list');
 // Footer Controls
 const bpmDisplay = document.getElementById('bpm-display');
 const holychordsButton = document.getElementById('holychords-button');
