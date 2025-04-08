@@ -205,82 +205,79 @@ button:not(.remove-button):not(.delete-button):active { transform: translateY(0)
 #repertoire-panel h3 { font-size: 1.1rem; }
 #repertoire-panel h3 span { font-weight: normal; color: var(--text-color); font-size: 0.9em; }
 
-.list-container,
-#favorites-list,
-#shared-songs-list {
-    max-height: 250px; overflow-y: auto; margin-bottom: 10px;
-    padding: 10px; border: 1px solid var(--border-color);
-    border-radius: var(--radius); background: var(--hover-color);
+/* Контейнер списка внутри панели репертуара */
+#repertoire-panel .list-container {
+    max-height: 60vh; /* Дадим еще немного высоты */
+    overflow-y: auto;
+    margin-bottom: 10px;
+    /* Убираем рамку и фон самого контейнера для чистоты */
+    border: none;
+    background: none;
+    padding: 0 5px 0 0; /* Убираем внутренний паддинг, кроме правого для скролла */
 }
-.list-container::-webkit-scrollbar { width: 6px; }
-.list-container::-webkit-scrollbar-track { background: var(--border-color); border-radius: 3px;}
-.list-container::-webkit-scrollbar-thumb { background: var(--primary-color); border-radius: 3px;}
-
-.favorite-item, .shared-item, .repertoire-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid var(--border-color); transition: background 0.3s ease; font-size: 0.9rem; cursor: pointer;}
-.favorite-item:last-child, .shared-item:last-child, .repertoire-item:last-child { border-bottom: none; }
-.favorite-item:hover, .shared-item:hover, .repertoire-item:hover { background-color: #262626; }
-.list-container .song-name { flex-grow: 1; margin-right: 10px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-.empty-message { padding: 15px; text-align: center; color: var(--label-color); font-style: italic; font-size: 0.9rem; }
-
-/* Кнопки удаления в списках (Переопределение) */
-.remove-button, .delete-button {
-    background: none !important; border: none !important; color: var(--danger-color) !important;
-    box-shadow: none !important; padding: 0 5px !important; font-size: 1.1rem !important;
-    line-height: 1 !important; flex-shrink: 0; min-width: auto !important; height: auto !important;
-    transition: color 0.2s ease !important; transform: none !important; cursor: pointer;
-}
-.remove-button:hover, .delete-button:hover { color: #ff1a1a !important; transform: none !important; box-shadow: none !important; text-decoration: underline;}
+/* Скроллбар (оставляем) */
+#repertoire-panel .list-container::-webkit-scrollbar { width: 6px; }
+#repertoire-panel .list-container::-webkit-scrollbar-track { background: var(--border-color); border-radius: 3px;}
+#repertoire-panel .list-container::-webkit-scrollbar-thumb { background: var(--primary-color); border-radius: 3px;}
 
 /* Заголовок Тональности */
 .repertoire-key-heading {
-    font-size: 0.9rem;        /* Размер шрифта */
-    font-weight: 600;         /* Полужирный */
-    color: var(--text-color); /* Основной цвет текста */
-    background-color: var(--input-bg-color); /* Темный фон */
-    padding: 6px 10px;        /* Внутренние отступы */
-    margin-top: 15px;         /* Отступ СВЕРХУ перед группой тональности */
-    margin-bottom: 5px;       /* Отступ СНИЗУ */
-    border-radius: 4px;       /* Легкое скругление */
-    border-left: 3px solid var(--primary-color); /* Акцентная полоска */
-    position: sticky; /* Делаем заголовок тональности "липким" */
-    top: -1px; /* Чтобы он прилипал к самому верху при скролле */
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-color);
+    background-color: #303030; /* Чуть темнее фон */
+    padding: 5px 10px;
+    margin-top: 15px; /* Отступ МЕЖДУ тональностями */
+    margin-bottom: 8px;
+    border-radius: 4px;
+    border-left: 3px solid var(--primary-color);
+    position: sticky; /* Липкий заголовок */
+    top: -1px; /* Прилипает к верху */
+    z-index: 1; /* Поверх песен */
 }
-/* Убираем верхний отступ у самого первого заголовка тональности в списке */
 #repertoire-panel .list-container > .repertoire-key-heading:first-child {
     margin-top: 0;
 }
 
 /* Заголовок Листа */
 .repertoire-sheet-heading {
-    font-size: 0.8rem;        /* Меньше, чем тональность */
-    font-weight: 500;         /* Средний */
-    color: var(--label-color);  /* Сероватый */
-    padding: 3px 10px 3px 15px; /* Отступ слева чуть больше */
-    margin-top: 8px;          /* Отступ сверху перед группой листов */
-    margin-bottom: 4px;
-    /* font-style: italic; */   /* Можно добавить курсив, если нравится */
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--label-color); /* Сероватый */
+    padding: 4px 10px 4px 15px; /* Отступ слева (меньше чем у песни) */
+    margin-top: 8px;
+    margin-bottom: 2px;
+    border-top: 1px dotted var(--border-color); /* Линия НАД названием листа */
+}
+/* Убираем линию у первого листа под тональностью */
+.repertoire-key-heading + .repertoire-sheet-heading {
+     border-top: none;
+     margin-top: 4px; /* Уменьшаем отступ у первого листа */
 }
 
 /* Элемент Песни */
 .repertoire-item {
-    /* Display, justify, align, border-bottom, cursor, transition - наследуются */
-    padding: 7px 10px 7px 25px; /* УВЕЛИЧИЛИ ОТСТУП СЛЕВА */
-    font-size: 0.9rem; /* Основной размер для песни */
+    /* display, justify, align, cursor, transition - наследуются */
+    padding: 6px 10px 6px 30px; /* БОЛЬШОЙ ОТСТУП СЛЕВА */
+    border-bottom: 1px solid var(--border-color); /* Тонкий разделитель */
+    font-size: 0.9rem;
 }
-/* Имя песни внутри элемента */
+.repertoire-item:last-child { border-bottom: none; }
+.repertoire-item:hover { background-color: var(--hover-color); }
+
+/* Имя песни */
 .repertoire-item .song-name {
-    line-height: 1.4;
-    color: var(--text-color); /* Убедимся, что цвет основной */
-    font-weight: normal;    /* Обычный шрифт */
+    line-height: 1.3;
+    color: var(--text-color);
+    font-weight: normal;
 }
 
-/* Кнопка удаления внутри репертуара */
+/* Кнопка удаления */
 #repertoire-panel .remove-button {
-    /* Стили из прошлого шага, можно чуть подправить размер */
-    font-size: 1rem; /* Размер крестика */
+    /* Стиль остается без изменений */
+    font-size: 1rem;
     padding: 0 5px !important;
 }
-
 /* === КОНЕЦ БЛОКА СТИЛЕЙ ДЛЯ ПАНЕЛЕЙ === */
 
 /* --- Loading Indicator --- */
