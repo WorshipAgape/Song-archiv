@@ -142,6 +142,138 @@ button:active { transform: translateY(0); box-shadow: inset 0 2px 4px rgba(0, 0,
 #youtube-player-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; background: #000; border-radius: var(--radius); margin-bottom: 15px; }
 #youtube-player-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
 
+
+
+
+
+/* ============================================ */
+/* СТИЛИ ДЛЯ РЕЖИМА ПРЕЗЕНТАЦИИ              */
+/* ============================================ */
+
+/* Сам оверлей */
+.presentation-overlay {
+    position: fixed; /* Поверх всего */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--background-color); /* Темный фон */
+    z-index: 2000; /* Выше, чем боковые панели */
+    display: none; /* Изначально скрыт */
+    overflow-y: scroll; /* Вертикальный скролл для песен */
+    scroll-behavior: smooth; /* Плавный скролл */
+    /* Стилизация скроллбара (опционально) */
+    &::-webkit-scrollbar { width: 8px; }
+    &::-webkit-scrollbar-track { background: #444; }
+    &::-webkit-scrollbar-thumb { background: var(--primary-color); border-radius: 4px;}
+}
+
+/* Класс для показа оверлея */
+.presentation-overlay.visible {
+    display: block;
+}
+
+/* Контент внутри оверлея */
+.presentation-content {
+    padding: 40px 20px 20px 20px; /* Отступы (сверху больше из-за кнопки закрытия) */
+    max-width: 900px; /* Ограничиваем ширину для читаемости */
+    margin: 0 auto; /* Центрируем контент */
+}
+
+/* Блок для одной песни в режиме презентации */
+.presentation-song {
+    min-height: 95vh; /* Стараемся занять почти весь экран по высоте */
+    padding: 20px 0; /* Вертикальные отступы между песнями */
+    margin-bottom: 5vh; /* Отступ между песнями */
+    border-bottom: 1px solid var(--border-color); /* Разделитель */
+    display: flex; /* Используем flex для центрирования, если текст короткий */
+    flex-direction: column;
+    justify-content: center; /* Центрируем короткий текст вертикально */
+}
+.presentation-song:last-child {
+    border-bottom: none;
+    min-height: auto; /* У последней песни убираем мин. высоту */
+     padding-bottom: 5vh;
+}
+
+/* Заголовок песни в режиме презентации */
+.presentation-song h2 {
+    color: var(--accent-color); /* Акцентный цвет */
+    font-size: 2.5rem; /* КРУПНЫЙ шрифт */
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+/* Текст песни в режиме презентации */
+.presentation-song pre {
+    font-family: 'Courier New', Courier, monospace; /* Моноширинный */
+    font-size: 1.8rem; /* Крупный шрифт */
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    color: var(--text-color);
+}
+.presentation-song .chord {
+    font-weight: bold;
+    color: var(--accent-color); /* Яркие аккорды */
+    /* Убираем фон, если был */
+    background-color: transparent;
+    padding: 0; margin: 0; /* Убираем лишнее */
+}
+
+/* Кнопка Закрыть */
+.presentation-close-btn {
+    position: fixed; /* Фиксирована в углу */
+    top: 15px;
+    right: 15px;
+    z-index: 2001; /* Поверх контента оверлея */
+    background: rgba(50, 50, 50, 0.7); /* Полупрозрачный фон */
+    color: white;
+    border: 1px solid #555;
+    border-radius: 50%; /* Круглая */
+    width: 40px;
+    height: 40px;
+    font-size: 1.5rem;
+    line-height: 1;
+    padding: 0;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: none; /* Убираем базовую тень */
+}
+.presentation-close-btn:hover {
+    background-color: rgba(80, 80, 80, 0.8);
+    transform: none; /* Убираем базовый ховер */
+     box-shadow: none;
+}
+.presentation-close-btn:active {
+     background-color: rgba(30, 30, 30, 0.8);
+     transform: none;
+     box-shadow: none;
+}
+
+/* Стили для кнопки Fullscreen (опционально) */
+.presentation-fullscreen-btn {
+     position: fixed; top: 15px; right: 70px; /* Рядом с крестиком */
+     z-index: 2001; /* ... задать стиль ... */
+}
+
+/* Стили для режима Fullscreen API */
+.presentation-overlay:fullscreen {
+     /* Можно изменить фон или что-то еще */
+     background-color: #000; /* Чисто черный фон */
+}
+ .presentation-overlay:fullscreen .presentation-close-btn {
+      /* Можно скрыть кнопку закрытия, т.к. Esc работает */
+      /* display: none; */
+ }
+
+
+
+
+
+
+
+
 /* ============================================ */
 /* СТИЛИ ДЛЯ БОКОВЫХ ПАНЕЛЕЙ И ИХ КНОПОК       */
 /* ============================================ */
