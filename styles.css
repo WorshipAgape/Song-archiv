@@ -231,11 +231,55 @@ button:not(.remove-button):not(.delete-button):active { transform: translateY(0)
 }
 .remove-button:hover, .delete-button:hover { color: #ff1a1a !important; transform: none !important; box-shadow: none !important; text-decoration: underline;}
 
-/* Стили для группировки репертуара */
-.repertoire-key-heading { font-size: 0.85rem; font-weight: 600; color: var(--text-color); background-color: var(--input-bg-color); padding: 5px 8px; margin-top: 10px; margin-bottom: 5px; border-radius: 4px; border-left: 3px solid var(--primary-color); }
-.repertoire-sheet-heading { font-size: 0.75rem; font-weight: 500; color: var(--label-color); padding: 2px 8px 2px 12px; margin-top: 4px; }
-#repertoire-panel .list-container > .repertoire-key-heading:first-child { margin-top: 0; }
-#repertoire-panel .repertoire-item { padding-left: 15px; }
+/* Заголовок Тональности */
+.repertoire-key-heading {
+    font-size: 0.9rem;        /* Размер шрифта */
+    font-weight: 600;         /* Полужирный */
+    color: var(--text-color); /* Основной цвет текста */
+    background-color: var(--input-bg-color); /* Темный фон */
+    padding: 6px 10px;        /* Внутренние отступы */
+    margin-top: 15px;         /* Отступ СВЕРХУ перед группой тональности */
+    margin-bottom: 5px;       /* Отступ СНИЗУ */
+    border-radius: 4px;       /* Легкое скругление */
+    border-left: 3px solid var(--primary-color); /* Акцентная полоска */
+    position: sticky; /* Делаем заголовок тональности "липким" */
+    top: -1px; /* Чтобы он прилипал к самому верху при скролле */
+}
+/* Убираем верхний отступ у самого первого заголовка тональности в списке */
+#repertoire-panel .list-container > .repertoire-key-heading:first-child {
+    margin-top: 0;
+}
+
+/* Заголовок Листа */
+.repertoire-sheet-heading {
+    font-size: 0.8rem;        /* Меньше, чем тональность */
+    font-weight: 500;         /* Средний */
+    color: var(--label-color);  /* Сероватый */
+    padding: 3px 10px 3px 15px; /* Отступ слева чуть больше */
+    margin-top: 8px;          /* Отступ сверху перед группой листов */
+    margin-bottom: 4px;
+    /* font-style: italic; */   /* Можно добавить курсив, если нравится */
+}
+
+/* Элемент Песни */
+.repertoire-item {
+    /* Display, justify, align, border-bottom, cursor, transition - наследуются */
+    padding: 7px 10px 7px 25px; /* УВЕЛИЧИЛИ ОТСТУП СЛЕВА */
+    font-size: 0.9rem; /* Основной размер для песни */
+}
+/* Имя песни внутри элемента */
+.repertoire-item .song-name {
+    line-height: 1.4;
+    color: var(--text-color); /* Убедимся, что цвет основной */
+    font-weight: normal;    /* Обычный шрифт */
+}
+
+/* Кнопка удаления внутри репертуара */
+#repertoire-panel .remove-button {
+    /* Стили из прошлого шага, можно чуть подправить размер */
+    font-size: 1rem; /* Размер крестика */
+    padding: 0 5px !important;
+}
 
 /* === КОНЕЦ БЛОКА СТИЛЕЙ ДЛЯ ПАНЕЛЕЙ === */
 
@@ -325,19 +369,18 @@ button:not(.remove-button):not(.delete-button):active { transform: translateY(0)
     }
     /* Можно еще немного уменьшить шрифты/отступы на совсем маленьких экранах */
     #repertoire-panel .repertoire-key-heading {
-         font-size: 0.75rem;
-         padding: 3px 6px;
-         margin-top: 6px;
-    }
+       font-size: 0.8rem;
+         padding: 4px 8px;
+         margin-top: 12px;
     #repertoire-panel .repertoire-sheet-heading {
-        font-size: 0.7rem;
-        padding: 2px 6px 2px 12px;
+         font-size: 0.75rem;
+        padding: 2px 8px 2px 12px;
     }
      #repertoire-panel .repertoire-item {
-         padding: 5px 5px 5px 15px;
-         font-size: 0.8rem;
+          padding: 6px 8px 6px 20px; /* Уменьшаем отступ */
+         font-size: 0.85rem;
      }
      #repertoire-panel .remove-button {
-         font-size: 0.9rem;
+           font-size: 0.9rem;
      }
 }
