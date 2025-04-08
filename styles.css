@@ -145,13 +145,23 @@ button:not(.remove-button):not(.delete-button):active { transform: translateY(0)
     transition: transform 0.3s ease-in-out; z-index: 1000; padding: 20px;
     display: flex; flex-direction: column; gap: 15px; overflow-y: auto;
 }
-/* Панель Списков (#favorites-panel) - ВЫЕЗД СЛЕВА */
+* Панель Списков (#favorites-panel) - ВЫЕЗД СЛЕВА */
 #favorites-panel {
-    left: 0; right: auto;
-    transform: translateX(-100%); /* Скрыта слева */
+    position: fixed !important; /* Гарантируем */
+    top: 0; left: 0; right: auto;
+    width: 90%; max-width: 380px; height: 100%;
+    background-color: var(--container-background-color);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s ease-in-out;
+    z-index: 1000; padding: 20px;
+    display: flex; flex-direction: column; gap: 15px;
+    overflow-y: auto;
     border-right: 2px solid var(--primary-color);
+    transform: translateX(-100%); /* Скрыта слева */
 }
-#favorites-panel.open { transform: translateX(0); }
+#favorites-panel.open {
+    transform: translateX(0) !important; /* <<<< ДОБАВЛЕНО !important ДЛЯ ТЕСТА */
+}
 
 /* Панель Репертуара (#repertoire-panel) - ВЫЕЗД СПРАВА */
 #repertoire-panel {
