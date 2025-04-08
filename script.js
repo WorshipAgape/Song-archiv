@@ -790,11 +790,10 @@ function displaySongDetails(songData, index, key) {
     const processedOriginalLyrics = processLyrics(lyrics);
     const highlightedOriginalLyrics = highlightChords(processedOriginalLyrics);
 
-    // --- Обновляем ОСНОВНОЕ содержимое (Название + Текст) --- ИСПРАВЛЕНО
     songContent.innerHTML = `
-        <h2>${songTitle} — ${currentKey}</h2>
-        <pre>${highlightedOriginalLyrics}</pre>
-    `; // <-- Убедитесь, что строка заканчивается именно так
+    <h2>${songTitle} — ${currentKey}</h2>
+    <pre>${highlightedOriginalLyrics}</pre>
+`; // <-- Убедитесь, что строка заканчивается именно так
 
     // --- Обновляем селектор тональности и вызываем транспонирование ---
     keySelect.value = currentKey;
