@@ -61,7 +61,7 @@ let metronomeInterval = null;
 let isMetronomeActive = false;
 let currentBeat = 0;
 
-// --- DOM ELEMENT REFERENCES ---
+// --- DOM ELEMENT REFERENCES (Исправлено) ---
 // Main Controls
 const sheetSelect = document.getElementById('sheet-select');
 const songSelect = document.getElementById('song-select');
@@ -69,7 +69,7 @@ const keySelect = document.getElementById('key-select');
 const searchInput = document.getElementById('search-input');
 const searchResults = document.getElementById('search-results');
 const loadingIndicator = document.getElementById('loading-indicator');
-const vocalistSelect = document.getElementById('vocalist-select'); // Вокалист
+const vocalistSelect = document.getElementById('vocalist-select');
 
 // Song Display Area
 const songContent = document.getElementById('song-content');
@@ -81,19 +81,19 @@ const addToRepertoireButton = document.getElementById('add-to-repertoire-button'
 const splitTextButton = document.getElementById('split-text-button');
 
 // Panel Toggle Buttons
-const toggleFavoritesButton = document.getElementById('toggle-favorites'); // Кнопка Списки
-const toggleRepertoireButton = document.getElementById('toggle-repertoire'); // Кнопка Репертуар
+const toggleFavoritesButton = document.getElementById('toggle-favorites'); // Кнопка Списки (слева)
+const toggleRepertoireButton = document.getElementById('toggle-repertoire'); // Кнопка Репертуар (справа)
 
 // Favorites Panel ("Lists") Elements
-const favoritesPanel = document.getElementById('favorites-panel');       // Сама панель Списки
-const favoritesList = document.getElementById('favorites-list');          // Контейнер "Мой список"
-const sharedSongsList = document.getElementById('shared-songs-list');   // Контейнер "Общий список"
+const favoritesPanel = document.getElementById('favorites-panel');       // Сама панель Списки (слева)
+const favoritesList = document.getElementById('favorites-list');
+const sharedSongsList = document.getElementById('shared-songs-list');
 
 // Repertoire Panel Elements
-const repertoirePanel = document.getElementById('repertoire-panel');               // Сама панель Репертуар
-const repertoirePanelVocalistName = document.getElementById('repertoire-panel-vocalist-name'); // Span для имени
-const repertoirePanelList = document.getElementById('repertoire-panel-list');             // Контейнер списка репертуара
-const repertoirePanelTitle = document.getElementById('repertoire-panel-title'); // Заголовок (h3) панели репертуара
+const repertoirePanel = document.getElementById('repertoire-panel');         // Сама панель Репертуар (справа)
+const repertoirePanelVocalistName = document.getElementById('repertoire-panel-vocalist-name');
+const repertoirePanelList = document.getElementById('repertoire-panel-list');
+const repertoirePanelTitle = document.getElementById('repertoire-panel-title'); // Можно удалить, если не используется
 
 // Footer Controls
 const bpmDisplay = document.getElementById('bpm-display');
@@ -1227,30 +1227,28 @@ function setupEventListeners() {
         });
     }
 
-    // Кнопка открытия/закрытия панели "Группа"
-if (toggleFavoritesButton && favoritesPanel) {
-     toggleFavoritesButton.addEventListener('click', () => {
-         console.log("--- КЛИК: Кнопка 'Список' ---");
-         console.log("Переменная favoritesPanel:", favoritesPanel);
-         console.log("Классы ДО:", favoritesPanel.className);
-         const isOpen = favoritesPanel.classList.toggle('open'); // Переключаем класс
-         console.log("Классы ПОСЛЕ:", favoritesPanel.className); // Есть ли 'open'?
-         console.log("Панель 'Списки' должна быть открыта:", isOpen);
+   // Кнопка открытия/закрытия панели "Списки" (ИСПРАВЛЕННЫЙ обработчик)
+    if (toggleFavoritesButton && favoritesPanel) {
+        toggleFavoritesButton.addEventListener('click', () => {
+            console.log("--- КЛИК: Кнопка 'Списки' (Правильный обработчик) ---"); // Обновленный лог
+            const isOpen = favoritesPanel.classList.toggle('open');
+            console.log("Панель 'Списки' .open:", favoritesPanel.classList.contains('open')); // Проверка класса
 
-         if (isOpen) {
-             if (repertoirePanel && repertoirePanel.classList.contains('open')) {
-                 repertoirePanel.classList.remove('open');
-                 console.log("Панель 'Репертуар' принудительно закрыта.");
-             }
-             loadGroupPanel();
-         } else {
-              console.log("Панель 'Списки' была закрыта.");
-         }
-     });
-     // console.log("Слушатель для кнопки 'Списки' добавлен."); // Можно оставить для проверки
-} else {
-     console.error("Не найдены элементы для кнопки 'Списки'");
-}
+            if (isOpen) { // Если панель открылась
+                // Закрываем панель репертуара, если она была открыта
+                if (repertoirePanel && repertoirePanel.classList.contains('open')) {
+                    repertoirePanel.classList.remove('open');
+                    console.log("Панель 'Репертуар' принудительно закрыта.");
+                }
+                loadGroupPanel(); // Загружаем содержимое этой панели
+            } else { // Если панель закрылась
+                console.log("Панель 'Списки' была закрыта этим кликом.");
+            }
+        });
+        console.log("Правильный слушатель для кнопки 'Списки' добавлен.");
+    } else {
+        console.error("Не найдены элементы для кнопки 'Списки' (toggleFavoritesButton или favoritesPanel)");
+    }
 
     // Кнопка метронома
     if (metronomeButton) {
@@ -1323,10 +1321,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Первоначальная загрузка данных
     await loadAllSheetsData(); // Ждем загрузки всех данных перед дальнейшими действиями
     await loadVocalists();     // Загружаем вокалистов
-
-   // Начальное состояние UI (ИСПРАВЛЕНО)
-    if (repertoirePanel) repertoirePanel.style.display = 'none'; // <-- Исправлено здесь
-    displaySongDetails(null); // Показываем начальное состояние "Выберите песню"
 
     console.log("Инициализация приложения завершена.");
 });
