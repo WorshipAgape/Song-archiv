@@ -6,44 +6,43 @@
     <title>Agape Worship</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-</head>
+    </head>
 <body>
-<header>
 
+<header>
+    <button id="toggle-repertoire" class="toggle-button repertoire-toggle">Репертуар</button>
     <h1>Agape Worship</h1>
-    <!-- Кнопка "Группа" вынесена в заголовок -->
-<button id="toggle-repertoire" class="toggle-button repertoire-toggle">Репертуар</button>
-    <button id="toggle-favorites" class="toggle-favorites">Список</button>
+    <button id="toggle-favorites" class="toggle-button lists-toggle">Список</button> </header>
+
 <main class="container">
-    <!-- Панель управления -->
     <section class="controls">
-    <div class="control-group">
-        <label for="search-input">Поиск песни:</label>
-        <input type="text" id="search-input" placeholder="Введите название песни...">
-        <div id="search-results"></div>
-    </div>
-    <div class="control-group">
-        <label for="sheet-select">Выберите лист:</label>
-        <select id="sheet-select">
-            <option value="">-- Выберите лист --</option>
-            <option value="Быстрые (вертикаль)">Быстрые (вертикаль)</option>
-            <option value="Быстрые (горизонталь)">Быстрые (горизонталь)</option>
-            <option value="Поклонение (вертикаль)">Поклонение (вертикаль)</option>
-            <option value="Поклонение (горизонталь)">Поклонение (горизонталь)</option>
-        </select>
-    </div>
-    <div class="control-group">
-        <label for="song-select">Выберите песню:</label>
-        <select id="song-select" disabled>
-            <option value="">-- Сначала выберите лист --</option>
-        </select>
-    </div>
-<div class="control-group">
-    <label for="vocalist-select">Вокалист:</label>
-    <select id="vocalist-select">
-        <option value="">-- Выберите вокалиста --</option>
-        </select>
-</div>
+        <div class="control-group">
+            <label for="search-input">Поиск песни:</label>
+            <input type="text" id="search-input" placeholder="Введите название песни...">
+            <div id="search-results"></div>
+        </div>
+        <div class="control-group">
+            <label for="sheet-select">Выберите лист:</label>
+            <select id="sheet-select">
+                <option value="">-- Выберите лист --</option>
+                <option value="Быстрые (вертикаль)">Быстрые (вертикаль)</option>
+                <option value="Быстрые (горизонталь)">Быстрые (горизонталь)</option>
+                <option value="Поклонение (вертикаль)">Поклонение (вертикаль)</option>
+                <option value="Поклонение (горизонталь)">Поклонение (горизонталь)</option>
+            </select>
+        </div>
+        <div class="control-group">
+            <label for="song-select">Выберите песню:</label>
+            <select id="song-select" disabled>
+                <option value="">-- Сначала выберите лист --</option>
+            </select>
+        </div>
+        <div class="control-group">
+            <label for="vocalist-select">Вокалист:</label>
+            <select id="vocalist-select">
+                <option value="">-- Выберите вокалиста --</option>
+            </select>
+        </div>
         <div class="control-group">
             <label for="key-select">Тональность:</label>
             <select id="key-select">
@@ -60,49 +59,48 @@
                 <option value="A#">A#</option>
                 <option value="H">H</option>
             </select>
-        <div class="font-size-controls"> Масштаб
-            <button id="zoom-in">+</button>
-            <button id="zoom-out">-</button>
+            <div class="font-size-controls"> Масштаб
+                <button id="zoom-in">+</button>
+                <button id="zoom-out">-</button>
+            </div>
         </div>
     </section>
-    <!-- Текст песни -->
+
     <section id="song-content">
-        <h2 id="song-title">Название песни — Тональность</h2>
+        <h2 id="song-title">Выберите песню</h2>
+        <pre></pre>
     </section>
-    <!-- Дополнительные кнопки -->
+
     <div class="control-buttons">
         <button id="favorite-button" aria-label="Добавить в избранное">❤️ Мой список</button>
         <button id="add-to-list-button" aria-label="Добавить в список">📝 Общий список</button>
         <button id="split-text-button" aria-label="Разделить текст">Разделить текст</button>
     </div>
-    <!-- Информация о BPM -->
+
     <div class="controls-footer">
-    <div class="bpm-controls">
-  <span>Размер: </span>
-    <select id="time-signature">
-        <option value="4">4/4</option>
-        <option value="3">3/4</option>
-        <option value="6">6/8</option>
-        <option value="2">2/4</option>
-    </select>
- <span>BPM: </span>
-      <span id="bpm-display" contenteditable="true"></span> 
-        <button id="metronome-button">▶️ Включить метроном</button>
+        <div class="bpm-controls">
+            <span>Размер: </span>
+            <select id="time-signature">
+                <option value="4">4/4</option>
+                <option value="3">3/4</option>
+                <option value="6">6/8</option>
+                <option value="2">2/4</option>
+            </select>
+            <span>BPM: </span>
+            <span id="bpm-display" contenteditable="true">N/A</span>
+            <button id="metronome-button">▶️ Включить метроном</button>
+        </div>
+        <a id="holychords-button" href="#" target="_blank">Holychords</a>
+        <button id="add-to-repertoire-button" aria-label="Добавить в мой репертуар">🎤 В мой репертуар</button>
     </div>
-    <a id="holychords-button" href="#" target="_blank">Holychords</a>
-<button id="add-to-repertoire-button" aria-label="Добавить в мой репертуар">🎤 В мой репертуар</button>
-</div>
 </main>
-<!-- Панель "Группа" -->
-<div id="favorites-panel" class="favorites-panel">
-    <div id="my-list" class="list-section">
+
+<aside id="favorites-panel" class="side-panel favorites-panel"> <div id="my-list" class="list-section">
         <h3>Мой список</h3>
-        <div id="favorites-list" class="favorites-list"></div>
-    </div>
+        <div id="favorites-list" class="list-container"></div> </div>
     <div id="shared-list" class="list-section">
         <h3>Общий список</h3>
-        <div id="shared-songs-list" class="shared-songs-list"></div>
-    </div>
+        <div id="shared-songs-list" class="list-container"></div> </div>
 </aside>
 
 <aside id="repertoire-panel" class="side-panel repertoire-panel"> <h3 id="repertoire-panel-title">Репертуар: <span id="repertoire-panel-vocalist-name">-- Выберите вокалиста --</span></h3>
@@ -110,12 +108,14 @@
     </div>
 </aside>
 
-<section id="youtube-player-section" style="margin-top: 20px; display: none;"> <h3>Видео / Аудио</h3>
+<section id="youtube-player-section" style="margin-top: 20px; display: none;">
+    <h3>Видео / Аудио</h3>
     <div id="youtube-player-container" style="max-width: 100%; margin: auto;">
         </div>
 </section>
-<!-- Индикатор загрузки -->
+
 <div id="loading-indicator">Загрузка...</div>
+
 <script type="module" src="script.js"></script>
 </body>
 </html>
