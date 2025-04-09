@@ -309,7 +309,12 @@ async function deleteFromSharedList(docId) {
     }
 }
 
-// --- Функция загрузки репертуара ---
+// === ИЗМЕНЕНИЯ В script.js ===
+
+// --- GLOBAL STATE ---
+// ... (другие переменные) ...
+let currentRepertoireUnsubscribe = null; // <--- ДОБАВИТЬ ЭТУ ПЕРЕМЕННУЮ
+
 // --- Функция загрузки репертуара (с отпиской от предыдущего слушателя) ---
 function loadRepertoire(vocalistId) {
     const listContainer = repertoirePanelList;
@@ -467,78 +472,7 @@ function loadRepertoire(vocalistId) {
     });
 }
 
-function loadRepertoire(vocalistId) {
-    const listContainer = repertoirePanelList;
-    const sectionContainer = repertoirePanel;
-
-    if (!listContainer || !sectionContainer) {
-        console.error("Не найдены UI элементы для панели репертуара (контейнер или панель).");
-        return;
-    }
-    listContainer.innerHTML = '';
-
-    if (!vocalistId) {
-        listContainer.innerHTML = '<div class="empty-message">Выберите вокалиста для просмотра репертуара.</div>';
-        return;
-    }
-
-    listContainer.innerHTML = '<div>Загрузка репертуара...</div>'; // Это сообщение вы видите
-
-    const repertoireColRef = collection(db, "vocalists", vocalistId, "repertoire");
-    const q = query(repertoireColRef);
-
-    console.log(`loadRepertoire: Установка слушателя для ${vocalistId} (с группировкой)`); // Этот лог вы должны были проверить на шаге 1
-
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-        // ---> ДОБАВИТЬ ЭТОТ ЛОГ <---
-        console.log(`>>> Firestore onSnapshot для ${vocalistId} СРАБОТАЛ. Получено документов: ${snapshot.size}`);
-
-        const currentListContainer = document.getElementById('repertoire-panel-list');
-        if (!currentListContainer) {
-            console.error("!!! Контейнер #repertoire-panel-list исчез во время работы onSnapshot!");
-            return;
-        }
-        // ---> ДОБАВИТЬ ЭТОТ ЛОГ <---
-        console.log("   Очистка контейнера перед отрисовкой...");
-        currentListContainer.innerHTML = ''; // Очищаем перед отрисовкой
-
-        if (snapshot.empty) {
-            console.log("   Снимок пуст, репертуар не найден."); // ЛОГ
-            currentListContainer.innerHTML = '<div class="empty-message">Репертуар пуст.</div>';
-            return;
-        }
-
-         // ---> ДОБАВИТЬ ЭТОТ ЛОГ <---
-         console.log("   Начинаем группировку и отрисовку песен...");
-
-        // --- ЛОГИКА ГРУППИРОВКИ --- (без изменений)
-        const groupedByKeys = {};
-        snapshot.docs.forEach((doc) => {
-            // ...
-        });
-        // --- КОНЕЦ ГРУППИРОВКИ ---
-
-        // --- СОРТИРОВКА И ВЫВОД --- (без изменений)
-        const sortedKeys = Object.keys(groupedByKeys).sort(/*...*/);
-        // ... (циклы forEach) ...
-
-         // ---> ДОБАВИТЬ ЭТОТ ЛОГ <---
-         console.log("   Отрисовка песен ЗАВЕРШЕНА.");
-
-
-    }, (error) => { // Обработчик ошибок onSnapshot
-         // ---> ДОБАВИТЬ ЭТОТ ЛОГ <---
-         console.error(`!!! ОШИБКА Firestore onSnapshot для репертуара ${vocalistId}:`, error);
-
-         const currentListContainer = document.getElementById('repertoire-panel-list');
-         if (currentListContainer) {
-             currentListContainer.innerHTML = '<div class="empty-message">Ошибка загрузки репертуара.</div>';
-         }
-    });
-
-    // ... (сохранение unsubscribe) ...
-}
-
+// --- (Остальной код script.js без изменений) ---
 
 /** Добавление/Обновление песни в репертуаре вокалиста (Firestore) */
 async function addToRepertoire() {
