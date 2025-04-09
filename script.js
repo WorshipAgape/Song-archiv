@@ -1054,73 +1054,105 @@ async function loadAudioFile() {
     }
 }
 
-/** Воспроизведение одного щелчка метронома */
-function playClick() {
-    if (!audioContext || !audioBuffer) {
-        console.error("Невозможно воспроизвести щелчок: AudioContext или аудио буфер не готовы.");
-        // Попробовать загрузить снова? Или просто остановить метроном?
-        if(isMetronomeActive) toggleMetronome(0); // Останавливаем
-        return;
-    }
-    resumeAudioContext(); // Важно перед каждым воспроизведением
 
-    const beatsPerMeasure = parseInt(timeSignatureSelect.value, 10) || 4; // Значение из select (4/4, 3/4 и т.д.)
 
-    const source = audioContext.createBufferSource();
-    source.buffer = audioBuffer;
-    const gainNode = audioContext.createGain();
-
-    // Акцент на первую долю
-    gainNode.gain.setValueAtTime(currentBeat % beatsPerMeasure === 0 ? 1.0 : 0.6, audioContext.currentTime);
-
-    source.connect(gainNode);
-    gainNode.connect(audioContext.destination);
-    source.start(audioContext.currentTime);
-
-    // Обновляем счетчик долей
-    currentBeat = (currentBeat + 1) % beatsPerMeasure;
-}
-
-// --- Обновленная функция toggleMetronome ---
+// --- Обновленная функция toggleMetronome (с логами) ---
 function toggleMetronome(bpm) {
     const playIcon = '<i class="fas fa-play"></i>';
     const stopIcon = '<i class="fas fa-stop"></i>';
-    // Текстовые части для десктопа
     const playText = '<span class="button-text">Включить метроном</span>';
     const stopText = '<span class="button-text">Выключить метроном</span>';
 
-    if (!metronomeButton) return; // Добавим проверку кнопки
+    if (!metronomeButton) return;
 
     if (isMetronomeActive) {
         // --- Выключение ---
-        // ... (логика остановки интервала) ...
+        console.log("Metronome: Stopping. Interval ID:", metronomeInterval); // ЛОГ
+        clearInterval(metronomeInterval);
+        metronomeInterval = null;
         isMetronomeActive = false;
-        // Устанавливаем контент кнопки (теперь isMobileView определена)
+        currentBeat = 0;
         metronomeButton.innerHTML = playIcon + (isMobileView() ? '' : playText);
         metronomeButton.setAttribute('aria-label', 'Включить метроном');
-        console.log("Метроном выключен.");
+        console.log("Metronome: Stopped."); // ЛОГ
     } else if (bpm > 0) {
         // --- Включение ---
-         if (!audioContext || !audioBuffer) {
-             console.warn("Метроном не может быть запущен: аудио не готово.");
-             alert("Звук метронома еще не загружен, подождите.");
-             loadAudioFile();
-             return;
-         }
+        console.log("Metronome: Attempting to start with BPM:", bpm); // ЛОГ
+        if (!audioContext || !audioBuffer) {
+            console.warn("Metronome: Cannot start, audio not ready."); // ЛОГ
+            alert("Звук метронома еще не загружен, подождите.");
+            loadAudioFile();
+            return;
+        }
         const intervalMilliseconds = 60000 / bpm;
-         if (intervalMilliseconds <= 0 || !isFinite(intervalMilliseconds)) {
-             console.error("Неверный интервал метронома:", intervalMilliseconds);
-             return;
-         }
-        // ... (логика запуска интервала) ...
-        isMetronomeActive = true;
-         // Устанавливаем контент кнопки (теперь isMobileView определена)
-        metronomeButton.innerHTML = stopIcon + (isMobileView() ? '' : stopText);
-        metronomeButton.setAttribute('aria-label', 'Выключить метроном');
-        console.log(`Метроном включен: ${bpm} BPM`);
-        playClick();
+        if (intervalMilliseconds <= 0 || !isFinite(intervalMilliseconds)) {
+            console.error("Metronome: Invalid interval calculated:", intervalMilliseconds); // ЛОГ
+            return;
+        }
+        currentBeat = 0;
+
+
+// --- Обновленная функция playClick (с логами и try-catch) ---
+function playClick() {
+    console.log("--> playClick called. Beat:", currentBeat, "Context state:", audioContext?.state); // ЛОГ ВХОДА
+
+    if (!audioContext || !audioBuffer) {
+        console.error("!!! playClick stopping: AudioContext or audio buffer not ready."); // ЛОГ ОШИБКИ
+        if(isMetronomeActive) toggleMetronome(0); // Останавливаем
+        return;
+    }
+
+    if (audioContext.state === 'suspended') {
+        console.warn("playClick: AudioContext is suspended, attempting to resume..."); // ЛОГ ПРИОСТАНОВКИ
+        resumeAudioContext(); // Пытаемся возобновить
+        // Может потребоваться небольшая задержка перед воспроизведением после resume,
+        // но сначала попробуем без нее.
+    }
+
+    const beatsPerMeasure = parseInt(timeSignatureSelect.value, 10) || 4;
+
+    try {
+        console.log("   playClick: Creating BufferSource..."); // ЛОГ
+        const source = audioContext.createBufferSource();
+        source.buffer = audioBuffer;
+        const gainNode = audioContext.createGain();
+        gainNode.gain.setValueAtTime(currentBeat % beatsPerMeasure === 0 ? 1.0 : 0.6, audioContext.currentTime);
+
+        source.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+
+        console.log("   playClick: Calling source.start()..."); // ЛОГ
+        source.start(audioContext.currentTime);
+        source.onended = () => { // Добавим для информации
+             console.log("   playClick: source ended.");
+        };
+
+        currentBeat = (currentBeat + 1) % beatsPerMeasure;
+        console.log("   playClick finished. Next beat:", currentBeat); // ЛОГ УСПЕХА
+
+    } catch (error) {
+        console.error("!!! Error during playClick execution:", error); // ЛОГ ИСКЛЮЧЕНИЯ
+        if(isMetronomeActive) toggleMetronome(0); // Останавливаем при ошибке
     }
 }
+
+
+
+        // --- ЗАПУСК ИНТЕРВАЛА ---
+        metronomeInterval = setInterval(playClick, intervalMilliseconds);
+        isMetronomeActive = true;
+        console.log("Metronome: Started. Interval ID:", metronomeInterval, "Interval (ms):", intervalMilliseconds); // ЛОГ
+        metronomeButton.innerHTML = stopIcon + (isMobileView() ? '' : stopText);
+        metronomeButton.setAttribute('aria-label', 'Выключить метроном');
+        console.log("Metronome: Playing first click manually..."); // ЛОГ
+        playClick(); // Сразу играем первый удар
+        console.log("Metronome: First click function call finished.");// ЛОГ
+    } else {
+         console.log("Metronome: Start requested with invalid BPM:", bpm); // ЛОГ
+    }
+}
+
+
 
 // --- EVENT LISTENER SETUP ---
 function setupEventListeners() {
