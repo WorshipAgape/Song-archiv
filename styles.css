@@ -282,7 +282,18 @@ button.icon-button.simple:active {
 
     /* --- Ряд Тональность / Разделить / Масштаб (Мобильный) --- */
      .control-group:has(#key-select) { min-height: 38px; gap: 5px; } /* Уменьшаем высоту и gap */
-    #key-select { min-width: 50px; height: 38px; padding: 0 3px; }
+   #key-select {
+        min-width: 60px; /* Немного увеличим мин. ширину для гарантии */
+        height: 38px;
+        padding-top: 0;
+        padding-bottom: 0;
+        /* Выравниваем текст слева и добавляем отступы */
+        text-align: left;
+        padding-left: 8px;  /* Отступ слева */
+        padding-right: 28px; /* Отступ справа (место для стрелки), можно подбирать */
+        margin-right: 5px;
+        box-sizing: border-box; /* Убедимся, что паддинг внутри */
+    }
     /* Кнопка Разделить Текст - иконка */
     #split-text-button { width: 38px; height: 38px; padding: 0; margin-left: 5px; margin-right: 5px; background: var(--hover-color); box-shadow: none; border: 1px solid var(--border-color); color: var(--text-color); }
     #split-text-button:hover { background: var(--border-color); transform: none; box-shadow: none; }
