@@ -791,7 +791,7 @@ function displaySongDetails(songData, index, key) {
     const highlightedOriginalLyrics = highlightChords(processedOriginalLyrics);
 
     // --- Обновляем ОСНОВНОЕ содержимое (Название + Текст) --- ПРАВИЛЬНАЯ ВЕРСИЯ
-    songContent.innerHTML = `<h2>ТЕСТ ЗАГОЛОВОК — ТЕСТ КЛЮЧ</h2><pre>ТЕСТ ТЕКСТ</pre>`;
+   songContent.innerHTML = `<h2>ЗАГОЛОВОК — КЛЮЧ</h2><pre>ТЕКСТ</pre>`;
     // Убедитесь, что используются ОБРАТНЫЕ кавычки (` `) и теги написаны ВЕРНО!
 
 
