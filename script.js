@@ -671,6 +671,12 @@ function extractYouTubeVideoId(url) {
 }
 
 
+function isMobileView() {
+    // Используем ту же точку останова (breakpoint), что и в CSS (@media (max-width: 480px))
+    return window.innerWidth <= 480;
+}
+
+
 // --- UI UPDATE FUNCTIONS ---
 
 
@@ -1083,44 +1089,38 @@ function toggleMetronome(bpm) {
     const playText = '<span class="button-text">Включить метроном</span>';
     const stopText = '<span class="button-text">Выключить метроном</span>';
 
+    if (!metronomeButton) return; // Добавим проверку кнопки
+
     if (isMetronomeActive) {
         // --- Выключение ---
-        clearInterval(metronomeInterval);
-        metronomeInterval = null;
+        // ... (логика остановки интервала) ...
         isMetronomeActive = false;
-        currentBeat = 0;
-        if(metronomeButton) {
-            // Устанавливаем контент В ЗАВИСИМОСТИ от ширины экрана
-            metronomeButton.innerHTML = playIcon + (isMobileView() ? '' : playText);
-            metronomeButton.setAttribute('aria-label', 'Включить метроном');
-        }
+        // Устанавливаем контент кнопки (теперь isMobileView определена)
+        metronomeButton.innerHTML = playIcon + (isMobileView() ? '' : playText);
+        metronomeButton.setAttribute('aria-label', 'Включить метроном');
         console.log("Метроном выключен.");
     } else if (bpm > 0) {
         // --- Включение ---
-        if (!audioContext || !audioBuffer) {
-            console.warn("Метроном не может быть запущен: аудио не готово.");
-            alert("Звук метронома еще не загружен, подождите.");
-            loadAudioFile(); // Пробуем загрузить
-            return; // Выходим, чтобы пользователь нажал еще раз после загрузки
-        }
+         if (!audioContext || !audioBuffer) {
+             console.warn("Метроном не может быть запущен: аудио не готово.");
+             alert("Звук метронома еще не загружен, подождите.");
+             loadAudioFile();
+             return;
+         }
         const intervalMilliseconds = 60000 / bpm;
-        if (intervalMilliseconds <= 0 || !isFinite(intervalMilliseconds)) {
-            console.error("Неверный интервал метронома:", intervalMilliseconds);
-            return;
-        }
-        currentBeat = 0;
-        metronomeInterval = setInterval(playClick, intervalMilliseconds);
+         if (intervalMilliseconds <= 0 || !isFinite(intervalMilliseconds)) {
+             console.error("Неверный интервал метронома:", intervalMilliseconds);
+             return;
+         }
+        // ... (логика запуска интервала) ...
         isMetronomeActive = true;
-        if(metronomeButton) {
-             // Устанавливаем контент В ЗАВИСИМОСТИ от ширины экрана
-            metronomeButton.innerHTML = stopIcon + (isMobileView() ? '' : stopText);
-            metronomeButton.setAttribute('aria-label', 'Выключить метроном');
-        }
+         // Устанавливаем контент кнопки (теперь isMobileView определена)
+        metronomeButton.innerHTML = stopIcon + (isMobileView() ? '' : stopText);
+        metronomeButton.setAttribute('aria-label', 'Выключить метроном');
         console.log(`Метроном включен: ${bpm} BPM`);
-        playClick(); // Сразу играем первый удар
+        playClick();
     }
 }
-
 
 // --- EVENT LISTENER SETUP ---
 function setupEventListeners() {
