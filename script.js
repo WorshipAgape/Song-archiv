@@ -792,10 +792,11 @@ function displaySongDetails(songData, index, key) {
 
     // --- Обновляем ОСНОВНОЕ содержимое (Название + Текст) --- ИСПРАВЛЕНО
    
-     songContent.innerHTML = `
-<h2>${songTitle} — ${currentKey}</h2>
-<pre>${highlightedOriginalLyrics}</pre>
-`; // <-- Убедитесь, что ОБА тега (h2 и pre) написаны с < > правильно
+     // --- Обновляем ОСНОВНОЕ содержимое (Название + Текст) ---
+songContent.innerHTML = `
+    <h2>${songTitle} — <span class="math-inline">\{currentKey\}</h2\>
+        <pre>${highlightedOriginalLyrics}</pre>
+    `;
 
     // --- Обновляем селектор тональности и вызываем транспонирование ---
     keySelect.value = currentKey;
