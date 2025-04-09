@@ -37,12 +37,6 @@
             </select>
         </div>
         <div class="control-group">
-            <label for="vocalist-select">Вокалист:</label>
-            <select id="vocalist-select">
-                <option value="">-- Выберите вокалиста --</option>
-                </select>
-        </div>
-        <div class="control-group">
             <label for="key-select">Тональность:</label>
             <select id="key-select">
                 <option value="C">C</option>
@@ -59,7 +53,8 @@
                 <option value="H">H</option>
             </select>
             <button id="split-text-button" aria-label="Разделить текст" class="control-group-button">
-                <i class="fas fa-columns"></i> <span class="button-text">Разделить текст</span>
+                <i class="fas fa-columns"></i>
+                <span class="button-text">Разделить текст</span>
             </button>
             <div class="font-size-controls">
                  <button id="zoom-out" aria-label="Уменьшить масштаб">
@@ -70,11 +65,12 @@
                 </button>
             </div>
         </div>
-        </section>
+    </section>
 
     <section id="song-content">
         <h2 id="song-title">Выберите песню</h2>
-        <pre></pre> </section>
+        <pre></pre>
+    </section>
 
     <div class="control-buttons">
         <button id="favorite-button" aria-label="Добавить в избранное">❤️ Мой список</button>
@@ -93,7 +89,8 @@
             <span>BPM: </span>
             <span id="bpm-display" contenteditable="true">N/A</span>
             <button id="metronome-button" aria-label="Включить метроном">
-                 <i class="fas fa-play"></i> <span class="button-text">Включить метроном</span>
+                 <i class="fas fa-play"></i>
+                 <span class="button-text">Включить метроном</span>
             </button>
         </div>
         <a id="holychords-button" href="#" target="_blank">Holychords</a>
@@ -111,12 +108,18 @@
 </aside>
 
 <aside id="repertoire-panel" class="side-panel repertoire-panel">
-    <h3 id="repertoire-panel-title">Репертуар: <span id="repertoire-panel-vocalist-name">-- Выберите вокалиста --</span></h3>
-    <div id="repertoire-panel-list" class="list-container repertoire-list-container">
-        <div class="empty-message">Выберите вокалиста для просмотра репертуара.</div>
-    </div>
-</aside>
+    <h3 class="panel-header">Репертуар</h3>
 
+    <div class="repertoire-vocalist-selector">
+        <label for="vocalist-select">Вокалист:</label> <select id="vocalist-select">
+            <option value="">-- Выберите вокалиста --</option>
+            </select>
+    </div>
+
+    <div id="repertoire-panel-list" class="repertoire-list-container">
+        <div class="empty-message">Выберите вокалиста для просмотра репертуара.</div>
+        </div>
+</aside>
 <div id="presentation-overlay" class="presentation-overlay">
     <button id="presentation-close-btn" class="presentation-close-btn" title="Закрыть режим презентации">&times;</button>
     <div id="presentation-content" class="presentation-content">
