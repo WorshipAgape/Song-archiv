@@ -791,7 +791,7 @@ function displaySongDetails(songData, index, key) {
     const highlightedOriginalLyrics = highlightChords(processedOriginalLyrics);
 
     // --- Обновляем ОСНОВНОЕ содержимое (Название + Текст) --- ИСПРАВЛЕНО
-    // Убедитесь, что используется именно `songContent` и ОБРАТНЫЕ кавычки (` `)
+   
     songContent.innerHTML = `
 <h2>${songTitle} — ${currentKey}</h2>
 <pre>${highlightedOriginalLyrics}</pre>
