@@ -62,8 +62,8 @@ let metronomeInterval = null;
 let isMetronomeActive = false;
 let currentBeat = 0;
 
-// --- DOM ELEMENT REFERENCES (Исправлено) ---
-// Main Controls
+
+// --- DOM ELEMENT REFERENCES (Исправлено от дубликатов) ---
 const sheetSelect = document.getElementById('sheet-select');
 const songSelect = document.getElementById('song-select');
 const keySelect = document.getElementById('key-select');
@@ -71,48 +71,33 @@ const searchInput = document.getElementById('search-input');
 const searchResults = document.getElementById('search-results');
 const loadingIndicator = document.getElementById('loading-indicator');
 const vocalistSelect = document.getElementById('vocalist-select');
-
-// Song Display Area
 const songContent = document.getElementById('song-content');
-
-// Action Buttons
 const favoriteButton = document.getElementById('favorite-button');
 const addToListButton = document.getElementById('add-to-list-button');
 const addToRepertoireButton = document.getElementById('add-to-repertoire-button');
 const splitTextButton = document.getElementById('split-text-button');
-
-// Panel Toggle Buttons
 const toggleFavoritesButton = document.getElementById('toggle-favorites'); // Кнопка Списки (слева)
-const toggleRepertoireButton = document.getElementById('toggle-repertoire'); // Кнопка Репертуар (справа)
-
-// Favorites Panel ("Lists") Elements
-const favoritesPanel = document.getElementById('favorites-panel');       // Сама панель Списки (слева)
+const favoritesPanel = document.getElementById('favorites-panel');       // Панель Списки (слева)
 const favoritesList = document.getElementById('favorites-list');
 const sharedSongsList = document.getElementById('shared-songs-list');
-
-// Repertoire Panel Elements
-const repertoirePanel = document.getElementById('repertoire-panel');         // Сама панель Репертуар (справа)
+const toggleRepertoireButton = document.getElementById('toggle-repertoire'); // Кнопка Репертуар (справа)
+const repertoirePanel = document.getElementById('repertoire-panel');         // Панель Репертуар (справа)
 const repertoirePanelVocalistName = document.getElementById('repertoire-panel-vocalist-name');
 const repertoirePanelList = document.getElementById('repertoire-panel-list');
 const repertoirePanelTitle = document.getElementById('repertoire-panel-title'); // Можно удалить, если не используется
-
-// Footer Controls
 const bpmDisplay = document.getElementById('bpm-display');
 const holychordsButton = document.getElementById('holychords-button');
 const timeSignatureSelect = document.getElementById('time-signature');
 const metronomeButton = document.getElementById('metronome-button');
 const zoomInButton = document.getElementById('zoom-in');
 const zoomOutButton = document.getElementById('zoom-out');
-
-// YouTube Player
 const playerContainer = document.getElementById('youtube-player-container');
 const playerSection = document.getElementById('youtube-player-section');
-
-// Presentation Mode Elements
 const presentationOverlay = document.getElementById('presentation-overlay');
 const presentationContent = document.getElementById('presentation-content');
 const presentationCloseBtn = document.getElementById('presentation-close-btn');
-const sharedListHeading = document.getElementById('shared-list-heading'); // Заголовок для клика
+const sharedListHeading = document.getElementById('shared-list-heading'); // ID добавлен в HTML
+
 
 
 
