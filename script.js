@@ -312,8 +312,7 @@ async function deleteFromSharedList(docId) {
 // === ИЗМЕНЕНИЯ В script.js ===
 
 // --- GLOBAL STATE ---
-// ... (другие переменные) ...
-let currentRepertoireUnsubscribe = null; // <--- ДОБАВИТЬ ЭТУ ПЕРЕМЕННУЮ
+
 
 // --- Функция загрузки репертуара (с отпиской от предыдущего слушателя) ---
 function loadRepertoire(vocalistId) {
