@@ -58,10 +58,16 @@
                 <option value="A#">A#</option>
                 <option value="H">H</option>
             </select>
-            <button id="split-text-button" aria-label="Разделить текст" class="control-group-button">Разделить текст</button>
-            <div class="font-size-controls"> Масштаб
-                <button id="zoom-in">+</button>
-                <button id="zoom-out">-</button>
+            <button id="split-text-button" aria-label="Разделить текст" class="control-group-button">
+                <i class="fas fa-columns"></i> <span class="button-text">Разделить текст</span>
+            </button>
+            <div class="font-size-controls">
+                 <button id="zoom-out" aria-label="Уменьшить масштаб">
+                    <i class="fas fa-search-minus"></i>
+                </button>
+                <button id="zoom-in" aria-label="Увеличить масштаб">
+                    <i class="fas fa-search-plus"></i>
+                </button>
             </div>
         </div>
         </section>
@@ -73,7 +79,7 @@
     <div class="control-buttons">
         <button id="favorite-button" aria-label="Добавить в избранное">❤️ Мой список</button>
         <button id="add-to-list-button" aria-label="Добавить в список">📝 Общий список</button>
-        </div>
+    </div>
 
     <div class="controls-footer">
         <div class="bpm-controls">
@@ -86,7 +92,9 @@
             </select>
             <span>BPM: </span>
             <span id="bpm-display" contenteditable="true">N/A</span>
-            <button id="metronome-button">▶️ Включить метроном</button>
+            <button id="metronome-button" aria-label="Включить метроном">
+                 <i class="fas fa-play"></i> <span class="button-text">Включить метроном</span>
+            </button>
         </div>
         <a id="holychords-button" href="#" target="_blank">Holychords</a>
         <button id="add-to-repertoire-button" aria-label="Добавить в мой репертуар">🎤 В мой репертуар</button>
@@ -98,7 +106,8 @@
     </div>
     <div id="shared-list" class="list-section">
         <h3 id="shared-list-heading">Общий список</h3>
-        <div id="shared-songs-list" class="list-container"></div> </div>
+        <div id="shared-songs-list" class="list-container"></div>
+    </div>
 </aside>
 
 <aside id="repertoire-panel" class="side-panel repertoire-panel">
