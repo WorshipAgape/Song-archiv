@@ -786,18 +786,21 @@ function displaySongDetails(songData, index, key) {
         holychordsButton.style.display = 'none';
     }
 
-  // --- Обрабатываем и подсвечиваем текст ---
-    const processedOriginalLyrics = processLyrics(lyrics); // Убедитесь, что processLyrics используется (вы просили ее вернуть)
-    const highlightedOriginalLyrics = highlightChords(processedOriginalLyrics);
+ // --- Обрабатываем и подсвечиваем текст ---
+   const processedOriginalLyrics = processLyrics(lyrics); // <--- ВОССТАНОВИЛИ ВЫЗОВ
+const highlightedOriginalLyrics = highlightChords(processedOriginalLyrics); // Используем обработанный текст
 
-    // --- Обновляем ОСНОВНОЕ содержимое (Название + Текст) --- ПРАВИЛЬНАЯ ВЕРСИЯ
-   songContent.innerHTML = `<h2>ЗАГОЛОВОК — КЛЮЧ</h2><pre>ТЕКСТ</pre>`;
-    // Убедитесь, что используются ОБРАТНЫЕ кавычки (` `) и теги написаны ВЕРНО!
+   // --- Обновляем ОСНОВНОЕ содержимое (Название + Текст) ---
+songContent.innerHTML = `
+    <h2>${songTitle} — <span class="math-inline">\{currentKey\}</h2\>
+        <pre>${highlightedOriginalLyrics}</pre>
+    `;
 
-
-    // --- Обновляем селектор тональности и вызываем транспонирование ---
+    // Устанавливаем селектор тональности и индекс для транспонирования
     keySelect.value = currentKey;
-    keySelect.dataset.index = index;
+    keySelect.dataset.index = index; // Важно для updateTransposedLyrics
+
+    // Применяем транспонирование, если нужно
     updateTransposedLyrics();
 
 
