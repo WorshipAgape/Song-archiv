@@ -786,7 +786,7 @@ function displaySongDetails(songData, index, key) {
         holychordsButton.style.display = 'none';
     }
 
- // --- Обрабатываем и подсвечиваем текст ---
+// --- Обрабатываем и подсвечиваем текст ---
    const processedOriginalLyrics = processLyrics(lyrics); // <--- ВОССТАНОВИЛИ ВЫЗОВ
 const highlightedOriginalLyrics = highlightChords(processedOriginalLyrics); // Используем обработанный текст
 
