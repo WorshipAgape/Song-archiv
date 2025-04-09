@@ -786,14 +786,13 @@ function displaySongDetails(songData, index, key) {
         holychordsButton.style.display = 'none';
     }
 
- // --- Обрабатываем и подсвечиваем текст ---
-    const processedOriginalLyrics = processLyrics(lyrics);
+  // --- Обрабатываем и подсвечиваем текст ---
+    const processedOriginalLyrics = processLyrics(lyrics); // Убедитесь, что processLyrics используется (вы просили ее вернуть)
     const highlightedOriginalLyrics = highlightChords(processedOriginalLyrics);
 
-    // --- Обновляем ОСНОВНОЕ содержимое (Название + Текст) --- ИСПРАВЛЕНО
-   
-     songContent.innerHTML = `<h2>${songTitle} — <span class="math-inline">\{currentKey\}</h2\><pre\></span>{highlightedOriginalLyrics}</pre>`;
-    // Убедитесь, что кавычки ОБРАТНЫЕ (`), а не ' или "
+    // --- Обновляем ОСНОВНОЕ содержимое (Название + Текст) --- ПРАВИЛЬНАЯ ВЕРСИЯ
+    songContent.innerHTML = `<h2>${songTitle} — <span class="math-inline">\{currentKey\}</h2\><pre\></span>{highlightedOriginalLyrics}</pre>`;
+    // Убедитесь, что используются ОБРАТНЫЕ кавычки (` `) и теги написаны ВЕРНО!
 
 
     // --- Обновляем селектор тональности и вызываем транспонирование ---
