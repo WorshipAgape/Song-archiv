@@ -1075,34 +1075,47 @@ function playClick() {
     currentBeat = (currentBeat + 1) % beatsPerMeasure;
 }
 
-/** Включение/выключение метронома */
+// --- Обновленная функция toggleMetronome ---
 function toggleMetronome(bpm) {
+    const playIcon = '<i class="fas fa-play"></i>';
+    const stopIcon = '<i class="fas fa-stop"></i>';
+    // Текстовые части для десктопа
+    const playText = '<span class="button-text">Включить метроном</span>';
+    const stopText = '<span class="button-text">Выключить метроном</span>';
+
     if (isMetronomeActive) {
-        // Выключение
+        // --- Выключение ---
         clearInterval(metronomeInterval);
         metronomeInterval = null;
         isMetronomeActive = false;
-        currentBeat = 0; // Сбрасываем счетчик долей
-        if(metronomeButton) metronomeButton.textContent = '▶️ Включить метроном';
+        currentBeat = 0;
+        if(metronomeButton) {
+            // Устанавливаем контент В ЗАВИСИМОСТИ от ширины экрана
+            metronomeButton.innerHTML = playIcon + (isMobileView() ? '' : playText);
+            metronomeButton.setAttribute('aria-label', 'Включить метроном');
+        }
         console.log("Метроном выключен.");
     } else if (bpm > 0) {
-        // Включение
+        // --- Включение ---
         if (!audioContext || !audioBuffer) {
-             console.warn("Метроном не может быть запущен: аудио не готово.");
-             alert("Звук метронома еще не загружен, подождите.");
-             // Попытка загрузить асинхронно и запустить позже? Проще попросить пользователя нажать еще раз.
-             loadAudioFile(); // Запускаем загрузку на всякий случай
-             return;
+            console.warn("Метроном не может быть запущен: аудио не готово.");
+            alert("Звук метронома еще не загружен, подождите.");
+            loadAudioFile(); // Пробуем загрузить
+            return; // Выходим, чтобы пользователь нажал еще раз после загрузки
         }
         const intervalMilliseconds = 60000 / bpm;
         if (intervalMilliseconds <= 0 || !isFinite(intervalMilliseconds)) {
-             console.error("Неверный интервал метронома:", intervalMilliseconds);
-             return;
+            console.error("Неверный интервал метронома:", intervalMilliseconds);
+            return;
         }
-        currentBeat = 0; // Начинаем с первой доли
+        currentBeat = 0;
         metronomeInterval = setInterval(playClick, intervalMilliseconds);
         isMetronomeActive = true;
-        if(metronomeButton) metronomeButton.textContent = '⏹️ Выключить метроном';
+        if(metronomeButton) {
+             // Устанавливаем контент В ЗАВИСИМОСТИ от ширины экрана
+            metronomeButton.innerHTML = stopIcon + (isMobileView() ? '' : stopText);
+            metronomeButton.setAttribute('aria-label', 'Выключить метроном');
+        }
         console.log(`Метроном включен: ${bpm} BPM`);
         playClick(); // Сразу играем первый удар
     }
@@ -1157,6 +1170,24 @@ function setupEventListeners() {
     });
 
     if(splitTextButton && songContent) {
+        const splitIcon = '<i class="fas fa-columns"></i>';
+        const mergeIcon = '<i class="fas fa-align-justify"></i>'; // Иконка для "Объединить"
+        // Текстовые части для десктопа
+        const splitText = '<span class="button-text">Разделить текст</span>';
+        const mergeText = '<span class="button-text">Объединить колонки</span>';
+
+        // Функция для обновления кнопки
+        const updateSplitButton = () => {
+            const isSplit = songContent.classList.contains('split-columns');
+            const currentIcon = isSplit ? mergeIcon : splitIcon;
+            const currentTextSpan = isSplit ? mergeText : splitText;
+            // Устанавливаем контент В ЗАВИСИМОСТИ от ширины экрана
+            const content = currentIcon + (isMobileView() ? '' : currentTextSpan);
+            splitTextButton.innerHTML = content;
+            splitTextButton.setAttribute('aria-label', isSplit ? 'Объединить колонки' : 'Разделить текст');
+        };
+
+        // Обработчик клика
         splitTextButton.addEventListener('click', () => {
             const lyricsElement = songContent.querySelector('pre');
             if (!lyricsElement || !lyricsElement.textContent?.trim()) {
@@ -1164,7 +1195,18 @@ function setupEventListeners() {
                 return;
             }
             songContent.classList.toggle('split-columns');
-            splitTextButton.textContent = songContent.classList.contains('split-columns') ? 'Объединить колонки' : 'Разделить на 2 колонки';
+            updateSplitButton(); // Обновляем кнопку
+        });
+
+        // Установим начальное состояние кнопки при загрузке
+        updateSplitButton();
+
+        // Добавим слушатель на изменение размера окна, чтобы кнопка обновлялась
+        // (опционально, но улучшает UX если пользователь меняет размер окна)
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(updateSplitButton, 150); // Обновляем с небольшой задержкой
         });
     }
 
