@@ -11,6 +11,8 @@
 
 <header>
     <h1>Agape Worship</h1>
+ <button id="theme-toggle-button" class="icon-button simple theme-toggle" title="Переключить тему">
+        <i class="fas fa-sun"></i> </button>
 </header>
 
 <main class="container">
@@ -122,14 +124,29 @@
 </aside>
 <div id="presentation-overlay" class="presentation-overlay">
     <button id="presentation-close-btn" class="presentation-close-btn" title="Закрыть режим презентации">&times;</button>
+<button id="pres-split-text-btn" class="presentation-control-btn" title="Разделить текст">
+        <i class="fas fa-columns"></i>
+    </button>
+
+    <div class="presentation-controls">
+        <button id="pres-prev-btn" class="presentation-nav-btn" title="Предыдущая песня">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        <span id="pres-counter" class="presentation-counter">0 / 0</span>
+        <button id="pres-next-btn" class="presentation-nav-btn" title="Следующая песня">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+    </div>
+
     <div id="presentation-content" class="presentation-content">
         </div>
 </div>
 
 <section id="youtube-player-section" style="margin-top: 20px; display: none;">
     <h3>Видео / Аудио</h3>
-    <div id="youtube-player-container" style="max-width: 100%; margin: auto;">
-        </div>
+      <p id="youtube-video-key-display" style="text-align: center; margin-bottom: 10px; display: none; font-size: 0.9rem; color: var(--label-color);"></p>
+      <div id="youtube-player-container" style="max-width: 100%; margin: auto;">
+      </div>
 </section>
 
 <div id="loading-indicator">Загрузка...</div>
