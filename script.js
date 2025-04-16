@@ -1245,16 +1245,13 @@ function transposeLyrics(lyrics, transposition) {
     }
 }
 
-/** Обработка строк текста для уменьшения пробелов МЕЖДУ словами/аккордами */
+/** Обработка строк текста для коррекции выравнивания пробелов */
 function processLyrics(lyrics) {
-    if (!lyrics) return '';
-    // Разделяем на строки
-    return lyrics.split('\n').map(line => {
-        // Заменяем 2+ пробела на округленную половину их количества ИЛИ просто один пробел
-        // return line.replace(/ {2,}/g, match => ' '.repeat(Math.max(1, Math.ceil(match.length / 2))));
-        // Или более простой вариант: заменять 2+ пробела на один пробел
-        return line.replace(/ {2,}/g, ' ');
-    }).join('\n'); // Собираем обратно
+    if (!lyrics) return '';
+    return lyrics.split('\n').map(line => {
+        // Заменяем 2+ пробела на округленную половину их количества (минимум 1 пробел)
+        return line.replace(/ {2,}/g, match => ' '.repeat(Math.max(1, Math.ceil(match.length / 2))));
+    }).join('\n');
 }
 
 /** Выделение аккордов тегами span для стилизации */
@@ -1646,20 +1643,20 @@ function displaySongDetails(songData, index, keyToSelect) {
             toggleChordsButton.disabled = true; // Блокируем кнопку Аккорды
             // Обновляем ее вид на заблокированный (если функция доступна)
             if (typeof window.updateToggleButton === 'function') {
-                 window.updateToggleButton();
+                window.updateToggleButton();
             }
         }
         // Кнопка копирования уже скрыта выше
 
         // Убираем класс скрытия аккордов, если он был
-         if (songContent) songContent.classList.remove('chords-hidden');
+        if (songContent) songContent.classList.remove('chords-hidden');
 
         return;
     }
 
     // --- ОТОБРАЖЕНИЕ ВЫБРАННОЙ ПЕСНИ ---
     const title = songData[0] || 'Без названия';
-    const lyrics = songData[1] || '';
+    const originalLyrics = songData[1] || '';                 // <<< Оригинальный текст из таблицы
     const originalKeyFromSheet = songData[2] || chords[0];
     const srcUrl = songData[3] || '#';
     const bpm = songData[4] || 'N/A';
@@ -1671,8 +1668,8 @@ function displaySongDetails(songData, index, keyToSelect) {
     keySelect.dataset.index = index;
 
     if (bpmDisplay) {
-        updateBPM(bpm);
-        bpmDisplay.textContent = bpm;
+        updateBPM(bpm); // Обновляем BPM (функция сама ставит текст в bpmDisplay)
+        // bpmDisplay.textContent = bpm; // Эта строка больше не нужна здесь
     }
     if (holychordsButton) {
         if (srcUrl && srcUrl.trim() !== '' && srcUrl.trim() !== '#') {
@@ -1685,11 +1682,16 @@ function displaySongDetails(songData, index, keyToSelect) {
     }
 
     // --- ОБРАБОТКА ТЕКСТА ПЕСНИ ---
-    // 1. Транспонируем
+    // 0. Обрабатываем пробелы для корректного отображения (ВСТАВЛЕНО!)
+    const processedLyrics = processLyrics(originalLyrics);
+
+    // 1. Транспонируем (теперь используем processedLyrics)
     const transposition = getTransposition(originalKeyFromSheet, currentSelectedKey);
-    const transposedLyrics = transposeLyrics(lyrics, transposition);
+    const transposedLyrics = transposeLyrics(processedLyrics, transposition);
+
     // 2. Выделяем структуру (Куплет, Припев и т.д.)
     const structureHighlightedLyrics = highlightStructure(transposedLyrics);
+
     // 3. Выделяем аккорды
     const finalHighlightedLyrics = highlightChords(structureHighlightedLyrics);
     // --- КОНЕЦ ОБРАБОТКИ ТЕКСТА ---
@@ -1700,7 +1702,7 @@ function displaySongDetails(songData, index, keyToSelect) {
             <i class="far fa-copy"></i>
         </button>
         <h2>${title} — ${currentSelectedKey}</h2>
-        <pre>${finalHighlightedLyrics}</pre> `;
+        <pre>${finalHighlightedLyrics}</pre> `; // Используем finalHighlightedLyrics
     updateFontSize(); // Применяем текущий размер шрифта
 
     // Применяем класс скрытия аккордов, если он был включен
@@ -1708,7 +1710,7 @@ function displaySongDetails(songData, index, keyToSelect) {
         songContent.classList.toggle('chords-hidden', !areChordsVisible);
     }
 
-    // Обновляем YouTube плеер
+   // Обновляем YouTube плеер
    const vId = extractYouTubeVideoId(ytLink);
 if (vId && playerContainer && playerSection) {
     // Используем правильный URL для встраивания
@@ -1734,23 +1736,32 @@ if (vId && playerContainer && playerSection) {
     if (addToSetlistButton) addToSetlistButton.disabled = false;
     if (addToRepertoireButton) addToRepertoireButton.disabled = false;
     if (toggleChordsButton) {
-         toggleChordsButton.disabled = false;
-         // Обновляем вид кнопки Аккорды
-         if (typeof window.updateToggleButton === 'function') {
-              window.updateToggleButton();
-         }
+        toggleChordsButton.disabled = false;
+        // Обновляем вид кнопки Аккорды
+        if (typeof window.updateToggleButton === 'function') {
+            window.updateToggleButton();
+        }
     }
 
     // Находим кнопку копирования ВНУТРИ обновленного songContent и делаем видимой
-     const currentCopyButton = songContent.querySelector('#copy-text-button');
-     if (currentCopyButton) {
-         currentCopyButton.style.display = 'block'; // Показываем кнопку Копировать
-         // Переназначаем слушатель, используя функцию из window
-         currentCopyButton.addEventListener('click', window.handleCopyClick);
-     } else {
-         // Этого не должно происходить, если HTML вставлен правильно
-         console.warn("Кнопка копирования #copy-text-button не найдена после обновления innerHTML в displaySongDetails.");
-     }
+    const currentCopyButton = songContent.querySelector('#copy-text-button');
+    if (currentCopyButton) {
+        currentCopyButton.style.display = 'block'; // Показываем кнопку Копировать
+        // Переназначаем слушатель, используя функцию из window
+        // (Предполагается, что handleCopyClick добавлена в window в setupEventListeners)
+        if (typeof window.handleCopyClick === 'function') {
+             // Удаляем старый слушатель на всякий случай (если он был)
+             // currentCopyButton.removeEventListener('click', window.handleCopyClick); // Это может не сработать, если ссылка на функцию изменилась
+             // Проще не удалять, а просто добавить новый или использовать делегирование, как было сделано в setupEventListeners
+             // Оставим добавление слушателя в setupEventListeners через делегирование, здесь только показываем кнопку.
+        } else {
+             console.warn("Функция window.handleCopyClick не найдена. Слушатель для кнопки копирования не будет (пере)назначен здесь.");
+        }
+
+    } else {
+        // Этого не должно происходить, если HTML вставлен правильно
+        console.warn("Кнопка копирования #copy-text-button не найдена после обновления innerHTML в displaySongDetails.");
+    }
 } // Конец функции displaySongDetails
 
 /** Обновление текста песни при смене тональности в keySelect */
@@ -1767,38 +1778,50 @@ function updateTransposedLyrics() {
     }
 
     if (!cachedData[sheetName]?.[indexStr]) {
-         console.error("updateTransposedLyrics: Не найдены данные песни для транспонирования в кэше.", sheetName, indexStr);
-         return;
+        console.error("updateTransposedLyrics: Не найдены данные песни для транспонирования в кэше.", sheetName, indexStr);
+        return;
     }
 
     const songData = cachedData[sheetName][indexStr];
     const originalKey = songData[2]; // Оригинальная тональность из таблицы
-    const lyrics = songData[1] || '';
+    const originalLyrics = songData[1] || ''; // <<< ИСХОДНЫЙ текст из кэша
     const title = songData[0] || 'Без названия';
 
     const preElement = songContent.querySelector('pre');
     const h2Element = songContent.querySelector('h2');
-    // Находим кнопку копирования, если она уже есть
-    const copyBtn = songContent.querySelector('#copy-text-button');
 
     if (!preElement || !h2Element) {
         console.error("updateTransposedLyrics: Элементы H2 или PRE не найдены внутри songContent.");
         return;
     }
 
-    // Вычисляем транспозицию от оригинального ключа (из таблицы) к новому (из select)
-    const transposition = getTransposition(originalKey, newKey);
-    const transposedLyrics = transposeLyrics(lyrics, transposition);
-    const highlightedTransposedLyrics = highlightChords(transposedLyrics);
+    // --- НАЧАЛО ИСПРАВЛЕНИЯ ---
+    // 0. Обрабатываем пробелы ПЕРЕД транспонированием
+    const processedLyrics = processLyrics(originalLyrics);
 
-    // Обновляем только текст, сохраняя кнопку копирования, если она была
-    preElement.innerHTML = highlightedTransposedLyrics;
+    // 1. Вычисляем транспозицию
+    const transposition = getTransposition(originalKey, newKey);
+
+    // 2. Транспонируем обработанный текст (processedLyrics)
+    const transposedLyrics = transposeLyrics(processedLyrics, transposition);
+
+    // 3. Выделяем структуру
+    const structureHighlightedLyrics = highlightStructure(transposedLyrics);
+
+     // 4. Выделяем аккорды
+    const finalHighlightedLyrics = highlightChords(structureHighlightedLyrics);
+    // --- КОНЕЦ ИСПРАВЛЕНИЯ ---
+
+
+    // Обновляем текст в <pre>
+    preElement.innerHTML = finalHighlightedLyrics; // Используем finalHighlightedLyrics
+    // Обновляем заголовок
     h2Element.textContent = `${title} — ${newKey}`;
 
     // Применяем текущий размер шрифта к обновленному <pre>
     updateFontSize();
 
-    // <<< НОВОЕ: Применяем класс скрытия аккордов, если нужно
+    // Применяем класс скрытия аккордов, если нужно
     if (songContent) {
         songContent.classList.toggle('chords-hidden', !areChordsVisible);
     }
