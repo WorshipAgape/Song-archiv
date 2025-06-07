@@ -1,14 +1,14 @@
 // Имя для нашего кэша (памяти)
-const CACHE_NAME = 'agape-worship-cache-v1';
+const CACHE_NAME = 'agape-worship-cache-v2'; // v2, чтобы кэш обновился
 
-// Список файлов, которые нужно сохранить для работы оффлайн
+// Список файлов, которые нужно сохранить для работы оффлайн (С ИСПРАВЛЕННЫМИ ПУТЯМИ)
 const URLS_TO_CACHE = [
-  '/',
-  'index.html',
-  'script.js',
-  'styles.css',
-  'manifest.json',
-  // Внешние ресурсы, которые тоже нужно сохранить
+  '/Song-archiv/',
+  '/Song-archiv/index.html',
+  '/Song-archiv/script.js',
+  '/Song-archiv/styles.css',
+  '/Song-archiv/manifest.json',
+  // Внешние ресурсы, их пути не меняются
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css',
   'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js',
   'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js',
