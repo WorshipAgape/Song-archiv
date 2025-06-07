@@ -7,6 +7,14 @@
   "background_color": "#111827",
   "theme_color": "#1f2937",
   "description": "Приложение для песен прославления группы Agape.",
+  "screenshots": [
+    {
+      "src": "images/screenshot-mobile.png",
+      "type": "image/png",
+      "sizes": "540x720",
+      "form_factor": "narrow"
+    }
+  ],
   "icons": [
     {
       "src": "images/Icon-192.png",
